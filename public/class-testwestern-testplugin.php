@@ -26,11 +26,11 @@ class Testwestern_Testplugin {
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
 	 *
-	 * @since   0.9.1
+	 * @since   1.0.0
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.9.1';
+	const VERSION = '1.0.0';
 
 	/**
 	 * @TODO - Rename "testwestern-testplugin" to the name your your plugin
@@ -78,7 +78,7 @@ class Testwestern_Testplugin {
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-		//add_action( '@TODO', array( $this, 'action_method_name' ) );
+	    add_action( 'pre_get_posts', array( $this, 'search_filter' ) );
 		add_filter( 'the_content', array( $this, 'filter_content_string' ) );
     }
 
@@ -308,13 +308,29 @@ class Testwestern_Testplugin {
     /**
      * Append something to the content of posts.
      *
-     * @since    0.9.1
+     * @since    1.0.0
      */
     public function filter_content_string( $content ) {
 
         return str_replace("average", "exemplary", $content);
 
     }
+
+
+    /**
+     * Only return posts from search.
+     *
+     * @since    1.0.0
+     */
+    function search_filter($query) {
+        if ( !is_admin() && $query->is_main_query() ) {
+            if ($query->is_search) {
+                //$query->set('post_type', 'post'); //only return posts
+                echo $query;
+            }
+        }
+    }
+
 
 
 }
