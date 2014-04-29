@@ -79,7 +79,7 @@ class Testwestern_Testplugin {
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
 		//add_action( '@TODO', array( $this, 'action_method_name' ) );
-		add_filter( 'the_content', array( $this, 'append_post_notification' ) );
+		add_filter( 'the_content', array( $this, 'filter_content_string' ) );
     }
 
 	/**
@@ -310,11 +310,9 @@ class Testwestern_Testplugin {
      *
      * @since    0.9.1
      */
-    public function append_post_notification( $content ) {
+    public function filter_content_string( $content ) {
 
-        $notification = __( 'This message was appended with the Test Plugin.', 'testwestern-testplugin' );
-
-        return $content . $notification;
+        return str_replace("average", "exemplary", $content);
 
     }
 
