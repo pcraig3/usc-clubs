@@ -312,7 +312,7 @@ class Testwestern_Testplugin {
      */
     public function filter_content_string( $content ) {
 
-        return str_replace("average", "exemplary", $content);
+        return str_replace("average", "extremely handsome", $content);
 
     }
 
@@ -326,7 +326,7 @@ class Testwestern_Testplugin {
         if ( !is_admin() && $query->is_main_query() ) {
             if ($query->is_search) {
                 //$query->set('post_type', 'post'); //only return posts
-                echo $query;
+                var_dump($query);
             }
         }
     }
