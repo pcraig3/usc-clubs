@@ -310,7 +310,7 @@ class Testwestern_Testplugin {
      *
      * @since    1.0.0
      */
-    public function filter_content_string( $change_to, $content ) {
+    public function filter_content_string( $content ) {
 
         if(!isset($change_to))
             $change_to = "stupendous";
