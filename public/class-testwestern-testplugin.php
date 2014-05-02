@@ -92,30 +92,32 @@ class Testwestern_Testplugin {
             },
             12
         );
+
+        /**
+         * Add a string to post content
+         *
+         * @param  string $content
+         * @param  string $change_from  Look for this string
+         * @param  string $change_to    Change it to this
+         * @return string
+         */
+        function t5_param_test( $content, $change_from, $change_to )
+        {
+            if(!isset($change_from))
+                $change_from = "average";
+
+            if(!isset($change_to))
+                $change_to = "stupendous";
+
+            return str_replace($change_from, $change_to, $content);
+        }
     }
 
 
 
 
 
-    /**
-     * Add a string to post content
-     *
-     * @param  string $content
-     * @param  string $change_from  Look for this string
-     * @param  string $change_to    Change it to this
-     * @return string
-     */
-    function t5_param_test( $content, $change_from, $change_to )
-    {
-        if(!isset($change_from))
-            $change_from = "average";
 
-        if(!isset($change_to))
-            $change_to = "stupendous";
-
-        return str_replace($change_from, $change_to, $content);
-    }
 
 	/**
 	 * Return the plugin slug.
