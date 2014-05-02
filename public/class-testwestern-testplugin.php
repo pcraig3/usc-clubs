@@ -78,8 +78,8 @@ class Testwestern_Testplugin {
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-	    add_action( 'pre_get_posts', array( $this, 'search_filter' ) );
-		add_filter( 'the_content', array( $this, 'filter_content_string' ) );
+	    //add_action( 'pre_get_posts', array( $this, 'search_filter' ) );
+		add_filter( 'the_content', array( $this, 'filter_content_string' ), "lovely" );
     }
 
 	/**
@@ -310,9 +310,12 @@ class Testwestern_Testplugin {
      *
      * @since    1.0.0
      */
-    public function filter_content_string( $content ) {
+    public function filter_content_string( $change_to, $content ) {
 
-        return str_replace("average", "extremely handsome", $content);
+        if(!isset($change_to))
+            $change_to = "stupendous";
+
+        return str_replace("average", $change_to, $content);
 
     }
 
