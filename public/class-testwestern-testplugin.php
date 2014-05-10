@@ -79,44 +79,26 @@ class Testwestern_Testplugin {
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
 	    //add_action( 'pre_get_posts', array( $this, 'search_filter' ) );
-		///add_filter( 'the_content', array( $this, 'filter_content_string' ) );
+		//add_filter( 'the_content', array( $this, 'filter_content_string' ) );
 
-        $param1 = "student";
-        $param2 = "gorilla";
+        add_shortcode( 'testplugin', 'testplugin_func' );
 
-        add_filter(
-            'the_content',
-            function( $content ) use ( $param1, $param2 )
-            {
-                return t5_param_test( $content, $param1, $param2 );
-            },
-            12
-        );
-
-        /**
-         * Add a string to post content
-         *
-         * @param  string $content
-         * @param  string $change_from  Look for this string
-         * @param  string $change_to    Change it to this
-         * @return string
-         */
-        function t5_param_test( $content, $change_from, $change_to )
-        {
-            if(!isset($change_from))
-                $change_from = "average";
-
-            if(!isset($change_to))
-                $change_to = "stupendous";
-
-            return str_replace($change_from, $change_to, $content);
-        }
     }
 
 
+    /**
+     * Function meant to target the [testplugin] shortcode.  At this point, still testing.
+     *
+     * @param $atts         create an associative array based on attributes and values in the shortcode
+     * @return string
+     */
+    function testplugin_func ( $atts ) {
+        $arr = shortcode_atts( array(
+            'adj' => 'terrific',
+        ), $atts );
 
-
-
+        return esc_html( $arr['adj'] );
+    }
 
 
 	/**
@@ -341,36 +323,5 @@ class Testwestern_Testplugin {
 		// @TODO: Define your filter hook callback here
 	}
      */
-
-    /**
-     * Append something to the content of posts.
-     *
-     * @since    1.0.0
-     */
-    public function filter_content_string( $content ) {
-
-        if(!isset($change_to))
-            $change_to = "stupendous";
-
-        return str_replace("average", $change_to, $content);
-
-    }
-
-
-    /**
-     * Only return posts from search.
-     *
-     * @since    1.0.0
-     */
-    function search_filter($query) {
-        if ( !is_admin() && $query->is_main_query() ) {
-            if ($query->is_search) {
-                //$query->set('post_type', 'post'); //only return posts
-                var_dump($query);
-            }
-        }
-    }
-
-
 
 }
