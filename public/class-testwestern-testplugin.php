@@ -26,11 +26,11 @@ class Testwestern_Testplugin {
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
 	 *
-	 * @since   1.0.0
+	 * @since   1.0.1
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.0.0';
+	const VERSION = '1.0.1';
 
 	/**
 	 * @TODO - Rename "testwestern-testplugin" to the name your your plugin
@@ -61,7 +61,7 @@ class Testwestern_Testplugin {
 	 * Initialize the plugin by setting localization and loading public scripts
 	 * and styles.
 	 *
-	 * @since     0.9.0
+	 * @since     1.0.1
 	 */
 	private function __construct() {
 
@@ -90,7 +90,10 @@ class Testwestern_Testplugin {
      * Function meant to target the [testplugin] shortcode.  At this point, still testing.
      *
      * @param $atts         create an associative array based on attributes and values in the shortcode
-     * @return string
+     *
+  	 * @since    1.0.1
+     *
+     * @return string       a complimentary adjective for students
      */
     function testplugin_func ( $atts ) {
         $arr = shortcode_atts( array(
