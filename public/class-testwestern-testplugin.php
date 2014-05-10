@@ -91,58 +91,50 @@ class Testwestern_Testplugin {
      *
      * @param $atts         create an associative array based on attributes and values in the shortcode
      *
-  	 * @since    1.0.1
+     * @since    1.0.1
      *
      * @return string       a complimentary adjective for students
      */
     public function testplugin_func ( $atts ) {
 
         //function returns the clubs on github as a json array.
-        $returned_string = $this->get_some_clubs();
+        $returned_array = $this->call_api();
 
-        if(isset($returned_string))
-            return "true";
+        if( is_array( $returned_array ) ) {
+
+            return intval( sizeof( $returned_array ) );
+        }
 
         return "false";
     }
 
-    private function get_some_clubs() {
+    private function call_api() {
 
         $ch = curl_init('http://testwestern.com/github/json.php');
 
-        curl_setopt($ch, CURLOPT_HEADER, false); //TRUE to include the header in the output.
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); //TRUE to return transfer as a string instead of outputting it out directly.
-        //curl_setopt($ch, CURLOPT_FORBID_REUSE, true); //TRUE to force connection to close after processing, and not be pooled for reuse.
-        //curl_setopt($ch, CURLOPT_FRESH_CONNECT, true); //TRUE to force the use of a new connection instead of a cached one.
+        curl_setopt( $ch, CURLOPT_HEADER, false ); //TRUE to include the header in the output.
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true ); //TRUE to return transfer as a string instead of outputting it out directly.
 
-        //echo "1 more <br>";
-        $returnedString = curl_exec($ch);
-        curl_close($ch);
-
-        /* THIS TOOK FUCKING HOURS AND HOURS TO FIGURE OUT
-        http://stackoverflow.com/questions/689185/json-decode-returns-null-after-webservice-call */
-        //$returnedString = substr($returnedString, 3);
-
-        //$returnedString = preg_replace( '/\s+/', ' ', $returnedString );
+        $returnedString = curl_exec( $ch );
+        curl_close( $ch );
 
         // Define the errors.
-        $constants = get_defined_constants(true);
+        /* $constants = get_defined_constants(true);
 
         /*$json_errors = array();
         foreach ($constants["json"] as $name => $value) {
             if (!strncmp($name, "JSON_ERROR_", 11)) {
                 $json_errors[$value] = $name;
             }
-        }*/
+        }
 
-        /*
         echo '<h1>';
         echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
         echo '</h1>';
         die;
         */
 
-        return json_decode($returnedString, true);
+        return json_decode( $returnedString, true );
     }
 
 
