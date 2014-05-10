@@ -165,8 +165,8 @@ class Testwestern_Testplugin {
 
             $email = sanitize_email($clubs_array[$i]['email']);
 
-            $html_string .= '<p title="' . esc_attr($clubs_array[$i]['organizationId']) . '">' .
-                (intval($clubs_array[$i]['id']) + 1) . '. ' . esc_html($clubs_array[$i]['name']);
+            $html_string .= '<p style="text-align:left;" title="' . esc_attr($clubs_array[$i]['organizationId']) .
+                '">' . (intval($clubs_array[$i]['id']) + 1) . '. ' . esc_html($clubs_array[$i]['name']);
 
             if($email)
                 $html_string .= ' | <a href="mailto:' . antispambot($email,1) .
