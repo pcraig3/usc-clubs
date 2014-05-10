@@ -81,7 +81,7 @@ class Testwestern_Testplugin {
 	    //add_action( 'pre_get_posts', array( $this, 'search_filter' ) );
 		//add_filter( 'the_content', array( $this, 'filter_content_string' ) );
 
-        add_shortcode( 'testplugin', 'testplugin_func' );
+        add_shortcode( 'testplugin', array( $this, 'testplugin_func') );
 
     }
 
@@ -95,12 +95,54 @@ class Testwestern_Testplugin {
      *
      * @return string       a complimentary adjective for students
      */
-    function testplugin_func ( $atts ) {
-        $arr = shortcode_atts( array(
-            'adj' => 'terrific',
-        ), $atts );
+    public function testplugin_func ( $atts ) {
 
-        return esc_html( $arr['adj'] );
+        //function returns the clubs on github as a json array.
+        $returned_string = $this->get_some_clubs();
+
+        if(isset($returned_string))
+            return "true";
+
+        return "false";
+    }
+
+    private function get_some_clubs() {
+
+        $ch = curl_init('http://testwestern.com/github/json.php');
+
+        curl_setopt($ch, CURLOPT_HEADER, false); //TRUE to include the header in the output.
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); //TRUE to return transfer as a string instead of outputting it out directly.
+        //curl_setopt($ch, CURLOPT_FORBID_REUSE, true); //TRUE to force connection to close after processing, and not be pooled for reuse.
+        //curl_setopt($ch, CURLOPT_FRESH_CONNECT, true); //TRUE to force the use of a new connection instead of a cached one.
+
+        //echo "1 more <br>";
+        $returnedString = curl_exec($ch);
+        curl_close($ch);
+
+        /* THIS TOOK FUCKING HOURS AND HOURS TO FIGURE OUT
+        http://stackoverflow.com/questions/689185/json-decode-returns-null-after-webservice-call */
+        //$returnedString = substr($returnedString, 3);
+
+        //$returnedString = preg_replace( '/\s+/', ' ', $returnedString );
+
+        // Define the errors.
+        $constants = get_defined_constants(true);
+
+        /*$json_errors = array();
+        foreach ($constants["json"] as $name => $value) {
+            if (!strncmp($name, "JSON_ERROR_", 11)) {
+                $json_errors[$value] = $name;
+            }
+        }*/
+
+        /*
+        echo '<h1>';
+        echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
+        echo '</h1>';
+        die;
+        */
+
+        return json_decode($returnedString, true);
     }
 
 

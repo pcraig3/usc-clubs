@@ -33,6 +33,12 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
+= 1.0.1 =
+* Using shortcodes instead of string substitution
+
+= 1.0.0 =
+* Got basic word substitution working
+
 = 0.9 =
 * Totally new.  Renaming everything.
 
