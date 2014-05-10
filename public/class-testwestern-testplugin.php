@@ -194,6 +194,7 @@ class Testwestern_Testplugin {
 
         curl_setopt( $ch, CURLOPT_HEADER, false ); //TRUE to include the header in the output.
         curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true ); //TRUE to return transfer as a string instead of outputting it out directly.
+        //curl_setopt($ch, CURLOPT_FRESH_CONNECT, true); //TRUE to force the use of a new connection instead of a cached one.
 
         $returnedString = curl_exec( $ch );
         curl_close( $ch );
