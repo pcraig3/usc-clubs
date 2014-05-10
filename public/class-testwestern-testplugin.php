@@ -26,11 +26,11 @@ class Testwestern_Testplugin {
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
 	 *
-	 * @since   1.0.1
+	 * @since   1.1.0
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.1.0';
 
 	/**
 	 * @TODO - Rename "testwestern-testplugin" to the name your your plugin
@@ -87,29 +87,109 @@ class Testwestern_Testplugin {
 
 
     /**
-     * Function meant to target the [testplugin] shortcode.  At this point, still testing.
+     * Function meant to target the [testplugin] shortcode.  Grabs the attributes in the shortcode to
+     * call a function somewhere down there.
      *
      * @param $atts         create an associative array based on attributes and values in the shortcode
      *
-     * @since    1.0.1
+     * @since    1.1.0
      *
      * @return string       a complimentary adjective for students
      */
     public function testplugin_func ( $atts ) {
 
+        //initialize your variables
+        $get = $show = $result = false;
+
+        extract(
+            shortcode_atts(
+                array(
+                    'get'   => 'clubs',
+                    'show'  => 'count',
+                ), $atts ),
+            EXTR_OVERWRITE);
+
         //function returns the clubs on github as a json array.
+        //in the future, we'll have this take a parameter
         $returned_array = $this->call_api();
 
         if( is_array( $returned_array ) ) {
 
-            return intval( sizeof( $returned_array ) );
+            $testplugin_function = (string) $get . "_" . (string) $show;
+
+            ob_start();
+
+            echo call_user_func( array( $this, $testplugin_function ), $returned_array );
+
+            $result = ob_get_clean();
+        }
+
+        if( $result ) {
+
+            return $result;
         }
 
         return "false";
     }
 
+    /**
+     * Return the number of clubs as an integer
+     *
+     * @param $clubs_array      an array of clubs originating from a csv file on github
+     *
+     * @since    1.1.0
+     *
+     * @return int              the number of clubs on github
+     */
+    private function clubs_count($clubs_array) {
+
+        return intval( sizeof( $clubs_array ) );
+    }
+
+    /**
+     * Return HTML code to list all of the clubs known about on github
+     *
+     * @param $clubs_array      an array of clubs originating from a csv file on github
+     *
+     * @since    1.1.0
+     *
+     * @return string           the names of all of the clubs on github
+     */
+    private function clubs_list($clubs_array) {
+
+        $html_string = '<blockquote>';
+
+        $max = sizeof($clubs_array);
+
+        for($i = 0; $i < $max; $i++) {
+
+            $email = sanitize_email($clubs_array[$i]['email']);
+
+            $html_string .= '<p title="' . esc_attr($clubs_array[$i]['organizationId']) . '">' .
+                (intval($clubs_array[$i]['id']) + 1) . '. ' . esc_html($clubs_array[$i]['name']);
+
+            if($email)
+                $html_string .= ' | <a href="mailto:' . antispambot($email,1) .
+                                '" title="Click to e-mail" >Contact</a>';
+
+            $html_string .= '</p>';
+        }
+
+        $html_string .= "</blockquote>";
+
+        return $html_string;
+    }
+
+    /**
+     * Calls some page which calls a github csv file and converts it to json.
+     *
+     * @since    1.0.1
+     *
+     * @return array       at this point, return the clubs known about on github as an indexed array
+     */
     private function call_api() {
 
+        //the url where to get the github clubs
         $ch = curl_init('http://testwestern.com/github/json.php');
 
         curl_setopt( $ch, CURLOPT_HEADER, false ); //TRUE to include the header in the output.
@@ -136,7 +216,6 @@ class Testwestern_Testplugin {
 
         return json_decode( $returnedString, true );
     }
-
 
 	/**
 	 * Return the plugin slug.

@@ -3,24 +3,28 @@ Contributors: pcraig3
 Tags: demo, testing
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Aside from figuring out plugins, this plugin is meant to beam in some info from GitHub.
+This plugin beams in some info from GitHub.
 
 == Description ==
 
-Aside from figuring out plugins, this plugin is meant to beam in some info from GitHub.
+This plugin beams in some info from GitHub.
 
-Long & short is I'm going to try and get some information out of GitHub to correspond to WordPress shortcodes.
-
+It's kind of a proof of concept: use wordpress shortcodes to pull in data stored on github.
+This would give you a backend api that anyone could use.
 
 == Frequently Asked Questions ==
 
 = Why doesn't it work yet? =
 
 Shut up.
+
+= Does it make any sense to do this? =
+
+It took me a long time.  So 'yes.'
 
 
 == Screenshots ==
@@ -32,6 +36,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 1.1.0 =
+* Plugin connects to API which pulls information from github
 
 = 1.0.1 =
 * Using shortcodes instead of string substitution

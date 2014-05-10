@@ -15,7 +15,7 @@
  * Plugin Name:       Testwestern_Testplugin
  * Plugin URI:        http://testwestern.com
  * Description:       Does nothing right now.
- * Version:           1.0.1
+ * Version:           1.1.0
  * Author:            Paul Craig
  * Author URI:        https://profiles.wordpress.org/pcraig3/
  * Text Domain:       testwestern-testplugin
