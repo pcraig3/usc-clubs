@@ -141,9 +141,9 @@ class Testwestern_Testplugin {
      *
      * @return int              the number of clubs on github
      */
-    private function clubs_count($clubs_array) {
+    private function clubs_count( $clubs_array ) {
 
-        return intval( sizeof( $clubs_array ) );
+        return intval( $clubs_array['total'] );
     }
 
     /**
@@ -155,21 +155,23 @@ class Testwestern_Testplugin {
      *
      * @return string           the names of all of the clubs on github
      */
-    private function clubs_list($clubs_array) {
+    private function clubs_list( $clubs_array ) {
 
         $html_string = '<blockquote>';
 
-        $max = sizeof($clubs_array);
+        $max = intval( $clubs_array['total'] );
 
         for($i = 0; $i < $max; $i++) {
 
-            $email = sanitize_email($clubs_array[$i]['email']);
+            $current_club = $clubs_array['clubs'][$i];
 
-            $html_string .= '<p style="text-align:left;" title="' . esc_attr($clubs_array[$i]['organizationId']) .
-                '">' . (intval($clubs_array[$i]['id']) + 1) . '. ' . esc_html($clubs_array[$i]['name']);
+            $email = sanitize_email( $current_club['email'] );
+
+            $html_string .= '<p style="text-align:left;" title="' . esc_attr( $current_club['organizationId'] ) .
+                '">' . (intval( $current_club['id'] ) + 1) . '. ' . esc_html( $current_club['name'] );
 
             if($email)
-                $html_string .= ' | <a href="mailto:' . antispambot($email,1) .
+                $html_string .= ' | <a href="mailto:' . antispambot( $email, 1 ) .
                                 '" title="Click to e-mail" >Contact</a>';
 
             $html_string .= '</p>';
