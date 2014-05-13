@@ -26,11 +26,11 @@ class Testwestern_Testplugin {
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
 	 *
-	 * @since   1.1.0
+	 * @since   1.1.1
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.1.0';
+	const VERSION = '1.1.1';
 
 	/**
 	 * @TODO - Rename "testwestern-testplugin" to the name your your plugin
@@ -137,7 +137,7 @@ class Testwestern_Testplugin {
      *
      * @param $clubs_array      an array of clubs originating from a csv file on github
      *
-     * @since    1.1.0
+     * @since    1.1.1
      *
      * @return int              the number of clubs on github
      */
@@ -151,7 +151,7 @@ class Testwestern_Testplugin {
      *
      * @param $clubs_array      an array of clubs originating from a csv file on github
      *
-     * @since    1.1.0
+     * @since    1.1.1
      *
      * @return string           the names of all of the clubs on github
      */
@@ -166,13 +166,22 @@ class Testwestern_Testplugin {
             $current_club = $clubs_array['clubs'][$i];
 
             $email = sanitize_email( $current_club['email'] );
+            $fb_url = esc_url( $current_club['facebookUrl'] );
+            $tw_url = esc_url( $current_club['twitterUrl'] );
 
             $html_string .= '<p style="text-align:left;" title="' . esc_attr( $current_club['organizationId'] ) .
                 '">' . (intval( $current_club['id'] ) + 1) . '. ' . esc_html( $current_club['name'] );
 
             if($email)
                 $html_string .= ' | <a href="mailto:' . antispambot( $email, 1 ) .
-                                '" title="Click to e-mail" >Contact</a>';
+                                '" title="Click to e-mail" >Email</a>';
+            if($fb_url)
+                $html_string .= ' | <a href="' . $fb_url .
+                    '" title="View Facebook page" >Facebook</a>';
+
+            if($tw_url)
+                $html_string .= ' | <a href="' . $tw_url .
+                    '" title="View Twitter profile" >Twitter</a>';
 
             $html_string .= '</p>';
         }
