@@ -78,7 +78,7 @@ class Testwestern_Testplugin {
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-	    //add_action( 'pre_get_posts', array( $this, 'search_filter' ) );
+	    add_action( 'init', array( $this, 'clubsapi_rewrite_rules' ) );
 		//add_filter( 'the_content', array( $this, 'filter_content_string' ) );
 
         add_shortcode( 'testplugin', array( $this, 'testplugin_func') );
@@ -380,7 +380,11 @@ class Testwestern_Testplugin {
 	 * @since    0.9.0
 	 */
 	private static function single_activate() {
-		// @TODO: Define activation functionality here
+
+        clubsapi_rewrite_rules();
+
+        // flush rewrite rules - only do this on activation as anything more frequent is bad!
+        flush_rewrite_rules();
 	}
 
 	/**
@@ -389,8 +393,10 @@ class Testwestern_Testplugin {
 	 * @since    0.9.0
 	 */
 	private static function single_deactivate() {
-		// @TODO: Define deactivation functionality here
-	}
+
+        // flush rules on deactivate as well so they're not left hanging around uselessly
+        flush_rewrite_rules();
+    }
 
 	/**
 	 * Load the plugin text domain for translation.
@@ -425,31 +431,14 @@ class Testwestern_Testplugin {
 		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
 	}
 
-	/**
-	 * NOTE:  Actions are points in the execution of a page or process
-	 *        lifecycle that WordPress fires.
-	 *
-	 *        Actions:    http://codex.wordpress.org/Plugin_API#Actions
-	 *        Reference:  http://codex.wordpress.org/Plugin_API/Action_Reference
-	 *
-	 * @since    0.9.0
-	 */
-	public function action_method_name() {
-		// @TODO: Define your action hook callback here
-	}
 
-	/**
-	 * NOTE:  Filters are points of execution in which WordPress modifies data
-	 *        before saving it or sending it to the browser.
-	 *
-	 *        Filters: http://codex.wordpress.org/Plugin_API#Filters
-	 *        Reference:  http://codex.wordpress.org/Plugin_API/Filter_Reference
-	 *
-	 * @since    0.9.0
-	 *
-	public function filter_method_name() {
-		// @TODO: Define your filter hook callback here
-	}
-     */
+    public function clubsapi_rewrite_rules() {
+
+        // Custom tag we will be using to recognize page requests
+        add_rewrite_tag('%clubsapi%','([^/]+)');
+
+        // Custom rewrite rule to hijack page generation
+        add_rewrite_rule('clubs/([^/]+)/?$','index.php?clubsapi=$matches[1]','top');
+    }
 
 }

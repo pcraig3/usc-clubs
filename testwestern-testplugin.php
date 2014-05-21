@@ -51,8 +51,6 @@ register_deactivation_hook( __FILE__, array( 'Testwestern_Testplugin', 'deactiva
  */
 add_action( 'plugins_loaded', array( 'Testwestern_Testplugin', 'get_instance' ) );
 
-echo '<strong>CRAIG</strong>';
-
 /*----------------------------------------------------------------------------*
  * Dashboard and Administrative Functionality
  *----------------------------------------------------------------------------*/

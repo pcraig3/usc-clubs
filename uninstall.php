@@ -70,5 +70,4 @@ else
 	$GLOBALS['wpdb']->query("DROP TABLE `".$GLOBALS['wpdb']->prefix."TABLE_NAME`");
 	$GLOBALS['wpdb']->query("OPTIMIZE TABLE `" .$GLOBALS['wpdb']->prefix."options`");
 	*/
-    echo '<strong>PAUL</strong>';
 }
