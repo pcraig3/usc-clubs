@@ -54,7 +54,7 @@ if (is_multisite()) {
 }
 else
 {
-	/* @TODO: delete all transient, options and files you may have added 
+	/* @TODO: delete all transient, options and files you may have added
 	delete_transient( 'TRANSIENT_NAME' );
 	delete_option('OPTION_NAME');
 	//info: remove custom file directory for main site 
@@ -70,4 +70,5 @@ else
 	$GLOBALS['wpdb']->query("DROP TABLE `".$GLOBALS['wpdb']->prefix."TABLE_NAME`");
 	$GLOBALS['wpdb']->query("OPTIMIZE TABLE `" .$GLOBALS['wpdb']->prefix."options`");
 	*/
+    echo '<strong>PAUL</strong>';x``
 }
