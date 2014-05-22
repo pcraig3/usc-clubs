@@ -23,66 +23,108 @@
  */
 class Testwestern_Testplugin {
 
-	/**
-	 * Plugin version, used for cache-busting of style and script file references.
-	 *
-	 * @since   1.1.1
-	 *
-	 * @var     string
-	 */
-	const VERSION = '1.1.1';
+    /**
+     * Plugin version, used for cache-busting of style and script file references.
+     *
+     * @since   1.1.1
+     *
+     * @var     string
+     */
+    const VERSION = '1.1.1';
 
-	/**
-	 * @TODO - Rename "testwestern-testplugin" to the name your your plugin
-	 *
-	 * Unique identifier for your plugin.
-	 *
-	 *
-	 * The variable name is used as the text domain when internationalizing strings
-	 * of text. Its value should match the Text Domain file header in the main
-	 * plugin file.
-	 *
-	 * @since    0.9.0
-	 *
-	 * @var      string
-	 */
-	protected $plugin_slug = 'testwestern-testplugin';
+    /**
+     * @TODO - Rename "testwestern-testplugin" to the name your your plugin
+     *
+     * Unique identifier for your plugin.
+     *
+     *
+     * The variable name is used as the text domain when internationalizing strings
+     * of text. Its value should match the Text Domain file header in the main
+     * plugin file.
+     *
+     * @since    0.9.0
+     *
+     * @var      string
+     */
+    protected $plugin_slug = 'testwestern-testplugin';
 
-	/**
-	 * Instance of this class.
-	 *
-	 * @since    0.9.0
-	 *
-	 * @var      object
-	 */
-	protected static $instance = null;
+    /**
+     * Instance of this class.
+     *
+     * @since    0.9.0
+     *
+     * @var      object
+     */
+    protected static $instance = null;
 
-	/**
-	 * Initialize the plugin by setting localization and loading public scripts
-	 * and styles.
-	 *
-	 * @since     1.0.1
-	 */
-	private function __construct() {
+    /**
+     * Initialize the plugin by setting localization and loading public scripts
+     * and styles.
+     *
+     * @since     1.0.1
+     */
+    private function __construct() {
 
-		// Load plugin text domain
-		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+        // Load plugin text domain
+        add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
-		// Activate plugin when new blog is added
-		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
+        // Activate plugin when new blog is added
+        add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
-		// Load public-facing style sheet and JavaScript.
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+        // Load public-facing style sheet and JavaScript.
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-		/* Define custom functionality.
-		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
-		 */
-	    add_action( 'init', array( $this, 'clubsapi_rewrite_rules' ) );
-		//add_filter( 'the_content', array( $this, 'filter_content_string' ) );
+
+        /* Define custom functionality.
+         * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
+         */
+        add_action( 'init', array( $this, 'clubsapi_rewrite_rules' ) );
+        add_action( 'init', array( $this, 'add_clubsapi' ) );
+        //add_filter( 'query_vars', array( $this, 'wptuts_add_queryvars' ) );
+        add_action( 'template_redirect', array( $this, 'clubsapi_redirect' ) );
 
         add_shortcode( 'testplugin', array( $this, 'testplugin_func') );
 
+    }
+
+    public static function clubsapi_redirect() {
+
+        // Allow access to WordPress query variables
+        global $wp_query;
+
+        // Retrieve Wordpress query variables
+        $query_vars = $wp_query->query_vars;
+
+        //echo(sizeof($query_vars));
+
+        // Check if requesting our custom page
+        if(!empty($query_vars['clubsapi'])) {
+            // CUSTOM PAGE REQUESTED!
+            $custom_id = $query_vars['clubsapi'];
+            die("<html><head><title>Not a Wordpress Page</title></head><body>$custom_id here</body></html>");
+        }
+    }
+
+    function wptuts_add_queryvars( $query_vars ) {
+
+        $query_vars[] = 'clubsapi';
+        return $query_vars;
+    }
+
+
+    function add_clubsapi() {
+        global $wp;
+        $wp->add_query_var('clubsapi');
+    }
+
+    public static function clubsapi_rewrite_rules() {
+
+        // Custom tag we will be using to recognize page requests
+        add_rewrite_tag('%clubsapi%','([^/]+)');
+
+        // Custom rewrite rule to hijack page generation
+        add_rewrite_rule('clubs/([^/]+)/?$','index.php?clubsapi=$matches[1]','top');
     }
 
 
@@ -174,7 +216,7 @@ class Testwestern_Testplugin {
 
             if($email)
                 $html_string .= ' | <a href="mailto:' . antispambot( $email, 1 ) .
-                                '" title="Click to e-mail" >Email</a>';
+                    '" title="Click to e-mail" >Email</a>';
             if($fb_url)
                 $html_string .= ' | <a href="' . $fb_url .
                     '" title="View Facebook page" >Facebook</a>';
@@ -229,216 +271,205 @@ class Testwestern_Testplugin {
         return json_decode( $returnedString, true );
     }
 
-	/**
-	 * Return the plugin slug.
-	 *
-	 * @since    0.9.0
-	 *
-	 * @return    Plugin slug variable.
-	 */
-	public function get_plugin_slug() {
-		return $this->plugin_slug;
-	}
+    /**
+     * Return the plugin slug.
+     *
+     * @since    0.9.0
+     *
+     * @return    Plugin slug variable.
+     */
+    public function get_plugin_slug() {
+        return $this->plugin_slug;
+    }
 
-	/**
-	 * Return an instance of this class.
-	 *
-	 * @since     0.9.0
-	 *
-	 * @return    object    A single instance of this class.
-	 */
-	public static function get_instance() {
+    /**
+     * Return an instance of this class.
+     *
+     * @since     0.9.0
+     *
+     * @return    object    A single instance of this class.
+     */
+    public static function get_instance() {
 
-		// If the single instance hasn't been set, set it now.
-		if ( null == self::$instance ) {
-			self::$instance = new self;
-		}
+        // If the single instance hasn't been set, set it now.
+        if ( null == self::$instance ) {
+            self::$instance = new self;
+        }
 
-		return self::$instance;
-	}
+        return self::$instance;
+    }
 
-	/**
-	 * Fired when the plugin is activated.
-	 *
-	 * @since    0.9.0
-	 *
-	 * @param    boolean    $network_wide    True if WPMU superadmin uses
-	 *                                       "Network Activate" action, false if
-	 *                                       WPMU is disabled or plugin is
-	 *                                       activated on an individual blog.
-	 */
-	public static function activate( $network_wide ) {
+    /**
+     * Fired when the plugin is activated.
+     *
+     * @since    0.9.0
+     *
+     * @param    boolean    $network_wide    True if WPMU superadmin uses
+     *                                       "Network Activate" action, false if
+     *                                       WPMU is disabled or plugin is
+     *                                       activated on an individual blog.
+     */
+    public static function activate( $network_wide ) {
 
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+        if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 
-			if ( $network_wide  ) {
+            if ( $network_wide  ) {
 
-				// Get all blog ids
-				$blog_ids = self::get_blog_ids();
+                // Get all blog ids
+                $blog_ids = self::get_blog_ids();
 
-				foreach ( $blog_ids as $blog_id ) {
+                foreach ( $blog_ids as $blog_id ) {
 
-					switch_to_blog( $blog_id );
-					self::single_activate();
-				}
+                    switch_to_blog( $blog_id );
+                    self::single_activate();
+                }
 
-				restore_current_blog();
+                restore_current_blog();
 
-			} else {
-				self::single_activate();
-			}
+            } else {
+                self::single_activate();
+            }
 
-		} else {
-			self::single_activate();
-		}
+        } else {
+            self::single_activate();
+        }
 
-	}
+    }
 
-	/**
-	 * Fired when the plugin is deactivated.
-	 *
-	 * @since    0.9.0
-	 *
-	 * @param    boolean    $network_wide    True if WPMU superadmin uses
-	 *                                       "Network Deactivate" action, false if
-	 *                                       WPMU is disabled or plugin is
-	 *                                       deactivated on an individual blog.
-	 */
-	public static function deactivate( $network_wide ) {
+    /**
+     * Fired when the plugin is deactivated.
+     *
+     * @since    0.9.0
+     *
+     * @param    boolean    $network_wide    True if WPMU superadmin uses
+     *                                       "Network Deactivate" action, false if
+     *                                       WPMU is disabled or plugin is
+     *                                       deactivated on an individual blog.
+     */
+    public static function deactivate( $network_wide ) {
 
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+        if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 
-			if ( $network_wide ) {
+            if ( $network_wide ) {
 
-				// Get all blog ids
-				$blog_ids = self::get_blog_ids();
+                // Get all blog ids
+                $blog_ids = self::get_blog_ids();
 
-				foreach ( $blog_ids as $blog_id ) {
+                foreach ( $blog_ids as $blog_id ) {
 
-					switch_to_blog( $blog_id );
-					self::single_deactivate();
+                    switch_to_blog( $blog_id );
+                    self::single_deactivate();
 
-				}
+                }
 
-				restore_current_blog();
+                restore_current_blog();
 
-			} else {
-				self::single_deactivate();
-			}
+            } else {
+                self::single_deactivate();
+            }
 
-		} else {
-			self::single_deactivate();
-		}
+        } else {
+            self::single_deactivate();
+        }
 
-	}
+    }
 
-	/**
-	 * Fired when a new site is activated with a WPMU environment.
-	 *
-	 * @since    0.9.0
-	 *
-	 * @param    int    $blog_id    ID of the new blog.
-	 */
-	public function activate_new_site( $blog_id ) {
+    /**
+     * Fired when a new site is activated with a WPMU environment.
+     *
+     * @since    0.9.0
+     *
+     * @param    int    $blog_id    ID of the new blog.
+     */
+    public function activate_new_site( $blog_id ) {
 
-		if ( 1 !== did_action( 'wpmu_new_blog' ) ) {
-			return;
-		}
+        if ( 1 !== did_action( 'wpmu_new_blog' ) ) {
+            return;
+        }
 
-		switch_to_blog( $blog_id );
-		self::single_activate();
-		restore_current_blog();
+        switch_to_blog( $blog_id );
+        self::single_activate();
+        restore_current_blog();
 
-	}
+    }
 
-	/**
-	 * Get all blog ids of blogs in the current network that are:
-	 * - not archived
-	 * - not spam
-	 * - not deleted
-	 *
-	 * @since    0.9.0
-	 *
-	 * @return   array|false    The blog ids, false if no matches.
-	 */
-	private static function get_blog_ids() {
+    /**
+     * Get all blog ids of blogs in the current network that are:
+     * - not archived
+     * - not spam
+     * - not deleted
+     *
+     * @since    0.9.0
+     *
+     * @return   array|false    The blog ids, false if no matches.
+     */
+    private static function get_blog_ids() {
 
-		global $wpdb;
+        global $wpdb;
 
-		// get an array of blog ids
-		$sql = "SELECT blog_id FROM $wpdb->blogs
+        // get an array of blog ids
+        $sql = "SELECT blog_id FROM $wpdb->blogs
 			WHERE archived = '0' AND spam = '0'
 			AND deleted = '0'";
 
-		return $wpdb->get_col( $sql );
+        return $wpdb->get_col( $sql );
 
-	}
+    }
 
-	/**
-	 * Fired for each blog when the plugin is activated.
-	 *
-	 * @since    0.9.0
-	 */
-	private static function single_activate() {
+    /**
+     * Fired for each blog when the plugin is activated.
+     *
+     * @since    0.9.0
+     */
+    private static function single_activate() {
 
-        clubsapi_rewrite_rules();
+        self::clubsapi_rewrite_rules();
 
         // flush rewrite rules - only do this on activation as anything more frequent is bad!
         flush_rewrite_rules();
-	}
+    }
 
-	/**
-	 * Fired for each blog when the plugin is deactivated.
-	 *
-	 * @since    0.9.0
-	 */
-	private static function single_deactivate() {
+    /**
+     * Fired for each blog when the plugin is deactivated.
+     *
+     * @since    0.9.0
+     */
+    private static function single_deactivate() {
 
         // flush rules on deactivate as well so they're not left hanging around uselessly
         flush_rewrite_rules();
     }
 
-	/**
-	 * Load the plugin text domain for translation.
-	 *
-	 * @since    0.9.0
-	 */
-	public function load_plugin_textdomain() {
+    /**
+     * Load the plugin text domain for translation.
+     *
+     * @since    0.9.0
+     */
+    public function load_plugin_textdomain() {
 
-		$domain = $this->plugin_slug;
-		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
+        $domain = $this->plugin_slug;
+        $locale = apply_filters( 'plugin_locale', get_locale(), $domain );
 
-		load_textdomain( $domain, trailingslashit( WP_LANG_DIR ) . $domain . '/' . $domain . '-' . $locale . '.mo' );
-		load_plugin_textdomain( $domain, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
+        load_textdomain( $domain, trailingslashit( WP_LANG_DIR ) . $domain . '/' . $domain . '-' . $locale . '.mo' );
+        load_plugin_textdomain( $domain, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
 
-	}
-
-	/**
-	 * Register and enqueue public-facing style sheet.
-	 *
-	 * @since    0.9.0
-	 */
-	public function enqueue_styles() {
-		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
-	}
-
-	/**
-	 * Register and enqueue public-facing JavaScript files.
-	 *
-	 * @since    0.9.0
-	 */
-	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
-	}
-
-
-    public function clubsapi_rewrite_rules() {
-
-        // Custom tag we will be using to recognize page requests
-        add_rewrite_tag('%clubsapi%','([^/]+)');
-
-        // Custom rewrite rule to hijack page generation
-        add_rewrite_rule('clubs/([^/]+)/?$','index.php?clubsapi=$matches[1]','top');
     }
 
+    /**
+     * Register and enqueue public-facing style sheet.
+     *
+     * @since    0.9.0
+     */
+    public function enqueue_styles() {
+        wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
+    }
+
+    /**
+     * Register and enqueue public-facing JavaScript files.
+     *
+     * @since    0.9.0
+     */
+    public function enqueue_scripts() {
+        wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
+    }
 }
