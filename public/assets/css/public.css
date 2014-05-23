@@ -63,3 +63,12 @@ article#post-80 {
       padding-left: 10px; }
   article#post-80 .flag__body {
     width: 100%; }
+
+@media only screen and (max-width: 480px) {
+  article#post-80 div.club-box img {
+    max-height: 70px;
+    max-width: 70px; }
+  article#post-80 div.club-box p {
+    font-size: 1.2em; }
+  article#post-80 div.club-box span.club-list-num {
+    font-size: 2em; } }

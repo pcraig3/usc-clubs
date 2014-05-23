@@ -255,7 +255,7 @@ class Testwestern_Testplugin {
                 $img_url = esc_url( "http://" . $current_club['profileImageUrl'] );
 
 
-            $html_string .= '<a href="http://testwestern.com/clubs/' . intval( $current_club['organizationId'] ) . '/" target="self">';
+            $html_string .= '<a href="http://testwestern.com/clubs/' . intval( $current_club['organizationId'] ) . '/" target="_self">';
             $html_string .= '<div class="club-box flag clearfix">';
 
             $html_string.= '<div class="flag__image">';
