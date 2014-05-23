@@ -25,6 +25,10 @@ article[id^="club-"] {
 
 article#post-80 {
 
+  .post:not(.sticky) .entry-content p:first-child:first-line {
+    font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
+  }
+
   div#all-clubs {
 
     margin: 17px 40px;
@@ -121,7 +125,7 @@ article#post-80 {
 
   div#all-clubs {
 
-    margin: 17px 5px;
+    margin: 17px 10px;
   }
 
   article#post-80 {
@@ -136,7 +140,7 @@ article#post-80 {
 
       p {
 
-        font-size:   1.2em;
+        font-size:   1.1em;
       }
 
       span.club-list-num {
