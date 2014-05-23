@@ -23,11 +23,11 @@ article[id^="club-"] {
     }
 }
 
-article#post-80 {
+.post:not(.sticky) .entry-content #all-clubs p:first-child:first-line {
+  font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
+}
 
-  .post:not(.sticky) .entry-content p:first-child:first-line {
-    font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
-  }
+article#post-80 {
 
   div#all-clubs {
 
@@ -123,12 +123,12 @@ article#post-80 {
 
 @media only screen and (max-width: 480px) {
 
-  div#all-clubs {
-
-    margin: 17px 10px;
-  }
-
   article#post-80 {
+
+    div#all-clubs {
+
+      margin: 17px 40px;
+    }
 
     div.club-box {
 

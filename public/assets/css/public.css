@@ -11,10 +11,11 @@ article[id^="club-"] a[rel="back"]:before {
 article[id^="club-"] p.vcard a {
   padding-right: 10px; }
 
+.post:not(.sticky) .entry-content #all-clubs p:first-child:first-line {
+  font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif; }
+
 article#post-80 {
   /* Source: http://csswizardry.com/2013/05/the-flag-object/ */ }
-  article#post-80 .post:not(.sticky) .entry-content p:first-child:first-line {
-    font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif; }
   article#post-80 div#all-clubs {
     margin: 17px 40px; }
   article#post-80 .flag {
@@ -70,9 +71,8 @@ article#post-80 {
     width: 100%; }
 
 @media only screen and (max-width: 480px) {
-  div#all-clubs {
-    margin: 17px 10px; }
-
+  article#post-80 div#all-clubs {
+    margin: 17px 40px; }
   article#post-80 div.club-box img {
     max-height: 70px;
     max-width: 70px; }
