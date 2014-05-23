@@ -36,10 +36,19 @@ for($i = 0; $i < $max && is_null( $current_club ); $i++) {
     }
 }
 
-//    $email = sanitize_email( $current_club['email'] );
-  //  $fb_url = esc_url( $current_club['facebookUrl'] );
-    //$tw_url = esc_url( $current_club['twitterUrl'] );
+if( ! is_null( $current_club ) ) {
+    return false;
+}
 
+
+//CHANGE THE PAGE TITLE
+
+$club_name = esc_html( $current_club['name'] );
+
+add_filter( 'wp_title', function( $title ) use ( $club_name ) {
+
+        return $club_name . " | testwestern.com";
+});
 
 ///BUILD THE PAGE
 
@@ -133,6 +142,14 @@ get_header(); ?>
                             esc_html($next_club['name']) . '</a>';
                     }
                     ?>
+                </div>
+                <div class="category-link">
+
+                    <?php
+                    echo '<a rel="back" href="http://testwestern.com/clubs-from-github/">' .
+                         'Back to Clubs List</a>';
+                    ?>
+
                 </div>
             </footer> <!-- end article footer -->
 

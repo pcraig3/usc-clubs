@@ -10,4 +10,9 @@ article[id^="club-"] {
       border:     1px solid lightgrey;
 
     }
+
+    a[rel="back"]:before {
+      content: "«««";
+      padding-right: 0.5em;
+    }
 }
