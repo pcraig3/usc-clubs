@@ -1,5 +1,5 @@
 /* This stylesheet is used to style the public-facing components of the plugin. */
-article[id^="club-"] img.club_logo {
+article[id^="club-"] img.club-logo {
   max-width: 170px;
   max-height: 170px;
   padding: 5px;

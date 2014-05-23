@@ -90,7 +90,7 @@ get_header(); ?>
                         $profile_image_url = "http://" . $current_club['profileImageUrl'];
 
                         echo '<h3>LOGO</h3>';
-                        echo '<img class="club-logo" src="' . esc_url( $profile_image_url ) . '" style="max-width:170px;max-height:170px;border:1px solid grey;">';
+                        echo '<img class="club-logo" src="' . esc_url( $profile_image_url ) . '">';
                     }
 
                     $content_added = false;
