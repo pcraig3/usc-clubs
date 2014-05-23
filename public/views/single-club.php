@@ -76,8 +76,8 @@ get_header(); ?>
 
                     if($email)
                         echo '<a href="mailto:' . antispambot( $email, 1 ) .
-                            '" title="Click to e-mail" >' . antispambot( $email ) . '</a>';
-                    echo '<br><em>Category</em>';
+                            '" title="Click to e-mail" >' . antispambot( $email ) . '</a><br>';
+                    echo '<em>Category</em>';
                     ?></p>
 
             </header> <!-- end article header -->
@@ -85,6 +85,13 @@ get_header(); ?>
             <br>
             <section class="entry-content clearfix" itemprop="articleBody">
                 <?php
+
+                    if($current_club['profileImageUrl']) {
+                        $profile_image_url = "http://" . $current_club['profileImageUrl'];
+
+                        echo '<h3>LOGO</h3>';
+                        echo '<img class="club-logo" src="' . esc_url( $profile_image_url ) . '" style="max-width:170px;max-height:170px;border:1px solid grey;">';
+                    }
 
                     $content_added = false;
 
