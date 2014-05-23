@@ -36,18 +36,18 @@ for($i = 0; $i < $max && is_null( $current_club ); $i++) {
     }
 }
 
-if( ! is_null( $current_club ) ) {
+if( is_null( $current_club ) ) {
     return false;
 }
 
 
 //CHANGE THE PAGE TITLE
 
-$club_name = esc_html( $current_club['name'] );
+$current_club_name = esc_html( $current_club['name'] );
 
-add_filter( 'wp_title', function( $title ) use ( $club_name ) {
+add_filter( 'wp_title', function( $title ) use ( $current_club_name ) {
 
-        return $club_name . " | testwestern.com";
+        return $current_club_name . " | testwestern.com";
 });
 
 ///BUILD THE PAGE
@@ -78,14 +78,32 @@ get_header(); ?>
                     //printf(__('<time datetime="%1$s" pubdate>%2$s</time>', 'serena'), get_the_time('Y-m-j'), get_the_time(get_option('date_format')) );
                     echo '<time datetime="' . date('Y-m-j') . '" pubdate>' . date('F d, Y') . '</time>';
                     ?></p>
-                <h1 class="entry-title single-title" itemprop="headline"><?php echo esc_html( $current_club['name'] ); ?></h1>
+                <h1 class="entry-title single-title" itemprop="headline"><?php echo $current_club_name; ?></h1>
                 <p class="author vcard"><?php
                     //printf(__('by %1$s, under %2$s', 'serena'), serena_get_the_author_posts_link(), get_the_category_list(', '));
                     $email = sanitize_email( $current_club['email'] );
+                    $fb_url = esc_url( $current_club['facebookUrl'] );
+                    $tw_url = esc_url( $current_club['twitterUrl'] );
+
+                    $current_club_contact_info = "";
 
                     if($email)
-                        echo '<a href="mailto:' . antispambot( $email, 1 ) .
-                            '" title="Click to e-mail" >' . antispambot( $email ) . '</a><br>';
+                        $current_club_contact_info .= '<a href="mailto:' . antispambot( $email, 1 ) .
+                            '" title="Click to e-mail" >' . antispambot( $email ) . '</a>  ';
+
+                    if($fb_url)
+                        $current_club_contact_info .= '  <a href="' . $fb_url .
+                            '" title="Find us on Facebook"><i class="fa fa-facebook-square fa-lg"></i></a>  ';
+
+                    if($tw_url)
+                        $current_club_contact_info .= '  <a href="' . $tw_url .
+                            '" title="Follow us on Twitter"><i class="fa fa-twitter-square fa-lg"></i></a>';
+
+
+                    if( ! empty($current_club_contact_info) ) {
+                        echo $current_club_contact_info . '<br>';
+                    }
+
                     echo '<em>Category</em>';
                     ?></p>
 
