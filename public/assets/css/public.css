@@ -13,6 +13,8 @@ article[id^="club-"] p.vcard a {
 
 article#post-80 {
   /* Source: http://csswizardry.com/2013/05/the-flag-object/ */ }
+  article#post-80 div#all-clubs {
+    margin: 17px 40px; }
   article#post-80 .flag {
     display: table;
     width: 100%; }

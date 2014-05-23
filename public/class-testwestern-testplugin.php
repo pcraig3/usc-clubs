@@ -236,7 +236,7 @@ class Testwestern_Testplugin {
      */
     private function clubs_list( $clubs_array ) {
 
-        $html_string = '<blockquote>';
+        $html_string = '<div id="all-clubs">';
 
         $max = intval( $clubs_array['total'] );
 
@@ -285,7 +285,7 @@ class Testwestern_Testplugin {
             $html_string .= '</div><!--end of club-box--></a>';
         }
 
-        $html_string .= "</blockquote>";
+        $html_string .= "</div><!--end of #all-clubs-->";
 
         return $html_string;
     }
