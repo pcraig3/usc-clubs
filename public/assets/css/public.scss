@@ -23,13 +23,9 @@ article[id^="club-"] {
     }
 }
 
-.post:not(.sticky) .entry-content #all-clubs p:first-child:first-line {
-  font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
-}
-
 article#post-80 {
 
-  div#all-clubs {
+  blockquote#all-clubs {
 
     margin: 17px 40px;
   }
