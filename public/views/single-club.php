@@ -93,11 +93,11 @@ get_header(); ?>
 
                     if($fb_url)
                         $current_club_contact_info .= '  <a href="' . $fb_url .
-                            '" title="Find us on Facebook"><i class="fa fa-facebook-square fa-lg"></i></a>  ';
+                            '" title="Find us on Facebook"><i class="fa fa-facebook"></i></a>  ';
 
                     if($tw_url)
                         $current_club_contact_info .= '  <a href="' . $tw_url .
-                            '" title="Follow us on Twitter"><i class="fa fa-twitter-square fa-lg"></i></a>';
+                            '" title="Follow us on Twitter"><i class="fa fa-twitter"></i></a>';
 
 
                     if( ! empty($current_club_contact_info) ) {
@@ -147,7 +147,7 @@ get_header(); ?>
             <footer class="article-footer">
                 <?php //wp_link_pages(); ?>
                 <?php //the_tags('<p class="tags"><span class="tags-title">' . __('Tags:', 'serena') . '</span> ', ', ', '</p>'); ?>
-                <div class="post-link">
+                <div class="post-link clearfix">
                     <?php
 
                     if( ! is_null($previous_club) ) {
