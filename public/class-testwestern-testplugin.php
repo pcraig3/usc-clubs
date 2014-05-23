@@ -255,6 +255,7 @@ class Testwestern_Testplugin {
                 $img_url = esc_url( "http://" . $current_club['profileImageUrl'] );
 
 
+            $html_string .= '<a href="http://testwestern.com/clubs/' . intval( $current_club['organizationId'] ) . '/" target="self">';
             $html_string .= '<div class="club-box flag clearfix">';
 
             $html_string.= '<div class="flag__image">';
@@ -262,10 +263,10 @@ class Testwestern_Testplugin {
             if($img_url)
                 $html_string .= '<img src="' . $img_url . '">';
 
-            $html_string.= '</div>';
+            $html_string .= '</div>';
 
-
-            $html_string .= '<p class="flag__body" title="' . esc_attr( $current_club['organizationId'] ) .
+            $html_string .= '<div class="flag__body">';
+            $html_string .= '<p title="' . esc_attr( $current_club['organizationId'] ) .
                 '">' . esc_html( $current_club['name'] );
 
            /* if($email)
@@ -281,7 +282,7 @@ class Testwestern_Testplugin {
            */
             $html_string .= '</p></div>';
             $html_string .= '<span class="club-list-num">' . (intval( $current_club['id'] ) + 1) . '</span>';
-            $html_string .= '</div>';
+            $html_string .= '</div><!--end of club-box--></a>';
         }
 
         $html_string .= "</blockquote>";
