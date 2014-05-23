@@ -10,3 +10,6 @@ article[id^="club-"] a[rel="back"]:before {
   padding-right: 0.5em; }
 article[id^="club-"] p.vcard a {
   padding-right: 10px; }
+
+article#post-80 div.club-box p {
+  text-align: left; }

@@ -244,14 +244,26 @@ class Testwestern_Testplugin {
 
             $current_club = $clubs_array['clubs'][$i];
 
+            /*
             $email = sanitize_email( $current_club['email'] );
             $fb_url = esc_url( $current_club['facebookUrl'] );
             $tw_url = esc_url( $current_club['twitterUrl'] );
+            */
+            $img_url = "";
 
-            $html_string .= '<p style="text-align:left;" title="' . esc_attr( $current_club['organizationId'] ) .
+            if($current_club['profileImageUrl'])
+                $img_url = esc_url( "http://" . $current_club['profileImageUrl'] );
+
+
+            $html_string .= '<div class="club-box">';
+
+            if($img_url)
+                $html_string .= '<img src="' . $img_url . '">';
+
+            $html_string .= '<p title="' . esc_attr( $current_club['organizationId'] ) .
                 '">' . (intval( $current_club['id'] ) + 1) . '. ' . esc_html( $current_club['name'] );
 
-            if($email)
+           /* if($email)
                 $html_string .= ' | <a href="mailto:' . antispambot( $email, 1 ) .
                     '" title="Click to e-mail" >Email</a>';
             if($fb_url)
@@ -261,8 +273,8 @@ class Testwestern_Testplugin {
             if($tw_url)
                 $html_string .= ' | <a href="' . $tw_url .
                     '" title="View Twitter profile" >Twitter</a>';
-
-            $html_string .= '</p>';
+           */
+            $html_string .= '</p></div>';
         }
 
         $html_string .= "</blockquote>";
