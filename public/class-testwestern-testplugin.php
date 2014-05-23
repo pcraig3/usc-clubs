@@ -108,7 +108,7 @@ class Testwestern_Testplugin {
         if(!empty($query_vars['clubsapi'])) {
 
             // CLUB PAGE REQUESTED!
-            add_filter( 'template_include', array( 'Testwestern_Testplugin', 'clubsapi_callback' ) );
+            add_filter( 'template_include', array( $this, 'call_club_template' ) );
         }
     }
 
@@ -277,9 +277,9 @@ class Testwestern_Testplugin {
      *
      * @return array       at this point, return the clubs known about on github as an indexed array
      */
-    private function call_api() {
+    public static function call_api() {
 
-        //the url where to get the github clubs
+        //the url where to get clubs' information is stored (github, basically)
         $ch = curl_init('http://testwestern.com/github/json.php');
 
         curl_setopt( $ch, CURLOPT_HEADER, false ); //TRUE to include the header in the output.
