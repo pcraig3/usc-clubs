@@ -3,7 +3,7 @@ Contributors: pcraig3
 Tags: demo, testing
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,12 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 1.2.0 =
+* Figured out how to create custom, dynamically-generated pages
+
+= 1.1.1 =
+* commenting
 
 = 1.1.0 =
 * Plugin connects to API which pulls information from github

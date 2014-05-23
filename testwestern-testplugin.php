@@ -15,7 +15,7 @@
  * Plugin Name:       Testwestern_Testplugin
  * Plugin URI:        http://testwestern.com
  * Description:       Beams in some information from GitHub.  Possibly witchcraft.
- * Version:           1.1.1
+ * Version:           1.2.0
  * Author:            Paul Craig
  * Author URI:        https://profiles.wordpress.org/pcraig3/
  * Text Domain:       testwestern-testplugin
