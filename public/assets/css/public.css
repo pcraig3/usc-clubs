@@ -38,7 +38,8 @@ article#post-80 {
       text-align: left;
       width: 80%;
       font-size: 1.6em;
-      display: inline-block; }
+      display: inline-block;
+      font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif; }
     article#post-80 div.club-box span.club-list-num {
       position: absolute;
       right: -2px;
@@ -67,6 +68,9 @@ article#post-80 {
     width: 100%; }
 
 @media only screen and (max-width: 480px) {
+  div#all-clubs {
+    margin: 17px 5px; }
+
   article#post-80 div.club-box img {
     max-height: 70px;
     max-width: 70px; }

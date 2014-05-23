@@ -67,6 +67,7 @@ article#post-80 {
        width:       80%;
        font-size:   1.6em;
        display:     inline-block;
+       font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
      }
 
     span.club-list-num {
@@ -117,6 +118,11 @@ article#post-80 {
 }
 
 @media only screen and (max-width: 480px) {
+
+  div#all-clubs {
+
+    margin: 17px 5px;
+  }
 
   article#post-80 {
 
