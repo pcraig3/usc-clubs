@@ -3,7 +3,7 @@ Contributors: pcraig3
 Tags: demo, testing
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 1.3.0 =
+* Styled my dynamic pages, added the flag object, fontawesome icons, and linked everything together.
 
 = 1.2.0 =
 * Figured out how to create custom, dynamically-generated pages

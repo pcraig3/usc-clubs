@@ -26,11 +26,11 @@ class Testwestern_Testplugin {
     /**
      * Plugin version, used for cache-busting of style and script file references.
      *
-     * @since   1.2.0
+     * @since   1.3.0
      *
      * @var     string
      */
-    const VERSION = '1.2.0';
+    const VERSION = '1.3.0';
 
     /**
      * @TODO - Rename "testwestern-testplugin" to the name your your plugin
@@ -230,7 +230,7 @@ class Testwestern_Testplugin {
      *
      * @param $clubs_array      an array of clubs originating from a csv file on github
      *
-     * @since    1.1.1
+     * @since    1.3.0
      *
      * @return string           the names of all of the clubs on github
      */
@@ -293,7 +293,7 @@ class Testwestern_Testplugin {
     /**
      * Calls some page which calls a github csv file and converts it to json.
      *
-     * @since    1.0.1
+     * @since    1.2.0
      *
      * @return array       at this point, return the clubs known about on github as an indexed array
      */
