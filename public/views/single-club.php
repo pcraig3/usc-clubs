@@ -22,7 +22,7 @@ $current_club = $previous_club = $next_club = null;
 for($i = 0; $i < $max && is_null( $current_club ); $i++) {
 
     //if it matches
-    if( $desired_club_id === $clubs_array['clubs'][$i]) {
+    if( $desired_club_id === $clubs_array['clubs'][$i]['organizationId']) {
 
         if( $i > 0 ) {
             $previous_club = $clubs_array['clubs'][$i - 1];
@@ -69,7 +69,7 @@ get_header(); ?>
                     //printf(__('<time datetime="%1$s" pubdate>%2$s</time>', 'serena'), get_the_time('Y-m-j'), get_the_time(get_option('date_format')) );
                     echo '<time datetime="' . date('Y-m-j') . '" pubdate>' . date('F d, Y') . '</time>';
                     ?></p>
-                <h1 class="entry-title single-title" itemprop="headline">CLUB <?php echo esc_html( $current_club['name'] ); ?></h1>
+                <h1 class="entry-title single-title" itemprop="headline"><?php echo esc_html( $current_club['name'] ); ?></h1>
                 <p class="author vcard"><?php
                     //printf(__('by %1$s, under %2$s', 'serena'), serena_get_the_author_posts_link(), get_the_category_list(', '));
                     $email = sanitize_email( $current_club['email'] );
@@ -82,6 +82,7 @@ get_header(); ?>
 
             </header> <!-- end article header -->
 
+            <br>
             <section class="entry-content clearfix" itemprop="articleBody">
                 <?php
 
