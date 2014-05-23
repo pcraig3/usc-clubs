@@ -25,9 +25,11 @@ article#post-80 {
 
   div.club-box {
 
-    border:     1px solid #808080;
-    padding:    4px;
-    position:   relative;
+    border:         1px solid lightgrey;
+    padding:        4px;
+    position:       relative;
+    border-radius:  2px;
+    margin-bottom:  10px;
 
     img {
 
@@ -47,13 +49,52 @@ article#post-80 {
      }
 
     span.club-list-num {
-      position:   absolute;
-      top:        0;
-      right:      0;
-      color:      lightgrey;
-
+      position: absolute;
+      right: -2px;
+      color: #D3D3D3;
+      top: 3px;
+      font-size: 2.8em;
     }
 
+  }
+
+  .flag {
+    display: table;
+    width: 100%;
+  }
+
+  .flag__image,
+  .flag__body {
+    display: table-cell;
+    vertical-align: middle;
+
+    .flag--top & {
+      vertical-align: top;
+    }
+
+    .flag--bottom & {
+      vertical-align: bottom;
+    }
+
+  }
+
+  .flag__image {
+    padding-right: 10px;
+
+    > img {
+      display: block;
+      max-width: none;
+    }
+
+    .flag--rev & {
+      padding-right: 0;
+      padding-left: 10px;
+    }
+
+  }
+
+  .flag__body {
+    width: 100%;
   }
 
 }
