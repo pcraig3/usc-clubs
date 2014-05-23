@@ -68,8 +68,8 @@ article#post-80 {
     width: 100%; }
 
 @media only screen and (max-width: 480px) {
-  article#post-80 div#all-clubs {
-    margin: 17px 40px; }
+  article#post-80 blockquote#all-clubs {
+    margin: 17px 10px; }
   article#post-80 div.club-box img {
     max-height: 70px;
     max-width: 70px; }
