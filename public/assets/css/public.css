@@ -11,5 +11,22 @@ article[id^="club-"] a[rel="back"]:before {
 article[id^="club-"] p.vcard a {
   padding-right: 10px; }
 
-article#post-80 div.club-box p {
-  text-align: left; }
+article#post-80 div.club-box {
+  border: 1px solid #808080;
+  padding: 4px;
+  position: relative; }
+  article#post-80 div.club-box img {
+    margin: 0;
+    max-height: 80px;
+    max-width: 80px;
+    display: inline; }
+  article#post-80 div.club-box p {
+    text-align: left;
+    width: 80%;
+    font-size: 1.6em;
+    display: inline-block; }
+  article#post-80 div.club-box span.club-list-num {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: lightgrey; }

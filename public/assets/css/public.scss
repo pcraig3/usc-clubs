@@ -25,10 +25,34 @@ article#post-80 {
 
   div.club-box {
 
+    border:     1px solid #808080;
+    padding:    4px;
+    position:   relative;
+
+    img {
+
+      margin:     0;
+      max-height: 80px;
+      max-width:  80px;
+      display:    inline;
+
+    }
+
      p {
 
-       text-align:left;
+       text-align:  left;
+       width:       80%;
+       font-size:   1.6em;
+       display:     inline-block;
      }
+
+    span.club-list-num {
+      position:   absolute;
+      top:        0;
+      right:      0;
+      color:      lightgrey;
+
+    }
 
   }
 
