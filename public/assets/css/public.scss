@@ -39,7 +39,7 @@ article[id^="club-"] {
     width: 100%;
   }
 
-  div[class$="__box"] {
+  div[class*="__box"] {
 
     border:         1px solid lightgrey;
     padding:        4px;
@@ -73,7 +73,7 @@ article[id^="club-"] {
        font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
      }
 
-    span[class$="__box__count"] {
+    span[class*="__box__count"] {
 
       position: absolute;
       right: -2px;
@@ -127,7 +127,7 @@ article[id^="club-"] {
       margin: 17px 10px;
     }
 
-  div[class$="__box"] {
+  div[class*="__box"] {
 
       img {
 
@@ -140,7 +140,7 @@ article[id^="club-"] {
         font-size:   1.1em;
       }
 
-      span[class$="__box__count"] {
+      span[class*="__box__count"] {
 
         font-size: 2em;
       }
