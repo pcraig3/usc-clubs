@@ -232,11 +232,11 @@ class Testwestern_Testplugin {
      */
     private function clubs_list( $clubs_array ) {
 
-        $html_string = '<blockquote id="all-clubs">';
+        $html_string = '<blockquote id="clubs">';
 
-        $max = intval( $clubs_array['total'] );
+        $total = intval( $clubs_array['total'] );
 
-        for($i = 0; $i < $max; $i++) {
+        for($i = 0; $i < $total; $i++) {
 
             $current_club = $clubs_array['clubs'][$i];
 
@@ -247,12 +247,12 @@ class Testwestern_Testplugin {
             */
             $img_url = "";
 
-            if($current_club['profileImageUrl'])
+            if( isset( $current_club['profileImageUrl'] ) )
                 $img_url = esc_url( "http://" . $current_club['profileImageUrl'] );
 
 
             $html_string .= '<a href="http://testwestern.com/clubs/' . intval( $current_club['organizationId'] ) . '/" target="_self">';
-            $html_string .= '<div class="club-box flag clearfix">';
+            $html_string .= '<div class="clubs__box flag clearfix">';
 
             $html_string.= '<div class="flag__image">';
 
@@ -277,11 +277,11 @@ class Testwestern_Testplugin {
                     '" title="View Twitter profile" >Twitter</a>';
            */
             $html_string .= '</p></div>';
-            $html_string .= '<span class="club-list-num">' . (intval( $current_club['id'] ) + 1) . '</span>';
-            $html_string .= '</div><!--end of club-box--></a>';
+            $html_string .= '<span class="clubs__box__count">' . (intval( $current_club['id'] ) + 1) . '</span>';
+            $html_string .= '</div><!--end of clubs__box--></a>';
         }
 
-        $html_string .= "</blockquote><!--end of #all-clubs-->";
+        $html_string .= "</blockquote><!--end of #clubs-->";
 
         return $html_string;
     }

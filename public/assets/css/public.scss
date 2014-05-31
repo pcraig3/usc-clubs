@@ -1,5 +1,6 @@
 /* This stylesheet is used to style the public-facing components of the plugin. */
 
+/* This applies to the full page clubs pages */
 article[id^="club-"] {
 
     img.club-logo {
@@ -13,7 +14,7 @@ article[id^="club-"] {
 
     a[rel="back"]:before {
 
-      content: "«««";
+      content: "<<<";
       padding-right: 0.5em;
     }
 
@@ -23,9 +24,11 @@ article[id^="club-"] {
     }
 }
 
-article#post-80 {
 
-  blockquote#all-clubs {
+/* Applies to the clubs/events lists */
+
+ blockquote[id^="clubs"],
+ blockquote[id^="events"] {
 
     margin: 17px 40px;
   }
@@ -36,7 +39,7 @@ article#post-80 {
     width: 100%;
   }
 
-  div.club-box {
+  div[class$="__box"] {
 
     border:         1px solid lightgrey;
     padding:        4px;
@@ -70,7 +73,7 @@ article#post-80 {
        font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
      }
 
-    span.club-list-num {
+    span[class$="__box__count"] {
 
       position: absolute;
       right: -2px;
@@ -115,18 +118,16 @@ article#post-80 {
     width: 100%;
   }
 
-}
 
 @media only screen and (max-width: 480px) {
 
-  article#post-80 {
-
-    blockquote#all-clubs {
+  blockquote[id^="clubs"],
+  blockquote[id^="events"] {
 
       margin: 17px 10px;
     }
 
-    div.club-box {
+  div[class$="__box"] {
 
       img {
 
@@ -139,10 +140,10 @@ article#post-80 {
         font-size:   1.1em;
       }
 
-      span.club-list-num {
+      span[class$="__box__count"] {
 
         font-size: 2em;
       }
     }
-  }
+
 }
