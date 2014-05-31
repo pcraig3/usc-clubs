@@ -182,10 +182,7 @@ class Testwestern_Testplugin {
                     'get'   => 'clubs',
                     'show'  => 'count',
                 ), $atts ),
-            EXTR_SKIP);
-
-        if($get !== 'clubs')
-            return;
+            OVERWRITE);
 
         //function returns the clubs on github as a json array.
         //in the future, we'll have this take a parameter
