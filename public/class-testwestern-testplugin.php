@@ -33,10 +33,7 @@ class Testwestern_Testplugin {
     const VERSION = '1.3.0';
 
     /**
-     * @TODO - Rename "testwestern-testplugin" to the name your your plugin
-     *
      * Unique identifier for your plugin.
-     *
      *
      * The variable name is used as the text domain when internationalizing strings
      * of text. Its value should match the Text Domain file header in the main
@@ -87,7 +84,6 @@ class Testwestern_Testplugin {
         add_action( 'template_redirect', array( $this, 'clubsapi_redirect' ) );
 
         add_shortcode( 'testplugin', array( $this, 'testplugin_func') );
-
     }
 
     /**
@@ -186,7 +182,10 @@ class Testwestern_Testplugin {
                     'get'   => 'clubs',
                     'show'  => 'count',
                 ), $atts ),
-            EXTR_OVERWRITE);
+            EXTR_SKIP);
+
+        if($get !== 'clubs')
+            return;
 
         //function returns the clubs on github as a json array.
         //in the future, we'll have this take a parameter
