@@ -72,11 +72,18 @@ article[id^="club-"] {
        display:     inline-block;
        font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
        font-weight: normal;
+       text-transform: none;
+       letter-spacing: normal;
+       margin-top: 0;
      }
 
      p.lede {
 
        font-size:   1em;
+       margin: 0;
+       text-align: justify;
+       text-transform: lowercase;
+       color: #656565;
      }
 
     span[class*="__box__count"] {

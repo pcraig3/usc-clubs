@@ -44,9 +44,16 @@ div[class*="__box"] {
     font-size: 1.6em;
     display: inline-block;
     font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
-    font-weight: normal; }
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    margin-top: 0; }
   div[class*="__box"] p.lede {
-    font-size: 1em; }
+    font-size: 1em;
+    margin: 0;
+    text-align: justify;
+    text-transform: lowercase;
+    color: #656565; }
   div[class*="__box"] span[class*="__box__count"] {
     position: absolute;
     right: -2px;
