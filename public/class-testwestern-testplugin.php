@@ -262,7 +262,7 @@ class Testwestern_Testplugin {
             $html_string .= '</div>';
 
             $html_string .= '<div class="flag__body">';
-            $html_string .= '<p title="' . esc_attr( $current_club['organizationId'] ) .
+            $html_string .= '<h3 class="alpha" title="' . esc_attr( $current_club['organizationId'] ) .
                 '">' . esc_html( $current_club['name'] );
 
            /* if($email)
@@ -276,7 +276,7 @@ class Testwestern_Testplugin {
                 $html_string .= ' | <a href="' . $tw_url .
                     '" title="View Twitter profile" >Twitter</a>';
            */
-            $html_string .= '</p></div>';
+            $html_string .= '</h3></div>';
             $html_string .= '<span class="clubs__box__count">' . (intval( $current_club['id'] ) + 1) . '</span>';
             $html_string .= '</div><!--end of clubs__box--></a>';
         }

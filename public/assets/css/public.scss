@@ -64,13 +64,19 @@ article[id^="club-"] {
 
     }
 
-     p {
+     h3.alpha {
 
        text-align:  left;
        width:       80%;
        font-size:   1.6em;
        display:     inline-block;
        font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
+       font-weight: normal;
+     }
+
+     p.lede {
+
+       font-size:   1em;
      }
 
     span[class*="__box__count"] {
@@ -135,9 +141,14 @@ article[id^="club-"] {
         max-width:  70px;
       }
 
-      p {
+      h3.alpha {
 
         font-size:   1.1em;
+      }
+
+      p.lede {
+
+        font-size:   0.8em;
       }
 
       span[class*="__box__count"] {

@@ -13,7 +13,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Testwestern_Testplugin
- * Plugin URI:        http://testwestern.com
+ * Plugin URI:        http://testwestern.com/clubs-from-github/
  * Description:       Beams in some information from GitHub.  Possibly witchcraft.
  * Version:           1.3.0
  * Author:            Paul Craig
