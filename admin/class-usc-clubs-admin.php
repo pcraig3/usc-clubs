@@ -1,8 +1,8 @@
 <?php
 /**
- * Testwestern_Testplugin.
+ * USC_Clubs.
  *
- * @package   Testwestern_Testplugin_Admin
+ * @package   USC_Clubs_Admin
  * @author    Paul Craig <email@example.com>
  * @license   GPL-2.0+
  * @link      http://testwestern.com
@@ -13,15 +13,10 @@
  * Plugin class. This class should ideally be used to work with the
  * administrative side of the WordPress site.
  *
- * If you're interested in introducing public-facing
- * functionality, then refer to `testwestern-testplugin-name.php`
- *
- * I am not at this time interested, but I'll have a look at all of the TODOs
- *
- * @package Testwestern_Testplugin_Admin
+ * @package USC_Clubs_Admin
  * @author  Paul Craig <pcraig3@uwo.ca>
  */
-class Testwestern_Testplugin_Admin {
+class USC_Clubs_Admin {
 
 	/**
 	 * Instance of this class.
@@ -61,7 +56,7 @@ class Testwestern_Testplugin_Admin {
 		/*
 		 * Call $plugin_slug from public plugin class.
 		 */
-		$plugin = Testwestern_Testplugin::get_instance();
+		$plugin = USC_Clubs::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
 
 		// Load admin style sheet and JavaScript.
@@ -130,7 +125,7 @@ class Testwestern_Testplugin_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), Testwestern_Testplugin::VERSION );
+			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), USC_Clubs::VERSION );
 		}
 
 	}
@@ -175,8 +170,8 @@ class Testwestern_Testplugin_Admin {
 		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
 		 */
 		$this->plugin_screen_hook_suffix = add_options_page(
-			__( 'Testwestern_Testplugin_Admin Page Title', $this->plugin_slug ),
-			__( 'Testwestern_Testplugin_Admin Menu Text', $this->plugin_slug ),
+			__( 'USC_Clubs_Admin Page Title', $this->plugin_slug ),
+			__( 'USC_Clubs_Admin Menu Text', $this->plugin_slug ),
 			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )

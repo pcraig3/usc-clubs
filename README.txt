@@ -1,9 +1,9 @@
-=== Testwestern_Testplugin ===
+=== USC Clubs ===
 Contributors: pcraig3
-Tags: demo, testing
+Tags: clubs list, beta
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,10 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 1.4.0 =
+* Renaming everything.  Hopefully it all still works.
+* Making it not work comes later.
 
 = 1.3.0 =
 * Styled my dynamic pages, added the flag object, fontawesome icons, and linked everything together.

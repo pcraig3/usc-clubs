@@ -9,7 +9,7 @@
 $desired_club_id = intval( get_query_var('clubsapi') );
 
 //function returns the clubs on github as a json array.
-$clubs_array = Testwestern_Testplugin::call_api();
+$clubs_array = USC_Clubs::call_api();
 
 if( ! is_array( $clubs_array ) ) {
     return false;

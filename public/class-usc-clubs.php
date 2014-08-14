@@ -1,36 +1,33 @@
 <?php
 /**
- * Testwestern Testplugin.
+ * USC Clubs
  *
- * @package   Testwestern_Testplugin
+ * @package   USC_Clubs
  * @author    Paul Craig <pcraig3@uwo.ca>
  * @license   GPL-2.0+
  * @link      http://testwestern.com
  * @copyright 2014 University Students' Council
  */
 
+//http://wordpress.stackexchange.com/questions/97811/how-to-prevent-execution-of-default-query-while-preserving-ability-to-use-wp-qu
+
 /**
- * Testwestern Testplugin class. This class should ideally be used to work with the
+ * USC Clubs class. This class should ideally be used to work with the
  * public-facing side of the WordPress site.
  *
- * If you're interested in introducing administrative or dashboard
- * functionality, then refer to `testwestern-testplugin-admin.php`
- *
- * @TODO: Rename this class to a proper name for your plugin.
- *
- * @package Testwestern_Testplugin
+ * @package USC_Clubs
  * @author  Paul Craig <pcraig3@uwo.ca>
  */
-class Testwestern_Testplugin {
+class USC_Clubs {
 
     /**
      * Plugin version, used for cache-busting of style and script file references.
      *
-     * @since   1.3.0
+     * @since   1.4.0
      *
      * @var     string
      */
-    const VERSION = '1.3.0';
+    const VERSION = '1.4.0';
 
     /**
      * Unique identifier for your plugin.
@@ -43,7 +40,7 @@ class Testwestern_Testplugin {
      *
      * @var      string
      */
-    protected $plugin_slug = 'testwestern-testplugin';
+    protected $plugin_slug = 'usc-clubs';
 
     /**
      * Instance of this class.
@@ -83,7 +80,7 @@ class Testwestern_Testplugin {
         //check the current request for a clubsapi value
         add_action( 'template_redirect', array( $this, 'clubsapi_redirect' ) );
 
-        add_shortcode( 'testplugin', array( $this, 'testplugin_func') );
+        add_shortcode( 'testplugin', array( $this, 'usc_clubs_shortcode_function') );
     }
 
     /**
@@ -162,7 +159,7 @@ class Testwestern_Testplugin {
 
 
     /**
-     * Function meant to target the [testplugin] shortcode.  Grabs the attributes in the shortcode to
+     * Function meant to target the [usc_clubs] shortcode.  Grabs the attributes in the shortcode to
      * call a function somewhere down there.
      *
      * @param $atts         create an associative array based on attributes and values in the shortcode
@@ -171,7 +168,7 @@ class Testwestern_Testplugin {
      *
      * @return string       a complimentary adjective for students
      */
-    public function testplugin_func ( $atts ) {
+    public function usc_clubs_shortcode_function ( $atts ) {
 
         //initialize your variables
         $get = $show = $result = false;
@@ -190,11 +187,11 @@ class Testwestern_Testplugin {
 
         if( is_array( $returned_array ) ) {
 
-            $testplugin_function = (string) $get . "_" . (string) $show;
+            $usc_clubs_shortcode_function = (string) $get . "_" . (string) $show;
 
             ob_start();
 
-            echo call_user_func( array( $this, $testplugin_function ), $returned_array );
+            echo call_user_func( array( $this, $usc_clubs_shortcode_function ), $returned_array );
 
             $result = ob_get_clean();
         }
@@ -226,7 +223,7 @@ class Testwestern_Testplugin {
      *
      * @param $clubs_array      an array of clubs originating from a csv file on github
      *
-     * @since    1.3.0
+     * @since    1.4.0
      *
      * @return string           the names of all of the clubs on github
      */

@@ -51,7 +51,7 @@ div[class*="__box"] {
   div[class*="__box"] p.lede {
     font-size: 1em;
     margin: 0;
-    text-align: justify;
+    text-align: left;
     text-transform: lowercase;
     color: #656565; }
   div[class*="__box"] span[class*="__box__count"] {
