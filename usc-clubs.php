@@ -34,6 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Public-Facing Functionality
  *----------------------------------------------------------------------------*/
 
+require_once( plugin_dir_path( __FILE__ ) . 'public/WP_AJAX.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-usc-clubs.php' );
 
 /*

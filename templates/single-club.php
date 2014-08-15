@@ -5,7 +5,6 @@
  */
 
 //CHANGE THE PAGE TITLE
-
 $current_club_name = esc_html( $current_club['name'] );
 
 add_filter( 'wp_title', function( $title ) use ( $current_club_name ) {
