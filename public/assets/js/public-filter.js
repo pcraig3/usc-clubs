@@ -4,27 +4,28 @@ jQuery(function ($) {
     var fJS;
 
 
-    var AjaxUSCJobs = {
+    var AjaxUSCClubs = {
 
-        /** Remove the job listings created by wordpress for the job listings returned by filterJS
+        /** Remove the clubs listings created by my clubs list template for the job listings returned by filterJS
          *
          * @since  8.0.0
          */
-        remove_wordpress_jobs_for_filterjs_jobs: function() {
+        remove_wordpress_clubs_for_filterjs_clubs: function() {
 
-            var $jobs_column = $('.post-type-archive-usc_jobs .et_pb_text, .tax-departments .et_pb_text');
-            var $to_detach = $jobs_column.find('.filterjs__list__wrapper');
+            var $clubs_column = $('#clubs_list__wrapper');
+            var $to_detach = $('.filterjs__list__wrapper').detach();
 
             //http://bugs.jquery.com/ticket/13400
             //old.replaceWith( new ); //can be changed to:
             //old.before( new ).detach();
-            $articles = $jobs_column.find('article');
+            $clubs_boxes = $clubs_column.find('.clubs__box');
 
-            $articles.first().before( $to_detach );
-            $articles.remove();
+            $clubs_boxes.remove();
+            $clubs_column.append( $to_detach );
         },
 
-        /** Remove the widgets created by Wordpress and sub in the filter checkboxes and searchbar created by filterJS
+        /** Remove the widgets created by Wordpress (if they exist, which they don't)
+         *  and sub in the filter checkboxes and searchbar created by filterJS
          *
          * @since  8.0.2
          */
@@ -68,11 +69,11 @@ jQuery(function ($) {
                 });
             }
 
-            //keyup event listener updates 'x jobs available' string
+            //keyup event listener updates 'x clubs' string
             $widgets_column.find('#search_box').on('keyup', function() {
 
-                AjaxUSCJobs.typewatch(function () {
-                    AjaxUSCJobs.update_visible_jobs()
+                AjaxUSCClubs.typewatch(function () {
+                    AjaxUSCClubs.update_visible_clubs()
                 }, 50);
 
             });
@@ -95,7 +96,7 @@ jQuery(function ($) {
                 else
                     $( this ).removeClass('checked');
 
-                AjaxUSCJobs.update_visible_jobs();
+                AjaxUSCClubs.update_visible_clubs();
             });
         },
 
@@ -116,26 +117,26 @@ jQuery(function ($) {
         })(),
 
         /**
-         * Run through a bunch of setup stuff once the jobs (as a JSON string) has been received from our PHP API call
+         * Run through a bunch of setup stuff once the clubs (as a JSON string) has been received from our PHP API call
          * * Hide the loading gif
          * * Check all checkboxes (otherwise results would be hidden)
          * * filterInit builds the page
          * * change -- not sure what this does.  Maybe nothing.  @TODO: Whoops
-         * * Update the 'x Jobs Available string
+         * * Update the 'x clubs'
          *
          * @since  8.0.1
          */
-        jobs_gotten: function( jobs ) {
+        clubs_gotten: function( clubs ) {
 
             $('.filterjs__loading').addClass('hidden');
 
-            $('#remuneration label.checked, #taxonomy_departments label.checked').find('input:checkbox').prop('checked', true);
+            //$('#remuneration label.checked, #taxonomy_departments label.checked').find('input:checkbox').prop('checked', true);
 
-            fJS = filterInit( jobs );
+            fJS = filterInit( clubs );
 
-            $('#usc_jobs_list').trigger( "change" );
+            $('#usc_clubs_list').trigger( "change" );
 
-            AjaxUSCJobs.update_visible_jobs();
+            //AjaxUSCClubs.update_visible_clubs();
 
         },
 
@@ -167,15 +168,15 @@ jQuery(function ($) {
         },
 
         /**
-         *  Simple.  Find how many jobs are visible and change the number in the 'X Jobs Available string.
+         *  Simple.  Find how many clubs are visible and change the number in the 'X Clubs' string.
          *
          * @since  8.0.0
          */
-        update_visible_jobs: function() {
+        update_visible_clubs: function() {
 
-            var $jobs_column = $('.et_pb_text');
+            var $clubs_column = $('.et_pb_text');
 
-            $jobs_column.find('#counter').text( $jobs_column.find('article:visible').length );
+            $clubs_column.find('#counter').text( $clubs_column.find('article:visible').length );
         }
 
     };
@@ -184,80 +185,80 @@ jQuery(function ($) {
      * Function sets up all of our filtering.
      * Works now, but seems a bit brittle.
      *
-     * @param jobs    a list of jobs. Data is pulled from the USC Jobs Custom Post Type in our database.
+     * @param clubs    a list of clubs. Data is pulled from the WesternLink data saved as a JSON file on github
      *
      * @since   0.6.0
      *
-     * @returns {*} A list of searchable jobs in the backend.
+     * @returns {*} A list of searchable clubs in the backend.
      */
-    function filterInit( jobs ) {
+    function filterInit( clubs ) {
 
-        var view = function( job ) {
+        var view = function( club ) {
 
             var html_string = '';
 
-            //at this point we have ONE JOB.  This sets up the loop.
+            //at this point we have ONE CLUB.  This sets up the loop.
 
-            html_string +=  '<article id="post-' + job.wp_id + '" class="post-' + job.wp_id + ' ' + job.type + ' type-' + job.type + ' status-publish hentry et_pb_post">';
+            var img_url = "";
 
-            html_string +=          '<a href="' + job.url + '" title="' + job.title + '"><h2>' + job.title + '</h2></a>';
+            if( club.profileImageUrl )
+                img_url = 'http://' + club.profileImageUrl;
 
-            html_string +=          '<p class="post-meta">';
 
-            var departments = job.taxonomy_departments;
-            var total = departments.length;
-            for (var i = 0; i < total; i++) {
+            html_string +=  '<div class="clubs__box flag clearfix">';
 
-                html_string +=       '<a title="Find more ' + departments[i].title + ' jobs!" '
-                    + 'href="http://westernusc.org/departments/' + departments[i].slug + '/">' + departments[i].title + '</a>, ';
-            }
+            html_string +=          '<a href="http://testwestern.com/clubs/' + club.organizationId + '/" target="_self">';
 
-            //cut off the last comma and space
-            html_string =           html_string.slice(0, (html_string.length - 2));
+            html_string +=              '<div class="flag__image">';
 
-            html_string +=          '</p>';
+            if(img_url)
+                html_string +=              '<img src="' + img_url + '">';
 
-            html_string +=          '<p>';
-            html_string +=              '<span class="subheading">Remuneration</span> ' +  job.custom_fields.remuneration.charAt(0).toUpperCase() + job.custom_fields.remuneration.slice(1);
-            html_string +=          '</p>';
-            html_string +=          '<p>';
-            html_string +=              '<span class="subheading">Apply By Date</span> ' +  AjaxUSCJobs.date_format(job.custom_fields.apply_by_date);
-            html_string +=          '</p>';
+            html_string +=              '</div>';
 
-            html_string +=  '</article>';
+            html_string +=              '<div class="flag__body">';
+
+            html_string +=                  '<h3 class="alpha" title="' + club.organizationId + '">' + club.name + '</h3>';
+
+            html_string +=              '</div>';
+
+            html_string +=              '<span class="clubs__box__count">' + (club.id + 1) + '</span>';
+
+            html_string +=  '</a></div><!--end of clubs__box-->';
 
             return html_string;
         }
 
         var settings = {
-            filter_criteria: {
+            /*filter_criteria: {
                 remuneration: ['#remuneration input:checkbox', 'custom_fields.remuneration'],
                 taxonomy_departments: ['#taxonomy_departments input:checkbox', 'taxonomy_departments.ARRAY.slug']
-            },
+            },*/
             search: {input: '#search_box' },
-            and_filter_on: true,
+            //and_filter_on: true,
             id_field: 'id' //Default is id. This is only for usecase
         };
 
-        return FilterJS(jobs, "#usc_jobs_list", view, settings);
+        return FilterJS(clubs, "#usc_clubs_list", view, settings);
     }
 
     $(document).ready(function() {
 
-        var usc_jobs_as_json = JSON.parse(options.jobs);
+        var usc_clubs_as_json = JSON.parse(options.clubs);
 
-        //console.log( usc_jobs_as_json[0] );
+        console.log( usc_clubs_as_json[0] );
 
-        AjaxUSCJobs.jobs_gotten( usc_jobs_as_json );
+        AjaxUSCClubs.clubs_gotten( usc_clubs_as_json );
 
     });
 
     //call this right away.  don't wait for $(document).ready
-    //this one removes the jobs and puts in my new jobs.
-    AjaxUSCJobs.remove_wordpress_jobs_for_filterjs_jobs();
+    //this one removes my old clubs and puts in my new clubs.
+    AjaxUSCClubs.remove_wordpress_clubs_for_filterjs_clubs();
 
     //this one removes the widgets and puts in my widgets
-    AjaxUSCJobs.remove_wordpress_widgets_for_filterjs_imposter_widgets();
+    //AjaxUSCClubs.remove_wordpress_widgets_for_filterjs_imposter_widgets();
+    $('.filterjs').show();
 
 
 });
