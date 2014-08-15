@@ -7,11 +7,11 @@ if( !isset( $clubs_array ) )
 
 $html_string = '<blockquote id="clubs">';
 
-$total = intval( count($clubs_array['items']) );
+$total = intval( count($clubs_array) );
 
 for($i = 0; $i < $total; $i++) {
 
-    $current_club = $clubs_array['items'][$i];
+    $current_club = $clubs_array[$i];
 
     $img_url = "";
 

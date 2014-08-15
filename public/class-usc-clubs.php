@@ -173,24 +173,24 @@ class USC_Clubs {
             return array();
         }
 
-        $max = intval( count($clubs_array['items']) );
+        $max = intval( count($clubs_array) );
 
         $current_club = $previous_club = $next_club = null;
 
         for($i = 0; $i < $max && is_null( $current_club ); $i++) {
 
             //if it matches
-            if( $desired_club_id === $clubs_array['items'][$i]['organizationId']) {
+            if( $desired_club_id === $clubs_array[$i]['organizationId']) {
 
                 if( $i > 0 ) {
-                    $previous_club = $clubs_array['items'][$i - 1];
+                    $previous_club = $clubs_array[$i - 1];
                 }
 
                 if( $i < ( $max-1 ) ) {
-                    $next_club = $clubs_array['items'][$i + 1];
+                    $next_club = $clubs_array[$i + 1];
                 }
 
-                $current_club = $clubs_array['items'][$i];
+                $current_club = $clubs_array[$i];
             }
         }
 
@@ -267,7 +267,12 @@ class USC_Clubs {
         //function returns the clubs on github as a json array.
         //in the future, we'll have this take a parameter
         $returned_array = $this->wp_ajax->get_clubs();
-        $returned_array = $returned_array['response'];
+
+        $parameters = array(
+
+            $returned_array['response'],
+            $returned_array['is_cached'],
+        );
 
         if( is_array( $returned_array ) ) {
 
@@ -275,7 +280,8 @@ class USC_Clubs {
 
             ob_start();
 
-            echo call_user_func( array( $this, $usc_clubs_shortcode_function ), $returned_array );
+            /* @TODO: Explain yourself. */
+            echo call_user_func_array( array( $this, $usc_clubs_shortcode_function ), $parameters );
 
             $result = ob_get_clean();
         }
@@ -291,27 +297,41 @@ class USC_Clubs {
     /**
      * Return the number of clubs as an integer
      *
-     * @param $clubs_array      an array of clubs originating from a csv file on github
+     * @param array $clubs_array      an array of clubs originating from a csv file on github
      *
      * @since    1.1.1
      *
      * @return int              the number of clubs on github
      */
-    private function clubs_count( $clubs_array ) {
+    private function clubs_count( array $clubs_array ) {
 
-        return intval( count($clubs_array['items']) );
+        return intval( count( $clubs_array ) );
     }
 
     /**
      * Return HTML code to list all of the clubs known about on github
      *
-     * @param $clubs_array      an array of clubs originating from a csv file on github
-     *
      * @since    1.4.0
      *
+     * @param $clubs_array      An array of clubs originating from a csv file on github
+     * @param $is_cached        Pass this to JS.  If true, trigger an ajax method that updates the cache.
      * @return string           the names of all of the clubs on github
      */
-    private function clubs_list( $clubs_array ) {
+    private function clubs_list( $clubs_array, $is_cached ) {
+
+        wp_enqueue_script( 'tinysort', plugins_url( '/bower_components/tinysort/dist/jquery.tinysort.min.js', __DIR__ ), array( 'jquery' ), self::VERSION );
+
+        //<soops h4ck> disable jQuery.noConflict for the length of the externally-hosted filter.js
+        wp_enqueue_script( 'jquery_no_conflict_disable', plugins_url( '/assets/js/jquery-no-conflict-disable.js', __FILE__ ), array( 'jquery', 'tinysort' ), self::VERSION );
+        wp_enqueue_script( 'filterjs', plugins_url( '/assets/js/filter.js', __FILE__ ), array( 'jquery', 'tinysort', 'jquery-ui-core', 'jquery_no_conflict_disable' ), self::VERSION );
+
+        wp_enqueue_script( 'public_filterjs', plugins_url( '/assets/js/public-filter.js', __FILE__ ), array( 'jquery', 'tinysort', 'jquery-ui-core', 'filterjs' ), self::VERSION );
+
+        // declare the URL to the file that handles the AJAX request (wp-admin/admin-ajax.php)
+        wp_localize_script( 'public_filterjs', "options", array(
+            'clubs'     => json_encode($clubs_array),
+            'is_cached' => $is_cached,
+        ) );
 
         return require_once('views/usc_clubs-list.php');
     }

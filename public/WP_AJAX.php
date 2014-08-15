@@ -111,13 +111,112 @@ class WP_AJAX {
 
     }
 
-    public function add_ids_to_the_clubs_array( $clubs_array ) {
+    /**
+     *
+     * @since 0.6.0
+     *
+     * @param null $json_response
+     * @param array $fields_to_keep
+     * @return array|null
+     */
+    private function filter_js_format_API_response( $json_response = null,
+                                                    array $fields_to_keep = array(
+                                                        'organizationId',
+                                                        'name',
+                                                        'shortName',
+                                                        'summary',
+                                                        'description',
+                                                        'email',
+                                                        'externalWebsite',
+                                                        'facebookUrl',
+                                                        'twitterUrl',
+                                                        'flickrFeedUrl',
+                                                        'youtubeChannelUrl',
+                                                        'googleCalendarUrl',
+                                                        'profileImageUrl',
+                                                        'primaryContactName',
+                                                        'primaryContactCampusEmail',
+                                                        'categories'
+                                                    )
+    ) {
 
-        foreach( $clubs_array as $key => &$club)
-            $club['id'] = $key;
+        $json_response_modified = null;
+        if ( null == ( $json_response ) ) {
 
-        unset($club);
-        return $clubs_array;
+            return new WP_Error( 'api_error', __( 'Sorry, but we\'ve got nothing back from the API.  See if paul_craig_16@hotmail.com can do anything about it.', 'usc-clubs' ) );
+
+        } elseif ( ! empty( $fields_to_keep ) ) {
+            /** Just so we're all on the same page, here's the full list we can get from a club.
+             * @TODO: This might mean problems paging in the future. I guess we'll see.
+             * maybe check if json_response['count'] == json_response['count_total']
+             *
+             * Anyway, here's the simplified version.
+                organizationId: 1646
+                name: "Acapella Project"
+                status: "Active"
+                shortName: "TAP"
+                summary: "The Acapella Project is an a-cappella choir which aims to bring its unique brand of music to the community!\ \ \ \ Our first rehearsal is this coming Sunday, September 22, from 1 to 3 pm in VAC100. Hope to see you all there!"
+                description: "<p><span>The Acapella Project is a USC governed acapella choir which provides an open forum for those interested in singing, arra<\/span><span class=\"x_text_exposed_show\">nging, and beatboxing a-cappella. We accept members regardless of experience, and aim to educate and improve singers&rsquo; musicianship, vocal health, and performing experience.&nbsp;<\/span><\/p>"
+                addressStreet1: ""
+                addressStreet2: ""
+                addressCity: ""
+                addressStateProvince: ""
+                addressZipPostal: ""
+                phoneNumber: ""
+                extension: ""
+                faxNumber: ""
+                email: "theacapellaproject@gmail.com"
+                externalWebsite: ""
+                facebookUrl: "http:\/\/www.facebook.com\/theacapellaproject"
+                twitterUrl: ""
+                flickrFeedUrl: ""
+                youtubeChannelUrl: ""
+                googleCalendarUrl: ""
+                profileImageUrl: "westernu.collegiatelink.net\/images\/W170xL170\/0\/noshadow\/Profile\/3afeb90c7fbd43c5b6cf8d4b40b7966d.jpg"
+                profileUrl: "westernu.collegiatelink.net\/organization\/acapellaproject"
+                directoryVisibility: "Visible"
+                membershipType: "Open"
+                typeId: 66
+                typeName: "Ratified Clubs"
+                parentId: 1567
+                parentName: "University Students' Council"
+                primaryContactId: 48817
+                primaryContactName: "Xue Qing Yang"
+                primaryContactCampusEmail: "xyang295@uwo.ca"
+                categories: [
+                    {
+                    categoryId: 165
+                    categoryName: "Music and Performing Arts"
+                    }
+                ]
+                customFields: [ ]
+             */
+
+            $clubs = $json_response;
+
+            $temp_club = array();
+            foreach( $clubs as $num => $club ) {
+
+                if('Active' === $club['status'] && "Ratified Clubs" === $club['typeName'] ) {
+
+                    $temp_club['id'] = $num + 0; //filter_js needs sequential id numbers
+
+                    foreach( $fields_to_keep as &$field ) {
+                        $temp_club[$field] = $club[$field];
+                    }
+                    unset($field);
+
+                    $clubs[$num] = $temp_club;
+                }
+                else
+                    //if not Active + Ratified, remove the club
+                    unset($club[$num]);
+            }
+            //array_values in case any clubs were removed.
+            $json_response_modified = array_values($clubs);
+
+        } // end if/else
+        return ( is_null($json_response_modified) ) ? $json_response : $json_response_modified;
     }
 
     public function get_clubs() {
@@ -128,7 +227,7 @@ class WP_AJAX {
 
         if( false === $events_stored_in_cache ) {
             $clubs_array = $this->call_clubs_api();
-            $clubs_array['items'] = $this->add_ids_to_the_clubs_array($clubs_array['items']);
+            $clubs_array = $this->filter_js_format_API_response($clubs_array['items']);
 
             $response['response']  = $clubs_array;
             $response['is_cached'] = false;
@@ -186,7 +285,7 @@ class WP_AJAX {
 
         if( empty( $returned_string ) ) {
 
-            return new WP_Error( 'api_error', __( 'Spot of trouble connecting to the clubs API', 'test-clubs' ) );
+            return new WP_Error( 'api_error', __( 'Spot of trouble connecting to the clubs API', 'usc-clubs' ) );
         }
 
         return json_decode( $returned_string, true );
