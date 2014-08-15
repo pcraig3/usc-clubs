@@ -132,6 +132,15 @@ jQuery(function ($) {
 
             $('#categoryNames').find('input:checkbox').prop('checked', true);
 
+            //click event listener on '#all' checkbox turns on and off the entire row.
+            $('#categories_all').on('click',function(){
+                $(this).closest('ul').children().find(':checkbox').prop('checked', $(this).is(':checked'));
+                /*if($(this).is(':checked'))
+                    $(this).closest('ul').children().find('label').addClass('checked');
+                else
+                    $(this).closest('ul').children().find('label').removeClass('checked');*/
+            });
+
             fJS = filterInit( clubs );
 
             $('#usc_clubs_list').trigger( "change" );
@@ -181,7 +190,7 @@ jQuery(function ($) {
 
         create_category_checkbox_filters: function( categories ) {
 
-            var html_string = '';
+            var html_string = '<li><label><input id="categories_all" value="all" type="checkbox">All</label></li>';
 
             var total = categories.length;
             for (var i = 0; i < total; i++) {
