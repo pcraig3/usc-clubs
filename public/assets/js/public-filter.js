@@ -8,7 +8,7 @@ jQuery(function ($) {
 
         /** Remove the clubs listings created by my clubs list template for the job listings returned by filterJS
          *
-         * @since  8.0.0
+         * @since    2.0.0
          */
         remove_wordpress_clubs_for_filterjs_clubs: function() {
 
@@ -27,7 +27,7 @@ jQuery(function ($) {
         /** Remove the widgets created by Wordpress (if they exist, which they don't)
          *  and sub in the filter checkboxes and searchbar created by filterJS
          *
-         * @since  8.0.2
+         * @since    2.0.0
          */
         remove_wordpress_widgets_for_filterjs_imposter_widgets : function() {
 
@@ -106,7 +106,7 @@ jQuery(function ($) {
          *  @see http://stackoverflow.com/questions/2219924/idiomatic-jquery-delayed-event-only-after-a-short-pause-in-typing-e-g-timew
          *  @author CMS
          *
-         * @since  8.0.0
+         * @since    2.0.0
          */
         typewatch: (function(){
             var timer = 0;
@@ -124,7 +124,7 @@ jQuery(function ($) {
          * * change -- not sure what this does.  Maybe nothing.  @TODO: Whoops
          * * Update the 'x clubs'
          *
-         * @since  8.0.1
+         * @since    2.0.0
          */
         clubs_gotten: function( clubs ) {
 
@@ -155,7 +155,7 @@ jQuery(function ($) {
          *  Basically, use the string (a standardized one we can hardcode) to create a date, and then format it so that
          *  it looks like WordPress' default dates and not something dumb like "2014-08-10"
          *
-         * @since  8.0.0
+         * @since    2.0.0
          */
         date_format: function( date_string ) {
 
@@ -179,7 +179,7 @@ jQuery(function ($) {
         /**
          *  Simple.  Find how many clubs are visible and change the number in the 'X Clubs' string.
          *
-         * @since  8.0.0
+         * @since    2.0.0
          */
         update_visible_clubs: function() {
 
@@ -188,6 +188,9 @@ jQuery(function ($) {
             $clubs_column.find('#counter').text( $clubs_column.find('article:visible').length );
         },
 
+        /**
+         * @since    2.0.0
+         */
         create_category_checkbox_filters: function( categories ) {
 
             var html_string = '<li><label><input id="categories_all" value="all" type="checkbox">All</label></li>';
@@ -201,7 +204,10 @@ jQuery(function ($) {
             $('#categoryNames').append(html_string);
 
         },
-
+        /**
+         *
+         * @since    2.0.0
+         */
         ajax_update_wordpress_transient_cache: function( options ) {
 
             var jqxhr = jQuery.post(
@@ -232,7 +238,7 @@ jQuery(function ($) {
      *
      * @param clubs    a list of clubs. Data is pulled from the WesternLink data saved as a JSON file on github
      *
-     * @since   0.6.0
+     * @since    2.0.0
      *
      * @returns {*} A list of searchable clubs in the backend.
      */

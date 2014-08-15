@@ -3,7 +3,7 @@ Contributors: pcraig3
 Tags: clubs list, beta
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 1.4.0
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,6 +37,22 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
+= 2.0.0 =
+* Changed quite a bit structurally.  Ahem.
+* * Single template renamed and re-structured so that it might be called be WordPress itself (more easily).
+* * Query var now 'usc_clubs' rather than clubsapi
+* * Shortcode now 'usc_clubs' rather than 'testplugin'
+* * No longer calling clubs api from template.
+* * WordPress default 'main' query totally cancelled on single club pages.
+* * Single clubs now called by going to /clubs/clubs-list/{id}
+* * WP_AJAX file created (in its own namespace) to do async stuff, get all API results, and also manage transients.
+* * API result cached, and automatically saved asyncronously if not found in cache. (Read: this is super cool.)
+* * Due to some limitations in WesternLink's architecture, we're having JavaScript build our filter checkboxes.
+* * Clubs list page also built first for non-JS people and then (if JS) rebuilt with filterJS search tools.
+* * "All" checkbox included again.
+*
+* I guess that's it.
+
 = 1.4.0 =
 * Renaming everything.  Hopefully it all still works.
 * Making it not work comes later.
@@ -45,19 +61,19 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 * Styled my dynamic pages, added the flag object, fontawesome icons, and linked everything together.
 
 = 1.2.0 =
-* Figured out how to create custom, dynamically-generated pages
+* Figured out how to create custom, dynamically-generated pages.
 
 = 1.1.1 =
-* commenting
+* commenting.
 
 = 1.1.0 =
-* Plugin connects to API which pulls information from github
+* Plugin connects to API which pulls information from github.
 
 = 1.0.1 =
-* Using shortcodes instead of string substitution
+* Using shortcodes instead of string substitution.
 
 = 1.0.0 =
-* Got basic word substitution working
+* Got basic word substitution working.
 
 = 0.9 =
 * Totally new.  Renaming everything.

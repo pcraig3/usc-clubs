@@ -12,7 +12,7 @@ class WP_AJAX {
     /**
      * Instance of this class.
      *
-     * @since    0.9.2
+     * @since    2.0.0
      *
      * @var      object
      */
@@ -35,7 +35,7 @@ class WP_AJAX {
     /**
      * Return an instance of this class.
      *
-     * @since     0.9.2
+     * @since    2.0.0
      *
      * @return    object    A single instance of this class.
      */
@@ -53,7 +53,7 @@ class WP_AJAX {
      * Does (a bit more than) what it says on the box. gets all facebook and db events (and then merges their values)
      * and then returns everything to the javascript function waiting for it.
      *
-     * @since 0.9.8
+     * @since    2.0.0
      */
     public function get_clubs_ajax() {
 
@@ -74,7 +74,7 @@ class WP_AJAX {
     /**
      * This method implements our WordPress caching system.  Basically, instead of calling (@see)  all the time,
      *
-     * @since    0.9.8
+     * @since    2.0.0
      *
      */
     public function update_wordpress_clubs_cache() {
@@ -102,7 +102,7 @@ class WP_AJAX {
     /**
      * Bare-bones method that rejects non-logged-in users.  Used for all ajax methods.
      *
-     * @since   0.4.0
+     * @since    2.0.0
      *
      * @return 		echoes a string telling non-logged in users to log in.
      */
@@ -117,7 +117,7 @@ class WP_AJAX {
      * Method that abstracts the nonce-checking.  It's not actually that interesting.
      * If any of the values aren't set (or are wrong), execution halts.
      *
-     * @since    0.9.7
+     * @since    2.0.0
      *
      * @param string $attr_id   all of my nonce names end with "_nonce" and so we need the prefix
      * @param string $nonce     the nonce itself
@@ -131,7 +131,7 @@ class WP_AJAX {
 
     /**
      *
-     * @since 0.6.0
+     * @since    2.0.0
      *
      * @param null $json_response
      * @param array $fields_to_keep
@@ -237,6 +237,9 @@ class WP_AJAX {
         return ( is_null($json_response_modified) ) ? $json_response : $json_response_modified;
     }
 
+    /**
+     * @since    2.0.0
+     */
     public function get_clubs() {
 
         $transient_name = $this->generate_transient_name( 'usc_clubs_get_clubs' );
@@ -263,7 +266,7 @@ class WP_AJAX {
      * In the case of clubs, this is a moot point.  We can call it whatever we want.
      * We're always calling the same endpoint and getting everything.
      *
-     * @since       0.9.8
+     * @since    2.0.0
      *
      * @param   $transient_name  return the unmodified string
      * @return  string|WP_Error  a shiny new name for our transient
@@ -276,7 +279,7 @@ class WP_AJAX {
     /**
      * Function checks for the existence of a specific cached object.
      *
-     * @since    0.9.7
+     * @since    2.0.0
      *
      * @param $transient_name   looks for a cached object with this name
      * @return bool|mixed       returns 'false' if no object, or a json decoded array if found
@@ -291,7 +294,7 @@ class WP_AJAX {
     /**
      * Uses the WordPress HTTP API to call our AmAzE-O clubs api *wink*
      *
-     * @since    0.0.0
+     * @since    2.0.0
      *
      * @return array            at this point, return our clubs as a JSON file
      */
@@ -318,7 +321,7 @@ class WP_AJAX {
      * http://stackoverflow.com/questions/2762061/how-to-add-http-if-its-not-exists-in-the-url
      * @author Alix Axel
      *
-     * @since    0.9.7
+     * @since    2.0.0
      *
      * @param $url      a url with or without an http:// prefix
      * @return string   a url with the http:// prefix, or whatever it had originally
@@ -344,7 +347,7 @@ class WP_AJAX {
      * @param $sortCriteria         array of selected keys and how to sort them
      * @param bool $caseInSensitive whether or not to sort stings by case
      *
-     * @since    0.5.0
+     * @since    2.0.0
      *
      * @return bool|mixed           returns your array sorted by whatever the eff you asked for
      */
