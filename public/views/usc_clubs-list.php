@@ -15,7 +15,7 @@ ob_start();
             <input type="text" id="search_box" class="searchbox" placeholder="^.^"/>
         </aside>
         <aside id="nav_menu-categoryNames-1000" class="filterjs__filter__checkbox__wrapper et_pb_widget widget_nav_menu" >
-            <h4 class="widgettitle">Remuneration</h4>
+            <h4 class="widgettitle">Categories</h4>
             <ul id="categoryNames">
                 <?php
                 /*
@@ -55,7 +55,7 @@ ob_start();
         </div>
 
         <!--div class="filterjs__list__crop"-->
-        <div class="filterjs__list" id="usc_clubs_list"></div>
+        <div class="filterjs__list" id="usc_clubs_list" data-nonce="<?php echo wp_create_nonce("usc_clubs_list_nonce"); ?>"></div>
         <!--/div-->
     </div>
     <div class="clearfix cf"></div>

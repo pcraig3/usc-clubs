@@ -18,15 +18,18 @@ class WP_AJAX {
      */
     protected static $instance  = null;
 
+    protected $expiration = null;
+
     private function __construct() {
 
 
         add_action("wp_ajax_get_clubs_ajax", array( $this, "get_clubs_ajax" ) );
         add_action("wp_ajax_nopriv_get_clubs_ajax", array( $this, "get_clubs_ajax") );
 
-        add_action("wp_ajax_update_wordpress_transient_cache", array( $this, "update_wordpress_transient_cache" ) );
-        add_action("wp_ajax_nopriv_update_wordpress_transient_cache", array( $this, "update_wordpress_transient_cache") );
+        add_action("wp_ajax_update_wordpress_clubs_cache", array( $this, "update_wordpress_clubs_cache" ) );
+        add_action("wp_ajax_nopriv_update_wordpress_clubs_cache", array( $this, "update_wordpress_clubs_cache") );
 
+        $this->expiration = DAY_IN_SECONDS;
     }
 
     /**
@@ -74,10 +77,25 @@ class WP_AJAX {
      * @since    0.9.8
      *
      */
-    public function update_wordpress_transient_cache() {
+    public function update_wordpress_clubs_cache() {
 
         $this->make_sure_the_nonce_checks_out( $_POST['attr_id'], $_POST['nonce'] );
 
+        $transient_name = ( isset($_POST['transient_name'] ) && !empty($_POST['transient_name']) )
+            ? $_POST['transient_name'] : 'usc_clubs_get_clubs';
+
+        $json_decoded_events_array = $this->call_clubs_api();
+        $json_decoded_events_array = $this->filter_js_format_API_response($json_decoded_events_array['items']);
+
+        $expiration = $this->expiration;
+
+        $deleted = delete_site_transient( $transient_name );
+
+        //returns true or false
+        $result['success'] = set_site_transient( $transient_name, json_encode($json_decoded_events_array), $expiration );
+        $result['deleted'] = $deleted;
+
+        echo json_encode( $result );
         die();
     }
 
@@ -151,45 +169,45 @@ class WP_AJAX {
              * maybe check if json_response['count'] == json_response['count_total']
              *
              * Anyway, here's the simplified version.
-                organizationId: 1646
-                name: "Acapella Project"
-                status: "Active"
-                shortName: "TAP"
-                summary: "The Acapella Project is an a-cappella choir which aims to bring its unique brand of music to the community!\ \ \ \ Our first rehearsal is this coming Sunday, September 22, from 1 to 3 pm in VAC100. Hope to see you all there!"
-                description: "<p><span>The Acapella Project is a USC governed acapella choir which provides an open forum for those interested in singing, arra<\/span><span class=\"x_text_exposed_show\">nging, and beatboxing a-cappella. We accept members regardless of experience, and aim to educate and improve singers&rsquo; musicianship, vocal health, and performing experience.&nbsp;<\/span><\/p>"
-                addressStreet1: ""
-                addressStreet2: ""
-                addressCity: ""
-                addressStateProvince: ""
-                addressZipPostal: ""
-                phoneNumber: ""
-                extension: ""
-                faxNumber: ""
-                email: "theacapellaproject@gmail.com"
-                externalWebsite: ""
-                facebookUrl: "http:\/\/www.facebook.com\/theacapellaproject"
-                twitterUrl: ""
-                flickrFeedUrl: ""
-                youtubeChannelUrl: ""
-                googleCalendarUrl: ""
-                profileImageUrl: "westernu.collegiatelink.net\/images\/W170xL170\/0\/noshadow\/Profile\/3afeb90c7fbd43c5b6cf8d4b40b7966d.jpg"
-                profileUrl: "westernu.collegiatelink.net\/organization\/acapellaproject"
-                directoryVisibility: "Visible"
-                membershipType: "Open"
-                typeId: 66
-                typeName: "Ratified Clubs"
-                parentId: 1567
-                parentName: "University Students' Council"
-                primaryContactId: 48817
-                primaryContactName: "Xue Qing Yang"
-                primaryContactCampusEmail: "xyang295@uwo.ca"
-                categories: [
-                    {
-                    categoryId: 165
-                    categoryName: "Music and Performing Arts"
-                    }
-                ]
-                customFields: [ ]
+            organizationId: 1646
+            name: "Acapella Project"
+            status: "Active"
+            shortName: "TAP"
+            summary: "The Acapella Project is an a-cappella choir which aims to bring its unique brand of music to the community!\ \ \ \ Our first rehearsal is this coming Sunday, September 22, from 1 to 3 pm in VAC100. Hope to see you all there!"
+            description: "<p><span>The Acapella Project is a USC governed acapella choir which provides an open forum for those interested in singing, arra<\/span><span class=\"x_text_exposed_show\">nging, and beatboxing a-cappella. We accept members regardless of experience, and aim to educate and improve singers&rsquo; musicianship, vocal health, and performing experience.&nbsp;<\/span><\/p>"
+            addressStreet1: ""
+            addressStreet2: ""
+            addressCity: ""
+            addressStateProvince: ""
+            addressZipPostal: ""
+            phoneNumber: ""
+            extension: ""
+            faxNumber: ""
+            email: "theacapellaproject@gmail.com"
+            externalWebsite: ""
+            facebookUrl: "http:\/\/www.facebook.com\/theacapellaproject"
+            twitterUrl: ""
+            flickrFeedUrl: ""
+            youtubeChannelUrl: ""
+            googleCalendarUrl: ""
+            profileImageUrl: "westernu.collegiatelink.net\/images\/W170xL170\/0\/noshadow\/Profile\/3afeb90c7fbd43c5b6cf8d4b40b7966d.jpg"
+            profileUrl: "westernu.collegiatelink.net\/organization\/acapellaproject"
+            directoryVisibility: "Visible"
+            membershipType: "Open"
+            typeId: 66
+            typeName: "Ratified Clubs"
+            parentId: 1567
+            parentName: "University Students' Council"
+            primaryContactId: 48817
+            primaryContactName: "Xue Qing Yang"
+            primaryContactCampusEmail: "xyang295@uwo.ca"
+            categories: [
+            {
+            categoryId: 165
+            categoryName: "Music and Performing Arts"
+            }
+            ]
+            customFields: [ ]
              */
 
             $clubs = $json_response;
@@ -221,7 +239,7 @@ class WP_AJAX {
 
     public function get_clubs() {
 
-        $transient_name = $this->generate_transient_name( "usc_clubs_get_clubs" );
+        $transient_name = $this->generate_transient_name( 'usc_clubs_get_clubs' );
 
         $events_stored_in_cache = $this->if_stored_in_wordpress_transient_cache( $transient_name );
 
@@ -232,6 +250,7 @@ class WP_AJAX {
             $response['response']  = $clubs_array;
             $response['is_cached'] = false;
         } else {
+            //events stored in cache are already formatted
             $response['response'] = $events_stored_in_cache;
             $response['is_cached'] = true;
         }
@@ -310,6 +329,52 @@ class WP_AJAX {
             $url = "http://" . $url;
         }
         return $url;
+    }
+
+
+    /**
+     * Multisort function sorts two-dimensional arrays on specific keys.
+     * Ripped off the PHP reference page from one of the comments.
+     * http://www.php.net/manual/en/function.array-multisort.php#114076
+     *
+     * @author Robert C
+     * C probably short for "Champ"
+     *
+     * @param $data                 the array to be sorted
+     * @param $sortCriteria         array of selected keys and how to sort them
+     * @param bool $caseInSensitive whether or not to sort stings by case
+     *
+     * @since    0.5.0
+     *
+     * @return bool|mixed           returns your array sorted by whatever the eff you asked for
+     */
+    public function multisort($data, $sortCriteria, $caseInSensitive = true)
+    {
+        if( !is_array($data) || !is_array($sortCriteria))
+            return false;
+        $args = array();
+        $i = 0;
+        foreach($sortCriteria as $sortColumn => $sortAttributes)
+        {
+            $colList = array();
+            foreach ($data as $key => $row)
+            {
+                $convertToLower = $caseInSensitive && (in_array(SORT_STRING, $sortAttributes) || in_array(SORT_REGULAR, $sortAttributes));
+                $rowData = $convertToLower ? strtolower($row[$sortColumn]) : $row[$sortColumn];
+                $colLists[$sortColumn][$key] = $rowData;
+            }
+            $args[] = &$colLists[$sortColumn];
+
+            foreach($sortAttributes as $sortAttribute)
+            {
+                $tmp[$i] = $sortAttribute;
+                $args[] = &$tmp[$i];
+                $i++;
+            }
+        }
+        $args[] = &$data;
+        call_user_func_array('array_multisort', $args);
+        return end($args);
     }
 
 }

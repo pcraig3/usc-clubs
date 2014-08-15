@@ -130,7 +130,7 @@ jQuery(function ($) {
 
             $('.filterjs__loading').addClass('hidden');
 
-            //$('#remuneration label.checked, #taxonomy_departments label.checked').find('input:checkbox').prop('checked', true);
+            $('#categoryNames').find('input:checkbox').prop('checked', true);
 
             fJS = filterInit( clubs );
 
@@ -177,8 +177,44 @@ jQuery(function ($) {
             var $clubs_column = $('.et_pb_text');
 
             $clubs_column.find('#counter').text( $clubs_column.find('article:visible').length );
-        }
+        },
 
+        create_category_checkbox_filters: function( categories ) {
+
+            var html_string = '';
+
+            var total = categories.length;
+            for (var i = 0; i < total; i++) {
+                html_string += '<li><label><input id="' + categories[i].categoryId + '" value="' + categories[i].categoryId
+                    + '" type="checkbox">' + categories[i].categoryName + '</label></li>';
+            }
+
+            $('#categoryNames').append(html_string);
+
+        },
+
+        ajax_update_wordpress_transient_cache: function( options ) {
+
+            var jqxhr = jQuery.post(
+                options.ajax_url,
+                {
+                    action:         "update_wordpress_clubs_cache",
+                    attr_id:        "usc_clubs_list",
+                    nonce:          jQuery("#usc_clubs_list").data("nonce"),
+                    transient_name: options.transient_name
+                },
+                function( data ) {
+
+                    /* if(! data['success']) {
+                     //console.log('WordPress transient DB has NOT been updated.');
+                     }
+                     else
+                     //console.log('Yay! WordPress transient DB has been updated.');
+                     */
+
+                }, "json");
+
+        }
     };
 
     /**
@@ -230,12 +266,11 @@ jQuery(function ($) {
         }
 
         var settings = {
-            /*filter_criteria: {
-                remuneration: ['#remuneration input:checkbox', 'custom_fields.remuneration'],
-                taxonomy_departments: ['#taxonomy_departments input:checkbox', 'taxonomy_departments.ARRAY.slug']
-            },*/
+            filter_criteria: {
+                categories: ['#categoryNames input:checkbox', 'categories.ARRAY.categoryId']
+            },
             search: {input: '#search_box' },
-            //and_filter_on: true,
+            and_filter_on: true,
             id_field: 'id' //Default is id. This is only for usecase
         };
 
@@ -246,15 +281,22 @@ jQuery(function ($) {
 
         var usc_clubs_as_json = JSON.parse(options.clubs);
 
-        console.log( usc_clubs_as_json[0] );
-
+        console.log(usc_clubs_as_json[0]);
         AjaxUSCClubs.clubs_gotten( usc_clubs_as_json );
+
+        //unlike the jobs plugin, we're updating the cache only if it wasn't cached before.
+        //because I don't really expect the list to change ever.
+        if( ! options.if_cached )
+            AjaxUSCClubs.ajax_update_wordpress_transient_cache( options );
+
 
     });
 
     //call this right away.  don't wait for $(document).ready
     //this one removes my old clubs and puts in my new clubs.
     AjaxUSCClubs.remove_wordpress_clubs_for_filterjs_clubs();
+    AjaxUSCClubs.create_category_checkbox_filters( JSON.parse(options.categories) );
+
 
     //this one removes the widgets and puts in my widgets
     //AjaxUSCClubs.remove_wordpress_widgets_for_filterjs_imposter_widgets();

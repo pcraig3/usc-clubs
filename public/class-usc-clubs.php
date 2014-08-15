@@ -329,11 +329,42 @@ class USC_Clubs {
 
         // declare the URL to the file that handles the AJAX request (wp-admin/admin-ajax.php)
         wp_localize_script( 'public_filterjs', "options", array(
-            'clubs'     => json_encode($clubs_array),
-            'is_cached' => $is_cached,
+            'clubs'             => json_encode($clubs_array),
+            'categories'        => json_encode($this->return_categories_array($clubs_array)),
+            'is_cached'         => $is_cached,
+            'ajax_url'          => admin_url( 'admin-ajax.php' ),
+            'transient_name'    => '',
         ) );
 
         return require_once('views/usc_clubs-list.php');
+    }
+
+    private function return_categories_array($clubs_array) {
+
+        $categories_array = array();
+        $category_ids = array();
+
+        foreach($clubs_array as $club) {
+
+            foreach($club['categories'] as $category) {
+
+                //hasn't been stored in our array yet.
+                if( !in_array( $category['categoryId'], $category_ids) ) {
+
+                    array_push($category_ids, $category['categoryId']);
+                    array_push($categories_array, $category);
+                }
+            }
+
+        }
+        unset($category_ids);
+
+        $sort_criteria =
+            array('categoryName' => array(SORT_ASC, SORT_STRING),
+            );
+
+        return $this->wp_ajax->multisort($categories_array, $sort_criteria, true);
+
     }
 
     /**
