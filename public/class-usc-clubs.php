@@ -74,13 +74,23 @@ class USC_Clubs {
          * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
          */
         //define the rewrite tag and a url pattern that triggers it
-        add_action( 'init', array( $this, 'clubsapi_rewrite_rules' ) );
-        //add 'clubsapi' to our query variables
-        add_action( 'init', array( $this, 'add_clubsapi' ) );
-        //check the current request for a clubsapi value
-        add_action( 'template_redirect', array( $this, 'clubsapi_redirect' ) );
+        add_action( 'init', array( $this, 'usc_clubs_rewrite_rules' ) );
+        //add 'usc_clubs' to our query variables
+        add_action( 'init', array( $this, 'add_usc_clubs' ) );
+        //check the current request for a usc_clubs value
+        add_action( 'template_redirect', array( $this, 'usc_clubs_redirect' ) );
 
         add_shortcode( 'testplugin', array( $this, 'usc_clubs_shortcode_function') );
+
+        add_filter('posts_request', array( $this, 'suppress_main_query' ), 10, 2);
+
+    }
+
+    public function suppress_main_query( $request, $query ){
+        if( $query->is_main_query() && ! $query->is_admin )
+            return false;
+        else
+            return $request;
     }
 
     /**
@@ -89,7 +99,7 @@ class USC_Clubs {
      *
      * @since    1.2.0
      */
-    public function clubsapi_redirect() {
+    public function usc_clubs_redirect() {
 
         // Allow access to WordPress query variables
         global $wp_query;
@@ -98,7 +108,7 @@ class USC_Clubs {
         $query_vars = $wp_query->query_vars;
 
         // Check if requesting a club page
-        if(!empty($query_vars['clubsapi'])) {
+        if(!empty($query_vars['usc_clubs'])) {
 
             // CLUB PAGE REQUESTED!
             add_filter( 'template_include', array( $this, 'call_club_template' ) );
@@ -116,17 +126,70 @@ class USC_Clubs {
      */
     public function call_club_template( $original_template ) {
 
-        if ( true ) {
-            return plugin_dir_path( __FILE__ ) . 'views/single-club.php';
+        $one_club_you_want_two_you_dont = $this->find_a_club_and_its_neighbours( intval( get_query_var( 'usc_clubs' ) ) );
+
+        if ( !empty( $one_club_you_want_two_you_dont ) ) {
+
+            $current_club = $previous_club = $next_club = null; //these should be set by the array
+            extract($one_club_you_want_two_you_dont, EXTR_OVERWRITE);
+
+            //H4ck
+            include(locate_template('../../plugins/usc-clubs/templates/single-club.php', false));
+            //H4ck
+
+            //return trailingslashit( plugin_dir_path( __DIR__ ) ) . 'templates/single-club.php';
+
         } else {
             return $original_template;
         }
 
     }
 
+    private function find_a_club_and_its_neighbours( $desired_club_id ) {
+
+        //function returns the clubs on github as a json array.
+        $clubs_array = $this->call_clubs_api();
+
+        if( ! is_array( $clubs_array ) ) {
+            return array();
+        }
+
+        $max = intval( count($clubs_array['items']) );
+
+        $current_club = $previous_club = $next_club = null;
+
+        for($i = 0; $i < $max && is_null( $current_club ); $i++) {
+
+            //if it matches
+            if( $desired_club_id === $clubs_array['items'][$i]['organizationId']) {
+
+                if( $i > 0 ) {
+                    $previous_club = $clubs_array['items'][$i - 1];
+                }
+
+                if( $i < ( $max-1 ) ) {
+                    $next_club = $clubs_array['items'][$i + 1];
+                }
+
+                $current_club = $clubs_array['items'][$i];
+            }
+        }
+
+        if( is_null( $current_club ) ) {
+            return array();
+        }
+
+        return array(
+            'current_club'  => $current_club,
+            'previous_club' => $previous_club,
+            'next_club'     => $next_club
+        );
+
+    }
+
     /**
-     * Function adds the 'clubsapi' parameter to the query variables, as WordPress calls them.
-     * If the function below this one describes the pattern in which 'clubsapi' should be used,
+     * Function adds the 'usc_clubs' parameter to the query variables, as WordPress calls them.
+     * If the function below this one describes the pattern in which 'usc_clubs' should be used,
      * this is the function that registers the name of the variable with WordPress
      *
      * more information here:
@@ -134,11 +197,11 @@ class USC_Clubs {
      *
      * @since    1.2.0
      */
-    public function add_clubsapi() {
+    public function add_usc_clubs() {
 
         global $wp;
 
-        $wp->add_query_var('clubsapi');
+        $wp->add_query_var('usc_clubs');
     }
 
     /**
@@ -148,13 +211,13 @@ class USC_Clubs {
      *
      * @since    1.2.0
      */
-    public static function clubsapi_rewrite_rules() {
+    public static function usc_clubs_rewrite_rules() {
 
         // Custom tag we will be using to recognize page requests
-        add_rewrite_tag('%clubsapi%','([^/]+)');
+        add_rewrite_tag('%usc_clubs%','([^/]+)');
 
         // Custom rewrite rule to hijack page generation
-        add_rewrite_rule('clubs/([^/]+)/?$','index.php?clubsapi=$matches[1]','top');
+        add_rewrite_rule('clubs/([^/]+)/?$','index.php?usc_clubs=$matches[1]','top');
     }
 
 
@@ -183,7 +246,7 @@ class USC_Clubs {
 
         //function returns the clubs on github as a json array.
         //in the future, we'll have this take a parameter
-        $returned_array = $this->call_api();
+        $returned_array = $this->call_clubs_api();
 
         if( is_array( $returned_array ) ) {
 
@@ -284,41 +347,25 @@ class USC_Clubs {
     }
 
     /**
-     * Calls some page which calls a github csv file and converts it to json.
+     * Uses the WordPress HTTP API to call our AmAzE-O clubs api *wink*
      *
-     * @since    1.2.0
+     * @since    0.0.0
      *
-     * @return array       at this point, return the clubs known about on github as an indexed array
+     * @return array            at this point, return our clubs as a JSON file
      */
-    public static function call_api() {
+    public function call_clubs_api() {
 
-        //the url where to get clubs' information is stored (github, basically)
-        $ch = curl_init('http://testwestern.com/github/json.php');
+        //simple
+        $api_url = 'http://testwestern.com/github/json.php';
 
-        curl_setopt( $ch, CURLOPT_HEADER, false ); //TRUE to include the header in the output.
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true ); //TRUE to return transfer as a string instead of outputting it out directly.
-        //curl_setopt($ch, CURLOPT_FRESH_CONNECT, true); //TRUE to force the use of a new connection instead of a cached one.
+        $returned_string = wp_remote_retrieve_body( wp_remote_get( $api_url) );
 
-        $returnedString = curl_exec( $ch );
-        curl_close( $ch );
+        if( empty( $returned_string ) ) {
 
-        // Define the errors.
-        /* $constants = get_defined_constants(true);
-
-        /*$json_errors = array();
-        foreach ($constants["json"] as $name => $value) {
-            if (!strncmp($name, "JSON_ERROR_", 11)) {
-                $json_errors[$value] = $name;
-            }
+            return new WP_Error( 'api_error', __( 'Spot of trouble connecting to the clubs API', 'test-clubs' ) );
         }
 
-        echo '<h1>';
-        echo 'Last error: ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
-        echo '</h1>';
-        die;
-        */
-
-        return json_decode( $returnedString, true );
+        return json_decode( $returned_string, true );
     }
 
     /**
@@ -473,7 +520,7 @@ class USC_Clubs {
      */
     private static function single_activate() {
 
-        self::clubsapi_rewrite_rules();
+        self::usc_clubs_rewrite_rules();
 
         // flush rewrite rules - only do this on activation as anything more frequent is bad!
         flush_rewrite_rules();

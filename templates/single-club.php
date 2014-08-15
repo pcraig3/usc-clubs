@@ -4,50 +4,13 @@
  *
  */
 
-global $wp_query;
-//GET THE DATA
-$desired_club_id = intval( get_query_var('usc_clubs') );
-
-//function returns the clubs on github as a json array.
-$clubs_array = USC_Clubs::call_clubs_api();
-
-if( ! is_array( $clubs_array ) ) {
-    return false;
-}
-
-$max = intval( count($clubs_array['items']) );
-
-$current_club = $previous_club = $next_club = null;
-
-for($i = 0; $i < $max && is_null( $current_club ); $i++) {
-
-    //if it matches
-    if( $desired_club_id === $clubs_array['items'][$i]['organizationId']) {
-
-        if( $i > 0 ) {
-            $previous_club = $clubs_array['items'][$i - 1];
-        }
-
-        if( $i < ( $max-1 ) ) {
-            $next_club = $clubs_array['items'][$i + 1];
-        }
-
-        $current_club = $clubs_array['items'][$i];
-    }
-}
-
-if( is_null( $current_club ) ) {
-    return false;
-}
-
-
 //CHANGE THE PAGE TITLE
 
 $current_club_name = esc_html( $current_club['name'] );
 
 add_filter( 'wp_title', function( $title ) use ( $current_club_name ) {
 
-        return $current_club_name . " | testwestern.com";
+    return $current_club_name . " | testwestern.com";
 });
 
 ///BUILD THE PAGE
@@ -113,34 +76,34 @@ get_header(); ?>
             <section class="entry-content clearfix" itemprop="articleBody">
                 <?php
 
-                    if($current_club['profileImageUrl']) {
-                        $profile_image_url = "http://" . $current_club['profileImageUrl'];
+                if($current_club['profileImageUrl']) {
+                    $profile_image_url = "http://" . $current_club['profileImageUrl'];
 
-                        echo '<h3>LOGO</h3>';
-                        echo '<img class="club-logo" src="' . esc_url( $profile_image_url ) . '">';
-                    }
+                    echo '<h3>LOGO</h3>';
+                    echo '<img class="club-logo" src="' . esc_url( $profile_image_url ) . '">';
+                }
 
-                    $content_added = false;
+                $content_added = false;
 
-                    if( ! empty($current_club['summary']) ) {
-                        $content_added = true;
+                if( ! empty($current_club['summary']) ) {
+                    $content_added = true;
 
-                        echo '<h3>SUMMARY</h3>';
-                        echo '<p>' . esc_html($current_club['summary']) . '</p>';
-                        echo '<br>';
-                    }
+                    echo '<h3>SUMMARY</h3>';
+                    echo '<p>' . esc_html($current_club['summary']) . '</p>';
+                    echo '<br>';
+                }
 
-                    if( ! empty($current_club['description']) ) {
-                        $content_added = true;
+                if( ! empty($current_club['description']) ) {
+                    $content_added = true;
 
-                        echo '<h3>DESCRIPTION</h3>';
-                        echo '<p>' . esc_html($current_club['description']) . '</p>';
-                        echo '<br>';
-                    }
+                    echo '<h3>DESCRIPTION</h3>';
+                    echo '<p>' . esc_html($current_club['description']) . '</p>';
+                    echo '<br>';
+                }
 
-                    if( ! $content_added ) {
-                        echo '<p>' . 'Whoops!  Looks like we don\'t have any content for this club yet.';
-                    }
+                if( ! $content_added ) {
+                    echo '<p>' . 'Whoops!  Looks like we don\'t have any content for this club yet.';
+                }
                 ?>
             </section> <!-- end article section -->
 
@@ -165,7 +128,7 @@ get_header(); ?>
 
                     <?php
                     echo '<a rel="back" href="http://testwestern.com/clubs-from-github/">' .
-                         'Back to Clubs List</a>';
+                        'Back to Clubs List</a>';
                     ?>
 
                 </div>
