@@ -45,7 +45,7 @@ get_header();
                                 bcn_display();
                             }?>
 
-                            <!-- trailingslashit(get_bloginfo('wpurl'))
+                            <!-- trailingslashit(get_bloginfo('wpurl')) 
                                 . trailingslashit("clubs/list/" . $club['organizationId']); -->
                             >
             <!--//clubs -->         <span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" title="Go to Clubs." href="http://westernusc.org/clubs/">Clubs</a></span>

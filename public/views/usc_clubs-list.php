@@ -43,28 +43,6 @@ ob_start();
                     ?>
                 </ul>
             </aside>
-            <aside id="nav_menu-alphabet-1000" class="filterjs__filter__checkbox__wrapper et_pb_widget widget_nav_menu" >
-                <h4 class="widgettitle">Alphabet</h4>
-                <ul id="alphabet">
-                    <?php
-
-                    $alphabets = array(
-                        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-                    );
-
-                    foreach( $alphabets as &$alphabet ) {
-
-                        echo '<li><label>'
-                            .   '<input id="' . $alphabet . '" value="' . $alphabet . '" type="checkbox">';
-                        echo ucfirst($alphabet) . '</label>';
-                        echo '</li>';
-
-                    }
-                    unset( $alphabet );
-
-                    ?>
-                </ul>
-            </aside>
         </div>
         <br>
         <div class="filterjs__list__wrapper">

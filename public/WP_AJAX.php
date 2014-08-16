@@ -227,9 +227,6 @@ class WP_AJAX {
                     }
                     unset($field);
 
-                    $temp_club['alphabet'] = strtolower(substr(trim($temp_club['name']), 0, 1));
-
-
                     $clubs[$num] = $temp_club;
                 }
                 else

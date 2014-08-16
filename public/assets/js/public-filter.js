@@ -80,7 +80,7 @@ jQuery(function ($) {
             });
 
             //click event listener on normal checkbox items adds/removes the 'clicked' class (for CSS)
-            $widgets_column.find('#categoryNames, #alphabet').delegate('label', 'click', function() {
+            $widgets_column.find('#categoryNames').delegate('label', 'click', function() {
 
                 if($( this ).find( 'input:checkbox' ).is( ':checked' ))
                     $( this ).addClass('checked');
@@ -121,7 +121,7 @@ jQuery(function ($) {
 
             $('.filterjs__loading').addClass('hidden');
 
-            $('#categoryNames, #alphabet').find('label').addClass('checked').find('input:checkbox').prop('checked', true);
+            $('#categoryNames').find('label').addClass('checked').find('input:checkbox').prop('checked', true);
 
             fJS = filterInit( clubs );
 
@@ -272,8 +272,7 @@ jQuery(function ($) {
 
         var settings = {
             filter_criteria: {
-                categories: ['#categoryNames input:checkbox', 'categories.ARRAY.categoryId'],
-                alphabet: ['#alphabet input:checkbox', 'alphabet']
+                categories: ['#categoryNames input:checkbox', 'categories.ARRAY.categoryId']
             },
             search: {input: '#search_box' },
             and_filter_on: true,
