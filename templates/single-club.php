@@ -9,7 +9,7 @@ $current_club_name = esc_html( $current_club['name'] );
 
 add_filter( 'wp_title', function( $title ) use ( $current_club_name ) {
 
-    return $current_club_name . " | testwestern.com";
+    return $current_club_name . " | Western USC";
 });
 
 ///BUILD THE PAGE
@@ -113,12 +113,12 @@ get_header(); ?>
                     <?php
 
                     if( ! is_null($previous_club) ) {
-                        echo '<a rel="prev" href="http://testwestern.com/clubs/' . intval($previous_club['organizationId']) . '/">' .
+                        echo '<a rel="prev" href="' . esc_url( $previous_club['url'] ) . '/">' .
                             esc_html($previous_club['name']) . '</a>';
                     }
 
                     if( ! is_null($next_club) ) {
-                        echo '<a rel="next" href="http://testwestern.com/clubs/' . intval($next_club['organizationId']) . '/">' .
+                        echo '<a rel="next" href="' . esc_url( $next_club['url'] ) . '/">' .
                             esc_html($next_club['name']) . '</a>';
                     }
                     ?>

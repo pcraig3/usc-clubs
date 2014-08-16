@@ -8,67 +8,92 @@ ob_start();
 
 ?>
 
-<div class="filterjs hidden">
-    <div class="filterjs__filter">
-        <aside  id="nav_menu-search-1000" class="filterjs__filter__search__wrapper et_pb_widget widget_nav_menu">
-            <h4 class="widgettitle">Search Clubs</h4>
-            <input type="text" id="search_box" class="searchbox" placeholder="^.^"/>
-        </aside>
-        <aside id="nav_menu-categoryNames-1000" class="filterjs__filter__checkbox__wrapper et_pb_widget widget_nav_menu" >
-            <h4 class="widgettitle">Categories</h4>
-            <ul id="categoryNames">
-                <?php
-                /*
+    <div class="filterjs hidden">
+        <div class="filterjs__filter">
+            <aside  id="nav_menu-search-1000" class="filterjs__filter__search__wrapper et_pb_widget widget_nav_menu">
+                <h4 class="widgettitle">Search Clubs</h4>
+                <input type="text" id="search_box" class="searchbox" placeholder="^.^"/>
+            </aside>
+            <aside id="nav_menu-categoryNames-1000" class="filterjs__filter__checkbox__wrapper et_pb_widget widget_nav_menu" >
+                <h4 class="widgettitle">Categories</h4>
+                <ul id="categoryNames">
+                    <?php
+                    /*
 
-                Our JS can just build this, right?
+                    Our JS can just build this, right?
 
-                $remuneration_values = array(
-                    'paid',
-                    'volunteer'
-                );
+                    $remuneration_values = array(
+                        'paid',
+                        'volunteer'
+                    );
 
-                foreach( $remuneration_values as &$remuneration_value ) {
+                    foreach( $remuneration_values as &$remuneration_value ) {
 
-                    $checked_by_default = ( ! $is_remuneration ) ? "checked" : ( $remuneration === $remuneration_value ) ? "checked" : "" ;
+                        $checked_by_default = ( ! $is_remuneration ) ? "checked" : ( $remuneration === $remuneration_value ) ? "checked" : "" ;
 
-                    echo '<li><label class="' . $checked_by_default . '">'
-                        .   '<input id="' . $remuneration_value . '" value="' . $remuneration_value . '" type="checkbox">';
-                    echo ucfirst($remuneration_value) . '</label>';
-                    echo '</li>';
+                        echo '<li><label class="' . $checked_by_default . '">'
+                            .   '<input id="' . $remuneration_value . '" value="' . $remuneration_value . '" type="checkbox">';
+                        echo ucfirst($remuneration_value) . '</label>';
+                        echo '</li>';
 
-                }
-                unset( $remuneration_value );
-                */
+                    }
+                    unset( $remuneration_value );
+                    */
 
-                ?>
-            </ul>
-        </aside>
-    </div>
-    <br>
-    <div class="filterjs__list__wrapper">
-        <div class="filterjs__loading filterjs__loading--ajax">
-            <img class="filterjs__loading__img" title="go mustangs!"
-                 src="<?php echo plugins_url( 'assets/horse.gif', __DIR__ ); ?>" alt="Loading" height="91" width="160">
-            <p class="filterjs__loading__status">
-                * Loading *
-            </p>
+                    ?>
+                </ul>
+            </aside>
+            <aside id="nav_menu-alphabet-1000" class="filterjs__filter__checkbox__wrapper et_pb_widget widget_nav_menu" >
+                <h4 class="widgettitle">Alphabet</h4>
+                <ul id="alphabet">
+                    <?php
+
+                    $alphabets = array(
+                        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+                    );
+
+                    foreach( $alphabets as &$alphabet ) {
+
+                        echo '<li><label>'
+                            .   '<input id="' . $alphabet . '" value="' . $alphabet . '" type="checkbox">';
+                        echo ucfirst($alphabet) . '</label>';
+                        echo '</li>';
+
+                    }
+                    unset( $alphabet );
+
+                    ?>
+                </ul>
+            </aside>
         </div>
+        <br>
+        <div class="filterjs__list__wrapper">
+            <div class="filterjs__loading filterjs__loading--ajax">
+                <img class="filterjs__loading__img" title="go mustangs!"
+                     src="<?php echo plugins_url( 'assets/horse.gif', __DIR__ ); ?>" alt="Loading" height="91" width="160">
+                <p class="filterjs__loading__status">
+                    * Loading *
+                </p>
+            </div>
 
-        <!--div class="filterjs__list__crop"-->
-        <div class="filterjs__list" id="usc_clubs_list" data-nonce="<?php echo wp_create_nonce("usc_clubs_list_nonce"); ?>"></div>
-        <!--/div-->
+            <!--div class="filterjs__list__crop"-->
+            <div class="filterjs__list" id="usc_clubs_list" data-nonce="<?php echo wp_create_nonce("usc_clubs_list_nonce"); ?>"></div>
+            <!--/div-->
+        </div>
+        <div class="clearfix cf"></div>
     </div>
-    <div class="clearfix cf"></div>
-</div>
 
 <?php
 
 $html_string = ob_get_clean();
 
-
-$html_string .= '<blockquote id="clubs_list__wrapper">';
-
 $total = intval( count($clubs_array) );
+
+?>
+
+    <h4 class="usc_clubs--count"><span id="counter"><?php echo $total; ?></span> Clubs Found</h4>
+
+<?php
 
 for($i = 0; $i < $total; $i++) {
 
@@ -79,26 +104,42 @@ for($i = 0; $i < $total; $i++) {
     if( isset( $current_club['profileImageUrl'] ) )
         $img_url = esc_url( "http://" . $current_club['profileImageUrl'] );
 
+    /*
+            html_string += '</article><!-- end of usc_club -->';
+            return html_string;
+    */
 
-    $html_string .= '<div class="clubs__box flag clearfix"><a href="http://testwestern.com/clubs/' . intval( $current_club['organizationId'] ) . '/" target="_self">';
-    //$html_string .= '<div class="clubs__box flag clearfix">';
 
-    $html_string.= '<div class="flag__image">';
+    $html_string .= '<article class="usc_clubs type-usc_clubs et_pb_post media">';
 
-    if($img_url)
-        $html_string .= '<img src="' . $img_url . '">';
+    if( !empty( $img_url )) {
+        $html_string .= '<a href="' . esc_url( $current_club['url'] ) . '" class="img">';
 
-    $html_string .= '</div>';
+        $html_string .=     '<img src="' . $img_url . '" alt="Logo for '
+                                . esc_attr( $current_club['name'] ) . '" />';
 
-    $html_string .= '<div class="flag__body">';
-    $html_string .= '<h3 class="alpha" title="' . esc_attr( $current_club['organizationId'] ) .
-        '">' . esc_html( $current_club['name'] );
+        $html_string .= '</a>';
+    }
 
-    $html_string .= '</h3></div>';
-    $html_string .= '<span class="clubs__box__count">' . (intval( $current_club['id'] ) + 1) . '</span>';
-    $html_string .= '</a></div><!--end of clubs__box-->';
+
+    $html_string .=     '<div class="bd"><a href="' . esc_url( $current_club['url'] ) . '" title="' . esc_attr( $current_club['name'] ) . '"><h2>' . esc_html( $current_club['name'] ) . '</h2></a>';
+
+    $html_string .=     '<p class="post-meta">';
+
+    $categories = $current_club['categories'];
+    $total_categories = count( $categories );
+
+    for ($j = 0; $j < $total_categories; $j++) {
+        $html_string .=     '<a title="Find more clubs with a focus on ' . esc_attr( $categories[$j]['categoryName'] ) . '!" '
+            . 'href="#">' . esc_html( $categories[$j]['categoryName'] ) . '</a>, ';
+    }
+
+    $html_string = trim($html_string, ", ");
+
+    $html_string .=     '</p><!-- end of .post-meta -->';
+
+    $html_string .= '</div><!-- .end of .bd --></article><!-- end of .usc_club -->';
+
 }
-
-$html_string .= "</blockquote><!--end of #clubs-->";
 
 return $html_string;

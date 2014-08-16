@@ -11,7 +11,7 @@
  * @copyright 2014 University Students' Council
  *
  * @wordpress-plugin
- * Plugin Name:       USC_Clubs
+ * Plugin Name:       USC Clubs
  * Plugin URI:        http://testwestern.com/clubs-from-github/
  * Description:       Beams in some information from GitHub.  Possibly witchcraft.
  * Version:           2.0.0

@@ -37,6 +37,8 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
+* * Single clubs now called by going to /clubs/clubs-list/{id}
+
 = 2.0.0 =
 * Changed quite a bit structurally.  Ahem.
 * * Single template renamed and re-structured so that it might be called be WordPress itself (more easily).

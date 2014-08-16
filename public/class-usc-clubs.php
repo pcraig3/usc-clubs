@@ -148,11 +148,11 @@ class USC_Clubs {
 
         if ( !empty( $one_club_you_want_two_you_dont ) ) {
 
-            $current_club = $previous_club = $next_club = $is_cached = null; //these should be set by the array
+            $current_club = $previous_club = $next_club = null; //these should be set by the array
             extract($one_club_you_want_two_you_dont, EXTR_OVERWRITE);
 
             //@TODO: H4ck
-            include(locate_template('../../plugins/usc-clubs/templates/single-club.php', false));
+            include(locate_template('../../plugins/usc-clubs/templates/single-club_westernusc.php', false));
             //include(locate_template('single-club.php', false));
             //H4ck
 
@@ -242,7 +242,7 @@ class USC_Clubs {
         add_rewrite_tag('%usc_clubs%','([^/]+)');
 
         // Custom rewrite rule to hijack page generation
-        add_rewrite_rule('clubs/clubs-list/([^/]+)/?$','index.php?usc_clubs=$matches[1]','top');
+        add_rewrite_rule('clubs/list/([^/]+)/?$','index.php?usc_clubs=$matches[1]','top');
     }
 
 

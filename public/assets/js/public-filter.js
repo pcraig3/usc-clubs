@@ -12,16 +12,15 @@ jQuery(function ($) {
          */
         remove_wordpress_clubs_for_filterjs_clubs: function() {
 
-            var $clubs_column = $('#clubs_list__wrapper');
-            var $to_detach = $('.filterjs__list__wrapper').detach();
+            var $clubs_column = $('.usc_clubs--count').parents('.et_pb_text');
+            var $to_detach = $clubs_column.find('.filterjs__list__wrapper');
 
             //http://bugs.jquery.com/ticket/13400
             //old.replaceWith( new ); //can be changed to:
             //old.before( new ).detach();
-            $clubs_boxes = $clubs_column.find('.clubs__box');
-
-            $clubs_boxes.remove();
-            $clubs_column.append( $to_detach );
+            $articles = $clubs_column.find('article');
+            $articles.first().before( $to_detach );
+            $articles.remove();
         },
 
         /** Remove the widgets created by Wordpress (if they exist, which they don't)
@@ -31,25 +30,17 @@ jQuery(function ($) {
          */
         remove_wordpress_widgets_for_filterjs_imposter_widgets : function() {
 
-            var $widgets_column = $('.post-type-archive-usc_jobs .et_pb_widget_area, .tax-departments .et_pb_widget_area');
+            var $widgets_column = $('.page-id-285 .et_pb_widget_area');
             var $filterjs       = $('.filterjs.hidden');
 
             //old.before( new ).detach();
 
-            $widgets_column.find('aside').each(function( index ) {
+            $widgets_column.find('.et_pb_widget').each(function( index ) {
 
-                var found = (  $( this ).find( '[class*=remuneration]' ).length > 0 );
+                var found = (  $( this ).find( '[class*=categoryNames]' ).length > 0 );
 
                 if( found )
-                    $( this ).replaceWith( $filterjs.find( '#nav_menu-remuneration-1000' ) );
-
-                else {
-
-                    found = (  $( this ).find( '[class*=departments]' ).length > 0 );
-
-                 if( found )
-                     $( this ).replaceWith( $filterjs.find( '#nav_menu-departments-1000' ) );
-                 }
+                    $( this ).replaceWith( $filterjs.find( '#nav_menu-categoryNames-1000' ) );
 
                 if( !found )
                     $( this ).remove();
@@ -73,13 +64,13 @@ jQuery(function ($) {
             $widgets_column.find('#search_box').on('keyup', function() {
 
                 AjaxUSCClubs.typewatch(function () {
-                    AjaxUSCClubs.update_visible_clubs()
+                    AjaxUSCClubs.update_visible_clubs();
                 }, 50);
 
             });
 
             //click event listener on '#all' checkbox turns on and off the entire row.
-            $('#departments_all').on('click',function(){
+            $('#categoryNames_all').on('click',function(){
                 $(this).closest('ul').children().find(':checkbox').prop('checked', $(this).is(':checked'));
 
                 if($(this).is(':checked'))
@@ -89,7 +80,7 @@ jQuery(function ($) {
             });
 
             //click event listener on normal checkbox items adds/removes the 'clicked' class (for CSS)
-            $widgets_column.find('#taxonomy_departments, #remuneration').delegate('label', 'click', function() {
+            $widgets_column.find('#categoryNames, #alphabet').delegate('label', 'click', function() {
 
                 if($( this ).find( 'input:checkbox' ).is( ':checked' ))
                     $( this ).addClass('checked');
@@ -130,16 +121,7 @@ jQuery(function ($) {
 
             $('.filterjs__loading').addClass('hidden');
 
-            $('#categoryNames').find('input:checkbox').prop('checked', true);
-
-            //click event listener on '#all' checkbox turns on and off the entire row.
-            $('#categories_all').on('click',function(){
-                $(this).closest('ul').children().find(':checkbox').prop('checked', $(this).is(':checked'));
-                /*if($(this).is(':checked'))
-                    $(this).closest('ul').children().find('label').addClass('checked');
-                else
-                    $(this).closest('ul').children().find('label').removeClass('checked');*/
-            });
+            $('#categoryNames, #alphabet').find('label').addClass('checked').find('input:checkbox').prop('checked', true);
 
             fJS = filterInit( clubs );
 
@@ -183,7 +165,7 @@ jQuery(function ($) {
          */
         update_visible_clubs: function() {
 
-            var $clubs_column = $('.et_pb_text');
+            var $clubs_column = $('.usc_clubs--count').parents('.et_pb_text');
 
             $clubs_column.find('#counter').text( $clubs_column.find('article:visible').length );
         },
@@ -193,7 +175,7 @@ jQuery(function ($) {
          */
         create_category_checkbox_filters: function( categories ) {
 
-            var html_string = '<li><label><input id="categories_all" value="all" type="checkbox">All</label></li>';
+            var html_string = '<li><label><input id="categoryNames_all" value="all" type="checkbox">All</label></li>';
 
             var total = categories.length;
             for (var i = 0; i < total; i++) {
@@ -256,33 +238,42 @@ jQuery(function ($) {
                 img_url = 'http://' + club.profileImageUrl;
 
 
-            html_string +=  '<div class="clubs__box flag clearfix">';
+            html_string +=  '<article class="usc_clubs type-usc_clubs et_pb_post media">';
 
-            html_string +=          '<a href="http://testwestern.com/clubs/' + club.organizationId + '/" target="_self">';
+            if( img_url ) {
+                html_string += '<a href="' + club.url + '" class="img">';
 
-            html_string +=              '<div class="flag__image">';
+                html_string +=     '<img src="' + img_url + '" alt="Logo for ' + club.name + '" />';
 
-            if(img_url)
-                html_string +=              '<img src="' + img_url + '">';
+                html_string += '</a>';
+            }
 
-            html_string +=              '</div>';
+            html_string +=      '<div class="bd">'
+                                    + '<a href="' + club.url + '" title="' + club.name + '"><h2>' + club.name + '</h2></a>';
 
-            html_string +=              '<div class="flag__body">';
+            html_string +=          '<p class="post-meta">';
 
-            html_string +=                  '<h3 class="alpha" title="' + club.organizationId + '">' + club.name + '</h3>';
+            var categories = club.categories;
+            var total = categories.length;
+            for (var i = 0; i < total; i++) {
+                html_string +=      '<a title="Find more clubs with a focus on ' + categories[i].categoryName + '!" '
+                    + 'href="#">' + categories[i].categoryName + '</a>, ';
+            }
 
-            html_string +=              '</div>';
+            //cut off the last comma and space
+            html_string = html_string.slice(0, (html_string.length - 2));
+            html_string +=          '</p><!-- end of .post-meta -->';
 
-            html_string +=              '<span class="clubs__box__count">' + (club.id + 1) + '</span>';
 
-            html_string +=  '</a></div><!--end of clubs__box-->';
-
+            html_string += '</div><!-- .end of .bd --></article><!-- end of .usc_club -->';
             return html_string;
+
         }
 
         var settings = {
             filter_criteria: {
-                categories: ['#categoryNames input:checkbox', 'categories.ARRAY.categoryId']
+                categories: ['#categoryNames input:checkbox', 'categories.ARRAY.categoryId'],
+                alphabet: ['#alphabet input:checkbox', 'alphabet']
             },
             search: {input: '#search_box' },
             and_filter_on: true,
@@ -314,8 +305,6 @@ jQuery(function ($) {
 
 
     //this one removes the widgets and puts in my widgets
-    //AjaxUSCClubs.remove_wordpress_widgets_for_filterjs_imposter_widgets();
-    $('.filterjs').show();
-
+    AjaxUSCClubs.remove_wordpress_widgets_for_filterjs_imposter_widgets();
 
 });

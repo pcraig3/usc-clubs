@@ -88,6 +88,7 @@ class WP_AJAX {
         $json_decoded_events_array = $this->filter_js_format_API_response($json_decoded_events_array['items']);
 
         $expiration = $this->expiration;
+        $expiration = 300;
 
         $deleted = delete_site_transient( $transient_name );
 
@@ -218,11 +219,16 @@ class WP_AJAX {
                 if('Active' === $club['status'] && "Ratified Clubs" === $club['typeName'] ) {
 
                     $temp_club['id'] = $num + 0; //filter_js needs sequential id numbers
+                    $temp_club['url'] = trailingslashit(get_bloginfo('wpurl'))
+                                . trailingslashit("clubs/list/" . $club['organizationId']);
 
                     foreach( $fields_to_keep as &$field ) {
                         $temp_club[$field] = $club[$field];
                     }
                     unset($field);
+
+                    $temp_club['alphabet'] = strtolower(substr(trim($temp_club['name']), 0, 1));
+
 
                     $clubs[$num] = $temp_club;
                 }
