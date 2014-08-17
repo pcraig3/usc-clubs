@@ -144,30 +144,71 @@ get_header();
 
                             $keys = array(
                                 'summary',
-                                'description',
-                                'email',
-                                'externalWebsite',
-                                'facebookUrl',
-                                'twitterUrl',
-                                'flickrFeedUrl',
-                                'youtubeChannelUrl',
-                                'googleCalendarUrl',
-                                'profileImageUrl',
+                                'description'
+                                //'email',
+                                //'profileImageUrl',
                             );
+
+                            //some of the summaries are word-for-word what the descriptions are, except shorter
+                            //so check the first (I don't know, maybe) 50 characters of each and if they match only print the summary.
+                            if (
+                                substr_compare(
+                                    html_entity_decode( wp_strip_all_tags( $current_club['summary'] ) ),
+                                        html_entity_decode( wp_strip_all_tags( $current_club['description'] ) ),
+                                    0,  //start index
+                                    50 //end index
+                                ) === 0) {
+
+                                //ie, if the summary and the description match, then remove the first element (summary) from array
+                                array_shift($keys);
+
+                            }
 
                             foreach($keys as &$key) {
 
                                 if( !empty( $current_club[$key] ))
-                                    $html_string .= '<h3>' . $key .'</h3><p>' .  wp_strip_all_tags( $current_club[$key] ) . "</p><br>";
+                                    $html_string .= '<p><span class="subheading">' . ucfirst($key) .'</span></p>'
+                                        . '<p>' .  wp_strip_all_tags( $current_club[$key] ) . "</p><br>";
                             }
                             unset($key);
 
 
                             echo $html_string;
 
-                            $person_string = '<p style="color: #555555;">Vice-President&nbsp;Finance&nbsp;|&nbsp;<a style="color: #451c5f;" href="mailto:uscvpfin@uwo.ca">uscvpfin@uwo.ca</a></p>';
 
-                            echo do_shortcode('[person title="Exective Council Lead"]' . $person_string . '[/person]');
+                            //start the bottom
+
+                            $html_string = '<div class="usc_clubs__contact clearfix"><div class="usc_clubs__contact__child usc_clubs__contact__emails">';
+
+
+                            $contact_string = '';
+
+                            //echo '<a href="mailto:'.antispambot($email,1).'" title="Click to e-mail me" >'.antispambot($email).' </a>';
+                            if( !empty($current_club['email']) )
+                                $contact_string .= '<p style="color: #555555;"><strong>General Club Contact</strong><br>'
+                                                . 'Email: <a style="color: #451c5f;" href="mailto:' . antispambot( $current_club['email'] ,1 ) . '">' . antispambot( $current_club['email']) . '</a></p>';
+
+                            if( !empty($current_club['primaryContactName']) && !empty($current_club['primaryContactCampusEmail']) )
+                                $contact_string .= '<p style="color: #555555;"><strong>Primary Club Contact</strong><br>' .  esc_html($current_club['primaryContactName']) . '<br>'
+                                    . 'Email: <a style="color: #451c5f;" href="mailto:' . antispambot( $current_club['primaryContactCampusEmail'] ,1 ) . '">' . antispambot( $current_club['primaryContactCampusEmail']) . '</a></p>';
+
+
+
+                            $html_string .= do_shortcode('[person title="Contact Information"]' . $contact_string . '[/person]');
+
+                            $html_string .= '</div><div class="usc_clubs__contact__child usc_clubs__contact__buttons"><div class="button_area_at_the_bottom_of_a_single_usc_club btn-menu">';
+
+                            $html_string .=     '<ul>';
+                            if( !empty( $current_club['profileUrl'] ) )
+                                $html_string .=     '<li><a class="profileUrl height_of_person_header" target="_blank" href="http://' . $current_club['profileUrl'] . '">' . __( 'WesternLink Profile', 'usc-clubs' ) .'</a></li>';
+
+                            $html_string .=     '</ul>';
+                            $html_string .= '</div><!--end of .btn-menu --></div><!--end of .usc_clubs__contact__buttons --> ';
+
+                            $html_string .= '</div><!--end of .usc_clubs__contact -->';
+
+                            echo $html_string;
+
 
 
                             wp_link_pages( array( 'before' => '<div class="page-links">' . __( 'Pages:', 'Divi' ), 'after' => '</div>' ) ); ?>

@@ -22,12 +22,14 @@
 .parent-pageid-127 .et_pb_fullwidth_header,
 .usc_clubs-main-content .et_pb_fullwidth_header {
   background-color: #ff5a5a; }
-.page-id-127 .breadcrumbs a:hover, .page-id-127 h4,
-.parent-pageid-127 .breadcrumbs a:hover,
-.parent-pageid-127 h4,
-.usc_clubs-main-content .breadcrumbs a:hover,
-.usc_clubs-main-content h4 {
+.page-id-127 #main-content .breadcrumbs a:hover,
+.parent-pageid-127 #main-content .breadcrumbs a:hover,
+.usc_clubs-main-content #main-content .breadcrumbs a:hover {
   color: rgba(255, 90, 90, 0.8); }
+.page-id-127 h4,
+.parent-pageid-127 h4,
+.usc_clubs-main-content h4 {
+  color: #ff5a5a; }
 .page-id-127 .usc-breadcrumbs,
 .parent-pageid-127 .usc-breadcrumbs,
 .usc_clubs-main-content .usc-breadcrumbs {
@@ -45,11 +47,11 @@
     font-family: 'ETmodules';
     padding: 0 5px;
     font-weight: 400; }
-    .usc_clubs-main-content .news-article-info .etmodules:before:hover {
-      color: rgba(255, 90, 90, 0.8); }
+  .usc_clubs-main-content .news-article-info .etmodules:hover:before {
+    color: rgba(255, 90, 90, 0.8); }
   .usc_clubs-main-content .news-article-info .externalWebsite:before {
     content: "\e02b";
-    /* icon_laptop */ }
+    /* icon_link_alt */ }
   .usc_clubs-main-content .news-article-info .facebookUrl:before {
     content: "\e0c1";
     /* social_facebook_square */
@@ -86,16 +88,27 @@
     content: "\e096";
     /* social_googleplus */ }
 
-.usc_clubs-entry-content p, .page-id-285 .type-usc_clubs p {
-  margin-left: 0;
-  padding-bottom: .35em;
-  /* Got both of these from Tyler's style.css */
-  font-size: 1.25em;
-  line-height: 1.85; }
-.usc_clubs-entry-content span.subheading, .page-id-285 .type-usc_clubs span.subheading {
-  display: inline-block;
-  font-weight: 600;
-  padding-right: 5px; }
+.usc_clubs-entry-content, .page-id-285 .type-usc_clubs {
+  /* Resetting styles so as to match the USC directory page */ }
+  .usc_clubs-entry-content p, .page-id-285 .type-usc_clubs p {
+    margin-left: 0;
+    padding-bottom: .35em;
+    /* Got both of these from Tyler's style.css */
+    font-size: 1.25em;
+    line-height: 1.85; }
+  .usc_clubs-entry-content .person-content, .page-id-285 .type-usc_clubs .person-content, .usc_clubs-entry-content .person, .page-id-285 .type-usc_clubs .person {
+    box-sizing: border-box; }
+    .usc_clubs-entry-content .person-content p, .page-id-285 .type-usc_clubs .person-content p, .usc_clubs-entry-content .person p, .page-id-285 .type-usc_clubs .person p {
+      line-height: 1.8;
+      padding-bottom: 1em;
+      font-size: 14px; }
+  .usc_clubs-entry-content span.subheading, .page-id-285 .type-usc_clubs span.subheading {
+    display: inline-block;
+    font-weight: 600;
+    padding-right: 5px; }
+  .usc_clubs-entry-content .usc_clubs__contact .usc_clubs__contact__child, .page-id-285 .type-usc_clubs .usc_clubs__contact .usc_clubs__contact__child {
+    float: left;
+    width: 50%; }
 
 .page-id-285 .et_pb_widget_area .et_pb_widget {
   margin: 15px 0px 25px; }
@@ -203,66 +216,41 @@
   .page-id-285 .type-usc_clubs .post-meta {
     padding: 0; }
 
-/*
-.button_area_at_the_bottom_of_a_single_usc_job {
+.button_area_at_the_bottom_of_a_single_usc_club {
+  text-align: right; }
+  .button_area_at_the_bottom_of_a_single_usc_club ul li {
+    display: inline-block;
+    width: 95%;
+    text-align: left;
+    padding: 0 10px;
+    box-sizing: border-box; }
+    .button_area_at_the_bottom_of_a_single_usc_club ul li a {
+      color: #666;
+      position: relative; }
+      .button_area_at_the_bottom_of_a_single_usc_club ul li a.height_of_person_header {
+        padding: 10px 15px; }
+      .button_area_at_the_bottom_of_a_single_usc_club ul li a:hover {
+        color: #ff5a5a; }
 
-  text-align: right;
+.btn-menu ul li a {
+  position: relative; }
+.btn-menu :before {
+  font-weight: normal; }
+.btn-menu .job_description_file:before {
+  content: "\e092"; }
+.btn-menu .job_posting_file:before {
+  content: "\e092"; }
+.btn-menu .application_link:before {
+  content: "\e02b"; }
 
-  ul {
+@media screen and (max-width: 750px) {
+    .usc_clubs-entry-content .usc_clubs__contact .usc_clubs__contact__child {
+        width: 100%;
 
-    li {
-
-      display:    inline-block;
-      width:      25%;
-      text-align: left;
-      padding:    0 10px;
-      box-sizing: border-box;
-
-      a {
-
-        color: #666;
-        position: relative;
-
-        &:hover {
-
-          color: $usc-clubs-salmon;
-        }
-      }
-    }
-  }
 }
 
-.btn-menu {
 
-  ul li a {
-    position: relative;
-  }
-
-  :before {
-    font-weight: normal;
-  }
-
-  .job_description_file:before {
-
-    content: "\e092";
-  }
-  .job_posting_file:before {
-
-    content: "\e092";
-  }
-  .application_link:before {
-
-    content: "\e02b";
-  }
-}*/
-@media screen and (min-width: 981px) and (max-width: 1100px) {
-  .btn-menu.button_area_at_the_bottom_of_a_single_usc_job ul li {
-    margin: 10px 0 10px 0;
-    width: 50%;
-    padding-left: 0;
-    padding-right: 20px; } }
-@media screen and (max-width: 980px) {
-  .button_area_at_the_bottom_of_a_single_usc_job ul li {
+  .button_area_at_the_bottom_of_a_single_usc_club ul li {
     width: 100%;
     display: block;
     padding: 0; } }
