@@ -22,24 +22,7 @@ ob_start();
 
                     Our JS can just build this, right?
 
-                    $remuneration_values = array(
-                        'paid',
-                        'volunteer'
-                    );
-
-                    foreach( $remuneration_values as &$remuneration_value ) {
-
-                        $checked_by_default = ( ! $is_remuneration ) ? "checked" : ( $remuneration === $remuneration_value ) ? "checked" : "" ;
-
-                        echo '<li><label class="' . $checked_by_default . '">'
-                            .   '<input id="' . $remuneration_value . '" value="' . $remuneration_value . '" type="checkbox">';
-                        echo ucfirst($remuneration_value) . '</label>';
-                        echo '</li>';
-
-                    }
-                    unset( $remuneration_value );
                     */
-
                     ?>
                 </ul>
             </aside>

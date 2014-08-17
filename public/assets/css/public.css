@@ -40,10 +40,51 @@
   .usc_clubs-main-content #content-area .et_pb_widget_area {
     padding-top: 30px; }
 .usc_clubs-main-content .news-article-info {
-  margin-bottom: 0; }
-  .usc_clubs-main-content .news-article-info .facebookUrl:before {
+  margin-bottom: 0px; }
+  .usc_clubs-main-content .news-article-info .etmodules:before {
     font-family: 'ETmodules';
-    content: "\e093"; }
+    padding: 0 5px;
+    font-weight: 400; }
+    .usc_clubs-main-content .news-article-info .etmodules:before:hover {
+      color: rgba(255, 90, 90, 0.8); }
+  .usc_clubs-main-content .news-article-info .externalWebsite:before {
+    content: "\e02b";
+    /* icon_laptop */ }
+  .usc_clubs-main-content .news-article-info .facebookUrl:before {
+    content: "\e0c1";
+    /* social_facebook_square */
+    content: "\e0aa";
+    /* social_facebook_circle */
+    content: "\e093";
+    /* social_facebook */ }
+  .usc_clubs-main-content .news-article-info .twitterUrl:before {
+    content: "\e0ab";
+    /* social_twitter_circle */
+    content: "\e0c2";
+    /* social_twitter_square */
+    content: "\e094";
+    /* social_twitter */ }
+  .usc_clubs-main-content .news-article-info .flickrFeedUrl:before {
+    content: "\e0d4";
+    /* social_flickr_square */
+    content: "\e0bd";
+    /* social_flickr_circle */
+    content: "\e0a6";
+    /* social_flickr */ }
+  .usc_clubs-main-content .news-article-info .youtubeChannelUrl:before {
+    content: "\e0d1";
+    /* social_youtube_square */
+    content: "\e0ba";
+    /* social_youtube_circle */
+    content: "\e0a3";
+    /* social_youtube */ }
+  .usc_clubs-main-content .news-article-info .googleCalendarUrl:before {
+    content: "\e0c4";
+    /* social_googleplus_square */
+    content: "\e0ad";
+    /* social_googleplus_circle */
+    content: "\e096";
+    /* social_googleplus */ }
 
 .usc_clubs-entry-content p, .page-id-285 .type-usc_clubs p {
   margin-left: 0;

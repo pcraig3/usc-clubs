@@ -56,7 +56,7 @@ get_header();
                                 if($key === 'a')
                                     foreach($breadcrumb as $link)
                                         echo ' > <span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" title="Go to '. $link
-                                                .'." href="' . trailingslashit(get_bloginfo('wpurl')) . str_replace(' ', '/', strtolower( $link ) ) . '/">' . $link . '</a></span>';
+                                            .'." href="' . trailingslashit(get_bloginfo('wpurl')) . str_replace(' ', '/', strtolower( $link ) ) . '/">' . $link . '</a></span>';
 
                                 else if ($key === 'span')
                                     foreach($breadcrumb as $link)
@@ -107,11 +107,26 @@ get_header();
                                 unset($category);
 
                                 $html_string = trim($html_string, ", ");
-                                $html_string .= ' | ';
+                                $html_string .= ' |';
+
+                                $social_links = array(
+                                    'externalWebsite',
+                                    'facebookUrl',
+                                    'twitterUrl',
+                                    'flickrFeedUrl',
+                                    'youtubeChannelUrl',
+                                    'googleCalendarUrl'
+                                );
+
+                                foreach($social_links as &$social_link) {
+                                    if( !empty( $current_club[$social_link]) )
+                                        $html_string .= '<a href="' . esc_url( $current_club[$social_link]) . '" target="_blank" class="etmodules ' . $social_link . '"></a>' ;//. date('F j, Y');
+                                }
+                                unset($social_link);
 
                                 /* This sucks and we're not leaving it. */
                                 if( !empty( $current_club['facebookUrl'] ) )
-                                    $html_string .= '<a href="' . esc_url( $current_club['facebookUrl']) . '" target="_blank"><span class="facebookUrl"></span></a>' ;//. date('F j, Y');
+
 
                                 $html_string .= '</p>';
                             }

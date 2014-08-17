@@ -153,6 +153,7 @@ class WP_AJAX {
                                                         'youtubeChannelUrl',
                                                         'googleCalendarUrl',
                                                         'profileImageUrl',
+                                                        'profileUrl',
                                                         'primaryContactName',
                                                         'primaryContactCampusEmail',
                                                         'categories'

@@ -30,7 +30,8 @@ jQuery(function ($) {
          */
         remove_wordpress_widgets_for_filterjs_imposter_widgets : function() {
 
-            var $widgets_column = $('.page-id-285 .et_pb_widget_area');
+            /* TODO: This is bad practice, adding the class like this. */
+            var $widgets_column = $('.page-id-285 .et_pb_widget_area').addClass('btn-menu');
             var $filterjs       = $('.filterjs.hidden');
 
             //old.before( new ).detach();
