@@ -33,14 +33,24 @@
 .usc_clubs-main-content .usc-breadcrumbs {
   background-color: #fbfbfb; }
 
+.usc_clubs-main-content #usc_clubs-post {
+  padding-top: 0 !important; }
 .usc_clubs-main-content #content-area {
   padding: 0; }
+  .usc_clubs-main-content #content-area .et_pb_widget_area {
+    padding-top: 30px; }
 .usc_clubs-main-content .news-article-info {
   margin-bottom: 0; }
+  .usc_clubs-main-content .news-article-info .facebookUrl:before {
+    font-family: 'ETmodules';
+    content: "\e093"; }
 
 .usc_clubs-entry-content p, .page-id-285 .type-usc_clubs p {
   margin-left: 0;
-  padding-bottom: .35em; }
+  padding-bottom: .35em;
+  /* Got both of these from Tyler's style.css */
+  font-size: 1.25em;
+  line-height: 1.85; }
 .usc_clubs-entry-content span.subheading, .page-id-285 .type-usc_clubs span.subheading {
   display: inline-block;
   font-weight: 600;

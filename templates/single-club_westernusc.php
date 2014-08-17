@@ -23,7 +23,11 @@ get_header();
 
             <section class="et_pb_fullwidth_header et_pb_bg_layout_dark et_pb_text_align_left">
                 <div class="et_pb_row">
-                    <h1><?php echo esc_html( $current_club['name'] ); ?></h1>
+                    <h1><?php
+                        echo esc_html( $current_club['name'] );
+                        if( !empty( $current_club['shortName'] ) )
+                            echo ' (' . esc_html( $current_club['shortName'] ) . ')'; ?>
+                    </h1>
                 </div>
             </section>
 
@@ -35,26 +39,32 @@ get_header();
                 <div class="et_pb_column et_pb_column_4_4">
                     <div class="et_pb_text et_pb_bg_layout_light et_pb_text_align_left">
 
-                        <!-- @TODO: fix this -->
-
-
-
                         <div class="breadcrumbs">
                             <?php if(function_exists('bcn_display'))
                             {
                                 bcn_display();
-                            }?>
+                            }
 
-                            <!-- trailingslashit(get_bloginfo('wpurl')) 
-                                . trailingslashit("clubs/list/" . $club['organizationId']); -->
-                            >
-            <!--//clubs -->         <span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" title="Go to Clubs." href="http://westernusc.org/clubs/">Clubs</a></span>
-                            >
-            <!--//clubs list -->    <span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" title="Go to the Clubs List." href="http://westernusc.org/clubs/list/">Clubs List</a></span>
-                            >
-            <!--//this club -->     <span typeof="v:Breadcrumb"><span property="v:title"><?php echo esc_html( $current_club['name'] ); ?></span></span>
+                            //as our page is not a native WordPress one, we're on our own with the breadcrumbs.
+                            $manual_breadcrumbs = array(
+                                'a'     => array( 'Clubs', 'Clubs List' ),
+                                'span'  => array( esc_html( $current_club['name'] ) )
+                            );
+
+                            foreach($manual_breadcrumbs as $key => $breadcrumb) {
+
+                                if($key === 'a')
+                                    foreach($breadcrumb as $link)
+                                        echo ' > <span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" title="Go to '. $link
+                                                .'." href="' . trailingslashit(get_bloginfo('wpurl')) . str_replace(' ', '/', strtolower( $link ) ) . '/">' . $link . '</a></span>';
+
+                                else if ($key === 'span')
+                                    foreach($breadcrumb as $link)
+                                        echo ' > <span typeof="v:Breadcrumb"><span property="v:title">' . $link . '</span></span>';
+                            }
+
+                            ?>
                         </div>
-
 
                     </div> <!-- .et_pb_text -->
                 </div> <!-- .et_pb_column -->
@@ -71,7 +81,7 @@ get_header();
                     <article id="post-<?php echo intval( $current_club['organizationId']); ?>"
                              class="post-<?php echo intval( $current_club['organizationId']); ?> usc_clubs type-usc_clubs status-publish hentry">
 
-                        <div class="usc_clubs-article-info">
+                        <div class="usc_clubs-article-info news-article-info ">
 
                             <?php //et_divi_post_meta();
 
@@ -97,7 +107,12 @@ get_header();
                                 unset($category);
 
                                 $html_string = trim($html_string, ", ");
-                                $html_string .= ' | ' . date('F j, Y');
+                                $html_string .= ' | ';
+
+                                /* This sucks and we're not leaving it. */
+                                if( !empty( $current_club['facebookUrl'] ) )
+                                    $html_string .= '<a href="' . esc_url( $current_club['facebookUrl']) . '" target="_blank"><span class="facebookUrl"></span></a>' ;//. date('F j, Y');
+
                                 $html_string .= '</p>';
                             }
 
@@ -113,7 +128,6 @@ get_header();
                             $html_string = '';
 
                             $keys = array(
-                                'shortName',
                                 'summary',
                                 'description',
                                 'email',
@@ -129,14 +143,17 @@ get_header();
                             foreach($keys as &$key) {
 
                                 if( !empty( $current_club[$key] ))
-                                    $html_string .= '<h3>' . $key .'</h3><p>' . esc_html($current_club[$key]) . "</p><br>";
+                                    $html_string .= '<h3>' . $key .'</h3><p>' .  wp_strip_all_tags( $current_club[$key] ) . "</p><br>";
                             }
                             unset($key);
 
-                            $summary = esc_html($current_club['summary']);
-                            $description = esc_html($current_club['description']);
 
                             echo $html_string;
+
+                            $person_string = '<p style="color: #555555;">Vice-President&nbsp;Finance&nbsp;|&nbsp;<a style="color: #451c5f;" href="mailto:uscvpfin@uwo.ca">uscvpfin@uwo.ca</a></p>';
+
+                            echo do_shortcode('[person title="Exective Council Lead"]' . $person_string . '[/person]');
+
 
                             wp_link_pages( array( 'before' => '<div class="page-links">' . __( 'Pages:', 'Divi' ), 'after' => '</div>' ) ); ?>
                         </div> <!-- .entry-content -->

@@ -166,10 +166,7 @@ class WP_AJAX {
 
         } elseif ( ! empty( $fields_to_keep ) ) {
             /** Just so we're all on the same page, here's the full list we can get from a club.
-             * @TODO: This might mean problems paging in the future. I guess we'll see.
-             * maybe check if json_response['count'] == json_response['count_total']
              *
-             * Anyway, here's the simplified version.
             organizationId: 1646
             name: "Acapella Project"
             status: "Active"

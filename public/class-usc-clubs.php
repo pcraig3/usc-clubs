@@ -93,6 +93,8 @@ class USC_Clubs {
         add_action( 'template_redirect', array( $this, 'usc_clubs_redirect' ) );
 
         add_shortcode( 'usc_clubs', array( $this, 'usc_clubs_shortcode_function') );
+
+        add_action( 'widgets_init', array( $this, 'usc_clubs_register_sidebars' ) );
     }
 
     /**
@@ -245,8 +247,27 @@ class USC_Clubs {
         add_rewrite_rule('clubs/list/([^/]+)/?$','index.php?usc_clubs=$matches[1]','top');
     }
 
-
     /**
+     * Guess what this one does.
+     */
+    public function usc_clubs_register_sidebars() {
+
+        /* Register the usc jobs archive sidebar. */
+        register_sidebar(
+            array(
+                'id' => 'usc_club_single_sidebar',
+                'name' => __( 'USC Club Single Sidebar', 'usc-jobs' ),
+                'description' => __( 'Widgets meant only for individual USC Club Pages.', 'usc-clubs' ),
+                'before_widget' => '<aside id="%1$s" class="et_pb_widget %2$s">',
+                'after_widget' => '</aside>',
+                'before_title' => '<h4 class="widgettitle">',
+                'after_title' => '</h4>'
+            )
+        );
+    }
+
+
+        /**
      * Function meant to target the [usc_clubs] shortcode.  Grabs the attributes in the shortcode to
      * call a function somewhere down there.
      *
