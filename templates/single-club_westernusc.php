@@ -107,10 +107,9 @@ get_header();
                                 unset($category);
 
                                 $html_string = trim($html_string, ", ");
-                                $html_string .= ' |';
 
                                 $social_links = array(
-                                    'externalWebsite',
+                                    /* 'externalWebsite', */
                                     'facebookUrl',
                                     'twitterUrl',
                                     'flickrFeedUrl',
@@ -123,9 +122,6 @@ get_header();
                                         $html_string .= '<a href="' . esc_url( $current_club[$social_link]) . '" target="_blank" class="etmodules ' . $social_link . '"></a>' ;//. date('F j, Y');
                                 }
                                 unset($social_link);
-
-                                /* This sucks and we're not leaving it. */
-                                if( !empty( $current_club['facebookUrl'] ) )
 
 
                                 $html_string .= '</p>';
@@ -186,11 +182,11 @@ get_header();
                             //echo '<a href="mailto:'.antispambot($email,1).'" title="Click to e-mail me" >'.antispambot($email).' </a>';
                             if( !empty($current_club['email']) )
                                 $contact_string .= '<p style="color: #555555;"><strong>General Club Contact</strong><br>'
-                                                . 'Email: <a style="color: #451c5f;" href="mailto:' . antispambot( $current_club['email'] ,1 ) . '">' . antispambot( $current_club['email']) . '</a></p>';
+                                                . 'Email: <a href="mailto:' . antispambot( $current_club['email'] ,1 ) . '">' . antispambot( $current_club['email']) . '</a></p>';
 
                             if( !empty($current_club['primaryContactName']) && !empty($current_club['primaryContactCampusEmail']) )
                                 $contact_string .= '<p style="color: #555555;"><strong>Primary Club Contact</strong><br>' .  esc_html($current_club['primaryContactName']) . '<br>'
-                                    . 'Email: <a style="color: #451c5f;" href="mailto:' . antispambot( $current_club['primaryContactCampusEmail'] ,1 ) . '">' . antispambot( $current_club['primaryContactCampusEmail']) . '</a></p>';
+                                    . 'Email: <a href="mailto:' . antispambot( $current_club['primaryContactCampusEmail'] ,1 ) . '">' . antispambot( $current_club['primaryContactCampusEmail']) . '</a></p>';
 
 
 
@@ -199,8 +195,16 @@ get_header();
                             $html_string .= '</div><div class="usc_clubs__contact__child usc_clubs__contact__buttons"><div class="button_area_at_the_bottom_of_a_single_usc_club btn-menu">';
 
                             $html_string .=     '<ul>';
+
+                            if( !empty( $current_club['externalWebsite'] ) )
+                                $html_string .=     '<li><a class="externalWebsite height_of_person_header" target="_blank" href="' . $this->wp_ajax->add_http_if_not_exists($current_club['externalWebsite']) . '">' . __( 'Twitter Profile', 'usc-clubs' ) .'</a></li>';
+
                             if( !empty( $current_club['profileUrl'] ) )
-                                $html_string .=     '<li><a class="profileUrl height_of_person_header" target="_blank" href="http://' . $current_club['profileUrl'] . '">' . __( 'WesternLink Profile', 'usc-clubs' ) .'</a></li>';
+                                $html_string .=     '<li><a class="profileUrl height_of_person_header" target="_blank" href="' . $this->wp_ajax->add_http_if_not_exists($current_club['profileUrl']) . '">' . __( 'WesternLink Profile', 'usc-clubs' ) .'</a></li>';
+
+                            //if( !empty( $current_club['facebookUrl'] ) )
+                            //    $html_string .=     '<li><a class="facebookUrl height_of_person_header" target="_blank" href="' . $current_club['facebookUrl'] . '">' . __( 'Facebook Profile', 'usc-clubs' ) .'</a></li>';
+
 
                             $html_string .=     '</ul>';
                             $html_string .= '</div><!--end of .btn-menu --></div><!--end of .usc_clubs__contact__buttons --> ';

@@ -128,7 +128,7 @@ class USC_Clubs {
             // CLUB PAGE REQUESTED!
 
             //tank the main query
-            add_filter('posts_request', array( $this, 'suppress_main_query' ), 10, 2);
+            //add_filter('posts_request', array( $this, 'suppress_main_query' ), 10, 2);
 
             //return our template (@TODO: bundle this with the theme, not the plugin)
             add_filter( 'template_include', array( $this, 'call_template_club_single' ) );
@@ -255,7 +255,7 @@ class USC_Clubs {
         /* Register the usc jobs archive sidebar. */
         register_sidebar(
             array(
-                'id' => 'usc_club_single_sidebar',
+                'id' => 'usc_clubs_single_sidebar',
                 'name' => __( 'USC Club Single Sidebar', 'usc-jobs' ),
                 'description' => __( 'Widgets meant only for individual USC Club Pages.', 'usc-clubs' ),
                 'before_widget' => '<aside id="%1$s" class="et_pb_widget %2$s">',

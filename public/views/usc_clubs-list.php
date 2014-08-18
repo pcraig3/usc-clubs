@@ -12,7 +12,7 @@ ob_start();
         <div class="filterjs__filter">
             <aside  id="nav_menu-search-1000" class="filterjs__filter__search__wrapper et_pb_widget widget_nav_menu">
                 <h4 class="widgettitle">Search Clubs</h4>
-                <input type="text" id="search_box" class="searchbox" placeholder="^.^"/>
+                <input type="text" id="search_box" class="searchbox" placeholder="´◡`"/>
             </aside>
             <aside id="nav_menu-categoryNames-1000" class="filterjs__filter__checkbox__wrapper et_pb_widget widget_nav_menu" >
                 <h4 class="widgettitle">Categories</h4>
@@ -63,7 +63,7 @@ for($i = 0; $i < $total; $i++) {
     $img_url = "";
 
     if( isset( $current_club['profileImageUrl'] ) )
-        $img_url = esc_url( "http://" . $current_club['profileImageUrl'] );
+        $img_url = esc_url( $this->wp_ajax->add_http_if_not_exists($current_club['profileImageUrl']) );
 
     /*
             html_string += '</article><!-- end of usc_club -->';
@@ -83,7 +83,10 @@ for($i = 0; $i < $total; $i++) {
     }
 
 
-    $html_string .=     '<div class="bd"><a href="' . esc_url( $current_club['url'] ) . '" title="' . esc_attr( $current_club['name'] ) . '"><h2>' . esc_html( $current_club['name'] ) . '</h2></a>';
+    $html_string .=     '<div class="bd"><a href="' . esc_url( $current_club['url'] ) . '" title="' . esc_attr( $current_club['name'] ) . '"><h2>'
+        . esc_html( $current_club['name'] );
+
+    $html_string .= ( !empty($current_club['shortName']) ) ? ' (' . esc_html( $current_club['shortName'] ) . ')</h2></a>' : '</h2></a>';
 
     $html_string .=     '<p class="post-meta">';
 

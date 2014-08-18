@@ -327,7 +327,7 @@ class WP_AJAX {
      * @param $url      a url with or without an http:// prefix
      * @return string   a url with the http:// prefix, or whatever it had originally
      */
-    private function add_http_if_not_exists($url) {
+    public function add_http_if_not_exists($url) {
 
         if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
             $url = "http://" . $url;

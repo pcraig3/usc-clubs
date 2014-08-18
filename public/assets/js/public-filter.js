@@ -250,8 +250,12 @@ jQuery(function ($) {
             }
 
             html_string +=      '<div class="bd">'
-                                    + '<a href="' + club.url + '" title="' + club.name + '"><h2>' + club.name + '</h2></a>';
+                                    + '<a href="' + club.url + '" title="' + club.name + '"><h2>' + club.name;
 
+            if('' != club.shortName )
+                html_string += ' (' + club.shortName + ')';
+
+            html_string +=          '</h2></a>'
             html_string +=          '<p class="post-meta">';
 
             var categories = club.categories;
