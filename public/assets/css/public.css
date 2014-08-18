@@ -346,7 +346,7 @@
     display: block;
     padding: 0; } }
 @media screen and (max-width: 470px) {
-  .usc_clubs-main-content .news-article-info .post-meta a.etmodules {
+  .usc_clubs-main-content .news-article-info .post-meta a.etmodules:before {
     padding: 0 35px 0 0;
     font-size: 28px; } }
 /* This applies to the full page clubs pages */

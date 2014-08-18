@@ -95,18 +95,20 @@ get_header();
                             if( false !== $array_of_categories ) {
 
                                 $html_string .= '<p class="post-meta">';
+                                $html_string .= '<a href="#" style="cursor:default;">';
+
 
                                 foreach( $array_of_categories as &$category) {
 
                                     //var_dump($department);
 
-                                    $html_string .= '<a href="#" style="cursor:default;">';
-                                    $html_string .= esc_html($category['categoryName']) . "</a>, ";
+                                    $html_string .= esc_html($category['categoryName']) . ", ";
 
                                 }
                                 unset($category);
 
                                 $html_string = trim($html_string, ", ");
+                                $html_string .= '</a>';
 
                                 $social_links = array(
                                     /* 'externalWebsite', */
@@ -197,7 +199,7 @@ get_header();
                             $html_string .=     '<ul>';
 
                             if( !empty( $current_club['externalWebsite'] ) )
-                                $html_string .=     '<li><a class="externalWebsite height_of_person_header" target="_blank" href="' . $this->wp_ajax->add_http_if_not_exists($current_club['externalWebsite']) . '">' . __( 'Twitter Profile', 'usc-clubs' ) .'</a></li>';
+                                $html_string .=     '<li><a class="externalWebsite height_of_person_header" target="_blank" href="' . $this->wp_ajax->add_http_if_not_exists($current_club['externalWebsite']) . '">' . __( 'Visit Website', 'usc-clubs' ) .'</a></li>';
 
                             if( !empty( $current_club['profileUrl'] ) )
                                 $html_string .=     '<li><a class="profileUrl height_of_person_header" target="_blank" href="' . $this->wp_ajax->add_http_if_not_exists($current_club['profileUrl']) . '">' . __( 'WesternLink Profile', 'usc-clubs' ) .'</a></li>';
