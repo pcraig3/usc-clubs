@@ -20,6 +20,8 @@ class WP_AJAX {
 
     protected $expiration = null;
 
+    private $wp_using_ext_object_cache_status;
+
     private function __construct() {
 
 
@@ -48,6 +50,25 @@ class WP_AJAX {
 
         return self::$instance;
     }
+
+    public function turn_off_object_cache_so_our_bloody_plugin_works() {
+
+        global $_wp_using_ext_object_cache;
+
+        $this->wp_using_ext_object_cache_status = $_wp_using_ext_object_cache;
+
+        $_wp_using_ext_object_cache = false;
+
+    }
+
+    public function turn_object_caching_back_on_for_the_next_poor_sod() {
+
+        global $_wp_using_ext_object_cache;
+
+        $_wp_using_ext_object_cache =  $this->wp_using_ext_object_cache_status;
+    }
+
+
 
     /**
      * Does (a bit more than) what it says on the box. gets all facebook and db events (and then merges their values)
@@ -92,9 +113,12 @@ class WP_AJAX {
         $json_decoded_events_array = $json_decoded_events_array['response'];
 
         $expiration = $this->expiration;
-        $expiration = 30000;
+        $expiration = 300;
 
-        $deleted = false; //delete_site_transient( $transient_name );
+        $this->turn_off_object_cache_so_our_bloody_plugin_works();
+
+        $deleted = delete_site_transient( $transient_name );
+        global $_wp_using_ext_object_cache;
 
         //returns true or false
         $result['success'] = set_site_transient( $transient_name, json_encode($json_decoded_events_array), $expiration );
@@ -102,7 +126,10 @@ class WP_AJAX {
         $result['expiration'] = $expiration;
         $result['stupid_test'] = $stupid_test;
         $result['transient'] = $this->get_clubs($transient_name);
+        $result['object_cache'] = $_wp_using_ext_object_cache;
         $result['deleted'] = $deleted;
+
+        $this->turn_object_caching_back_on_for_the_next_poor_sod();
 
         echo json_encode( $result );
         die();
@@ -227,6 +254,7 @@ class WP_AJAX {
                     $temp_club['id'] = $num + 0; //filter_js needs sequential id numbers
                     $temp_club['url'] = $this->generate_club_url( $club );
 
+
                     foreach( $fields_to_keep as &$field ) {
                         $temp_club[$field] = $club[$field];
                     }
@@ -270,6 +298,8 @@ class WP_AJAX {
      */
     public function get_clubs( $to_append = '' ) {
 
+        $this->turn_off_object_cache_so_our_bloody_plugin_works();
+
         $transient_name = $this->generate_transient_name( 'usc_clubs_get_clubs' );
 
         ob_start();
@@ -300,6 +330,8 @@ class WP_AJAX {
 
         $response['transient_name'] = $transient_name;
         $response['stupid_test'] = $stupid_test;
+
+        $this->turn_object_caching_back_on_for_the_next_poor_sod();
 
         return $response;
     }
