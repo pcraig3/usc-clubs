@@ -26,7 +26,7 @@ jQuery(function ($) {
         /** Remove the widgets created by Wordpress (if they exist, which they don't)
          *  and sub in the filter checkboxes and searchbar created by filterJS
          *
-         * @since    2.0.0
+         * @since    2.1.1
          */
         remove_wordpress_widgets_for_filterjs_imposter_widgets : function() {
 
@@ -68,6 +68,17 @@ jQuery(function ($) {
                     AjaxUSCClubs.update_visible_clubs();
                 }, 50);
 
+            });
+
+            $widgets_column.before('<h3 id="id1234" class="collapseomatic">Filter Club List</h3>');
+            $widgets_column.prop('id', "target-id1234" ).addClass('collapseomatic_content');
+
+            $(window).resize(function () {
+                    $collapseomatic_button = $('.collapseomatic');
+                    $collapseomatic_content = $collapseomatic_button.next();
+
+                    if( $(window).width() > 980 && ! $collapseomatic_content.is(':visible') )
+                        $collapseomatic_content.show();
             });
 
             //click event listener on '#all' checkbox turns on and off the entire row.

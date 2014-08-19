@@ -28,10 +28,13 @@
   background-color: #ff5a5a; }
 .page-id-127 .breadcrumbs a:hover,
 .page-id-127 #content-area .et_pb_widget_area li a:hover,
+.page-id-127 .collapseomatic:hover,
 .parent-pageid-127 .breadcrumbs a:hover,
 .parent-pageid-127 #content-area .et_pb_widget_area li a:hover,
+.parent-pageid-127 .collapseomatic:hover,
 .usc_clubs-main-content .breadcrumbs a:hover,
-.usc_clubs-main-content #content-area .et_pb_widget_area li a:hover {
+.usc_clubs-main-content #content-area .et_pb_widget_area li a:hover,
+.usc_clubs-main-content .collapseomatic:hover {
   color: rgba(255, 90, 90, 0.8) !important; }
 .page-id-127 h4,
 .parent-pageid-127 h4,
@@ -131,6 +134,13 @@
     float: left;
     width: 50%; }
 
+.page-id-285 .collapseomatic {
+  display: none; }
+.page-id-285 .et_pb_widget_area.collapseomatic_excerpt, .page-id-285 .et_pb_widget_area.collapseomatic_content {
+  margin-left: 0px;
+  padding: 0;
+  background: none;
+  border: none; }
 .page-id-285 .et_pb_widget_area .et_pb_widget {
   margin: 15px 0px 25px; }
   .page-id-285 .et_pb_widget_area .et_pb_widget .widgettitle {
@@ -309,7 +319,22 @@
 .btn-menu .application_link:before {
   content: "\e02b"; }
 
-@media screen and (max-width: 968px) {
+@media screen and (max-width: 979px) {
+  .page-id-285 .collapseomatic {
+    display: block;
+    padding: 15px;
+    color: #666;
+    margin-top: 15px;
+    border: 0; }
+  .page-id-285 .et_pb_widget_area.collapseomatic_excerpt, .page-id-285 .et_pb_widget_area.collapseomatic_content {
+    display: none;
+    padding: 15px;
+    background-color: #f9f9f9; }
+    .page-id-285 .et_pb_widget_area.collapseomatic_excerpt .searchbox, .page-id-285 .et_pb_widget_area.collapseomatic_content .searchbox {
+      background-color: #f9f9f9; }
+  .page-id-285 .usc_clubs--count {
+    margin-top: 30px; }
+
   .usc_clubs-main-content .news-article-info .post-meta a:first-of-type {
     width: 100%;
     display: block;
@@ -325,9 +350,7 @@
       font-size: 24px; }
 
   .usc_clubs-entry-content .usc_clubs__contact .usc_clubs__contact__child, .page-id-285 .type-usc_clubs .usc_clubs__contact .usc_clubs__contact__child {
-    padding-top: 15px; }
-
-  .usc_clubs-entry-content .usc_clubs__contact .usc_clubs__contact__child, .page-id-285 .type-usc_clubs .usc_clubs__contact .usc_clubs__contact__child {
+    padding-top: 15px;
     width: 100%; }
 
   .button_area_at_the_bottom_of_a_single_usc_club ul li {
@@ -348,93 +371,96 @@
 @media screen and (max-width: 470px) {
   .usc_clubs-main-content .news-article-info .post-meta a.etmodules:before {
     padding: 0 35px 0 0;
-    font-size: 28px; } }
-/* This applies to the full page clubs pages */
-article[id^="club-"] img.club-logo {
-  max-width: 170px;
-  max-height: 170px;
-  padding: 5px;
-  border: 1px solid lightgrey; }
-article[id^="club-"] a[rel="back"]:before {
-  content: "<<<";
-  padding-right: 0.5em; }
-article[id^="club-"] p.vcard a {
-  padding-right: 10px; }
+    font-size: 28px; }
 
-/* Applies to the clubs/events lists */
-/* Attribute selectors explained here: http://css-tricks.com/attribute-selectors/ */
-blockquote[id^="clubs"],
-blockquote[id^="events"] {
-  margin: 17px 40px; }
+  .type-usc_clubs .img {
+    display: none; }
 
-/* Source: http://csswizardry.com/2013/05/the-flag-object/ */
-.flag {
-  display: table;
-  width: 100%; }
+  /* This applies to the full page clubs pages */
+  article[id^="club-"] img.club-logo {
+    max-width: 170px;
+    max-height: 170px;
+    padding: 5px;
+    border: 1px solid lightgrey; }
+  article[id^="club-"] a[rel="back"]:before {
+    content: "<<<";
+    padding-right: 0.5em; }
+  article[id^="club-"] p.vcard a {
+    padding-right: 10px; }
 
-div[class*="__box"] {
-  border: 1px solid lightgrey;
-  padding: 4px;
-  position: relative;
-  border-radius: 2px;
-  margin-bottom: 10px;
-  overflow: hidden;
-  display: block; }
-  div[class*="__box"]:hover {
-    -webkit-box-shadow: 0px 0px 15px -10px grey;
-    box-shadow: 0px 0px 15px -10px grey; }
-  div[class*="__box"] img {
-    margin: 0;
-    max-height: 80px;
-    max-width: 80px;
-    display: inline; }
-  div[class*="__box"] h3.alpha {
-    text-align: left;
-    width: 80%;
-    font-size: 1.6em;
-    display: inline-block;
-    font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
-    font-weight: normal;
-    text-transform: none;
-    letter-spacing: normal;
-    margin-top: 0; }
-  div[class*="__box"] p.lede {
-    font-size: 1em;
-    margin: 0;
-    text-align: left;
-    text-transform: lowercase;
-    color: #656565; }
-  div[class*="__box"] span[class*="__box__count"] {
-    position: absolute;
-    right: -2px;
-    color: #D3D3D3;
-    top: 3px;
-    font-size: 2.8em; }
+  /* Applies to the clubs/events lists */
+  /* Attribute selectors explained here: http://css-tricks.com/attribute-selectors/ */
+  blockquote[id^="clubs"],
+  blockquote[id^="events"] {
+    margin: 17px 40px; }
 
-.flag__image,
-.flag__body {
-  display: table-cell;
-  vertical-align: middle; }
-  .flag--top .flag__image, .flag--top
+  /* Source: http://csswizardry.com/2013/05/the-flag-object/ */
+  .flag {
+    display: table;
+    width: 100%; }
+
+  div[class*="__box"] {
+    border: 1px solid lightgrey;
+    padding: 4px;
+    position: relative;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    display: block; }
+    div[class*="__box"]:hover {
+      -webkit-box-shadow: 0px 0px 15px -10px grey;
+      box-shadow: 0px 0px 15px -10px grey; }
+    div[class*="__box"] img {
+      margin: 0;
+      max-height: 80px;
+      max-width: 80px;
+      display: inline; }
+    div[class*="__box"] h3.alpha {
+      text-align: left;
+      width: 80%;
+      font-size: 1.6em;
+      display: inline-block;
+      font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
+      font-weight: normal;
+      text-transform: none;
+      letter-spacing: normal;
+      margin-top: 0; }
+    div[class*="__box"] p.lede {
+      font-size: 1em;
+      margin: 0;
+      text-align: left;
+      text-transform: lowercase;
+      color: #656565; }
+    div[class*="__box"] span[class*="__box__count"] {
+      position: absolute;
+      right: -2px;
+      color: #D3D3D3;
+      top: 3px;
+      font-size: 2.8em; }
+
+  .flag__image,
   .flag__body {
-    vertical-align: top; }
-  .flag--bottom .flag__image, .flag--bottom
+    display: table-cell;
+    vertical-align: middle; }
+    .flag--top .flag__image, .flag--top
+    .flag__body {
+      vertical-align: top; }
+    .flag--bottom .flag__image, .flag--bottom
+    .flag__body {
+      vertical-align: bottom; }
+
+  .flag__image {
+    padding-right: 10px; }
+    .flag__image > img {
+      display: block;
+      max-width: none; }
+    .flag--rev .flag__image {
+      padding-right: 0;
+      padding-left: 10px; }
+
   .flag__body {
-    vertical-align: bottom; }
-
-.flag__image {
-  padding-right: 10px; }
-  .flag__image > img {
-    display: block;
-    max-width: none; }
-  .flag--rev .flag__image {
-    padding-right: 0;
-    padding-left: 10px; }
-
-.flag__body {
-  width: 100%; }
-
-@media only screen and (max-width: 480px) {
+    width: 100%; } }
+@media only screen and (max-width: 470px) and (max-width: 480px) {
   blockquote[id^="clubs"],
   blockquote[id^="events"] {
     margin: 17px 10px; }
@@ -447,7 +473,4 @@ div[class*="__box"] {
   div[class*="__box"] p.lede {
     font-size: 0.8em; }
   div[class*="__box"] span[class*="__box__count"] {
-    font-size: 2em; }
-
-  .type-usc_clubs .img {
-    display: none; } }
+    font-size: 2em; } }

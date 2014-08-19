@@ -14,7 +14,7 @@
  * Plugin Name:       USC Clubs
  * Plugin URI:        http://testwestern.com/clubs-from-github/
  * Description:       Beams in some information from GitHub.  Possibly witchcraft.
- * Version:           2.1.0
+ * Version:           2.1.1
  * Author:            Paul Craig
  * Author URI:        https://profiles.wordpress.org/pcraig3/
  * Text Domain:       usc-clubs

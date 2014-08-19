@@ -3,7 +3,7 @@ Contributors: pcraig3
 Tags: clubs list, beta
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 2.1.1 =
+* Added JQuery Accordion to Filters on mobile version.
 
 = 2.1.0 =
 * Another biggish update.  Mostly I forgot to update the version.

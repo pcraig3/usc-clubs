@@ -50,10 +50,13 @@ $usc-clubs-salmon--transparent: rgba(255, 90, 90, .8);
     background-color: $usc-clubs-salmon;
   }
 
-  .breadcrumbs a:hover,
-  #content-area .et_pb_widget_area li a:hover {
+  .breadcrumbs a,
+  #content-area .et_pb_widget_area li a,
+  .collapseomatic {
 
-    color: $usc-clubs-salmon--transparent !important;
+    &:hover {
+      color: $usc-clubs-salmon--transparent !important;
+    }
   }
 
   h4 {
@@ -211,7 +214,21 @@ $usc-clubs-salmon--transparent: rgba(255, 90, 90, .8);
 
 .page-id-285 {
 
+  .collapseomatic {
+
+    display:  none;
+  }
+
   .et_pb_widget_area  {
+
+    &.collapseomatic_excerpt,
+    &.collapseomatic_content {
+
+      margin-left: 0px;
+      padding: 0;
+      background: none;
+      border: none;
+    }
 
     .et_pb_widget {
 
@@ -473,7 +490,41 @@ $usc-clubs-salmon--transparent: rgba(255, 90, 90, .8);
   }
 }
 
-@media screen and (max-width: 968px) {
+@media screen and (max-width: 979px) {
+
+  .page-id-285 {
+
+    .collapseomatic {
+
+      display:  block;
+      padding: 15px;
+      color: #666;
+      margin-top: 15px;
+      border: 0;
+    }
+
+    .et_pb_widget_area  {
+
+      &.collapseomatic_excerpt,
+      &.collapseomatic_content {
+        display: none;
+        padding: 15px;
+        background-color: #f9f9f9;
+
+        .searchbox {
+
+          background-color: #f9f9f9;
+        }
+      }
+    }
+
+    .usc_clubs--count {
+
+      margin-top:     30px;
+    }
+
+  }
+
 
   .usc_clubs-main-content .news-article-info .post-meta {
 
@@ -503,13 +554,7 @@ $usc-clubs-salmon--transparent: rgba(255, 90, 90, .8);
   .usc_clubs-entry-content .usc_clubs__contact .usc_clubs__contact__child {
 
     padding-top: 15px;
-  }
-
-  .usc_clubs-entry-content {
-
-    .usc_clubs__contact .usc_clubs__contact__child {
-      width: 100%;
-    }
+    width: 100%;
   }
 
   .button_area_at_the_bottom_of_a_single_usc_club ul li {
@@ -551,188 +596,189 @@ $usc-clubs-salmon--transparent: rgba(255, 90, 90, .8);
     }
   }
 
-}
-
-
-
-
-
-
-
-
-
-
-
-/* This applies to the full page clubs pages */
-article[id^="club-"] {
-
-  img.club-logo {
-
-    max-width:  170px;
-    max-height: 170px;
-    padding:    5px;
-    border:     1px solid lightgrey;
-
-  }
-
-  a[rel="back"]:before {
-
-    content: "<<<";
-    padding-right: 0.5em;
-  }
-
-  p.vcard a {
-
-    padding-right:  10px;
-  }
-}
-
-
-/* Applies to the clubs/events lists */
-/* Attribute selectors explained here: http://css-tricks.com/attribute-selectors/ */
-blockquote[id^="clubs"],
-blockquote[id^="events"] {
-
-  margin: 17px 40px;
-}
-
-/* Source: http://csswizardry.com/2013/05/the-flag-object/ */
-.flag {
-  display: table;
-  width: 100%;
-}
-
-div[class*="__box"] {
-
-  border:         1px solid lightgrey;
-  padding:        4px;
-  position:       relative;
-  border-radius:  2px;
-  margin-bottom:  10px;
-  overflow:       hidden;
-  display:        block;
-
-  &:hover {
-
-    -webkit-box-shadow: 0px 0px 15px -10px grey;
-    box-shadow: 0px 0px 15px -10px grey;
-  }
-
-  img {
-
-    margin:     0;
-    max-height: 80px;
-    max-width:  80px;
-    display:    inline;
-
-  }
-
-  h3.alpha {
-
-    text-align:  left;
-    width:       80%;
-    font-size:   1.6em;
-    display:     inline-block;
-    font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
-    font-weight: normal;
-    text-transform: none;
-    letter-spacing: normal;
-    margin-top: 0;
-  }
-
-  p.lede {
-
-    font-size:   1em;
-    margin: 0;
-    text-align: left;
-    text-transform: lowercase;
-    color: #656565;
-  }
-
-  span[class*="__box__count"] {
-
-    position: absolute;
-    right: -2px;
-    color: #D3D3D3;
-    top: 3px;
-    font-size: 2.8em;
-  }
-
-}
-
-.flag__image,
-.flag__body {
-  display: table-cell;
-  vertical-align: middle;
-
-  .flag--top & {
-    vertical-align: top;
-  }
-
-  .flag--bottom & {
-    vertical-align: bottom;
-  }
-
-}
-
-.flag__image {
-  padding-right: 10px;
-
-  > img {
-    display: block;
-    max-width: none;
-  }
-
-  .flag--rev & {
-    padding-right: 0;
-    padding-left: 10px;
-  }
-
-}
-
-.flag__body {
-  width: 100%;
-}
-
-
-@media only screen and (max-width: 480px) {
-
-  blockquote[id^="clubs"],
-  blockquote[id^="events"] {
-
-    margin: 17px 10px;
-  }
-
-  div[class*="__box"] {
-
-    img {
-
-      max-height: 70px;
-      max-width:  70px;
-    }
-
-    h3.alpha {
-
-      font-size:   1.1em;
-    }
-
-    p.lede {
-
-      font-size:   0.8em;
-    }
-
-    span[class*="__box__count"] {
-
-      font-size: 2em;
-    }
-  }
-
   .type-usc_clubs {
 
     .img {
 
       display: none;
     }
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+  /* This applies to the full page clubs pages */
+  article[id^="club-"] {
+
+    img.club-logo {
+
+      max-width:  170px;
+      max-height: 170px;
+      padding:    5px;
+      border:     1px solid lightgrey;
+
+    }
+
+    a[rel="back"]:before {
+
+      content: "<<<";
+      padding-right: 0.5em;
+    }
+
+    p.vcard a {
+
+      padding-right:  10px;
+    }
+  }
+
+
+  /* Applies to the clubs/events lists */
+  /* Attribute selectors explained here: http://css-tricks.com/attribute-selectors/ */
+  blockquote[id^="clubs"],
+  blockquote[id^="events"] {
+
+    margin: 17px 40px;
+  }
+
+  /* Source: http://csswizardry.com/2013/05/the-flag-object/ */
+  .flag {
+    display: table;
+    width: 100%;
+  }
+
+  div[class*="__box"] {
+
+    border:         1px solid lightgrey;
+    padding:        4px;
+    position:       relative;
+    border-radius:  2px;
+    margin-bottom:  10px;
+    overflow:       hidden;
+    display:        block;
+
+    &:hover {
+
+      -webkit-box-shadow: 0px 0px 15px -10px grey;
+      box-shadow: 0px 0px 15px -10px grey;
+    }
+
+    img {
+
+      margin:     0;
+      max-height: 80px;
+      max-width:  80px;
+      display:    inline;
+
+    }
+
+    h3.alpha {
+
+      text-align:  left;
+      width:       80%;
+      font-size:   1.6em;
+      display:     inline-block;
+      font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
+      font-weight: normal;
+      text-transform: none;
+      letter-spacing: normal;
+      margin-top: 0;
+    }
+
+    p.lede {
+
+      font-size:   1em;
+      margin: 0;
+      text-align: left;
+      text-transform: lowercase;
+      color: #656565;
+    }
+
+    span[class*="__box__count"] {
+
+      position: absolute;
+      right: -2px;
+      color: #D3D3D3;
+      top: 3px;
+      font-size: 2.8em;
+    }
+
+  }
+
+  .flag__image,
+  .flag__body {
+    display: table-cell;
+    vertical-align: middle;
+
+    .flag--top & {
+      vertical-align: top;
+    }
+
+    .flag--bottom & {
+      vertical-align: bottom;
+    }
+
+  }
+
+  .flag__image {
+    padding-right: 10px;
+
+    > img {
+      display: block;
+      max-width: none;
+    }
+
+    .flag--rev & {
+      padding-right: 0;
+      padding-left: 10px;
+    }
+
+  }
+
+  .flag__body {
+    width: 100%;
+  }
+
+
+  @media only screen and (max-width: 480px) {
+
+    blockquote[id^="clubs"],
+    blockquote[id^="events"] {
+
+      margin: 17px 10px;
+    }
+
+    div[class*="__box"] {
+
+      img {
+
+        max-height: 70px;
+        max-width:  70px;
+      }
+
+      h3.alpha {
+
+        font-size:   1.1em;
+      }
+
+      p.lede {
+
+        font-size:   0.8em;
+      }
+
+      span[class*="__box__count"] {
+
+        font-size: 2em;
+      }
+    }
+
   }
 
 }
