@@ -3,7 +3,7 @@ Contributors: pcraig3
 Tags: clubs list, beta
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,7 +37,14 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
+= 2.1.0 =
+* Another biggish update.  Mostly I forgot to update the version.
+* * Single template basically finished.
 * * Single clubs now called by going to /clubs/clubs-list/{id}
+* * API result fir single clubs cached, not saved asynchronously though.
+* * Added a widget area for single clubs
+* * Updated club Urls so they look better in the browser
+* * OH YEAH AND FIXED THE OBJECT CACHE ISSUE WHICH WAS BREAKING MY PLUGINS
 
 = 2.0.0 =
 * Changed quite a bit structurally.  Ahem.

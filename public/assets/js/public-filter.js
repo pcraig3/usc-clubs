@@ -193,8 +193,6 @@ jQuery(function ($) {
          */
         ajax_update_wordpress_transient_cache: function( options ) {
 
-            console.log(options.is_cached);
-
             var jqxhr = jQuery.post(
                 options.ajax_url,
                 {
@@ -205,14 +203,14 @@ jQuery(function ($) {
                 },
                 function( data ) {
 
-                    console.log(data);
 
+                    /*
                      if(! data['success']) {
                      console.log('WordPress transient DB has NOT been updated.');
                      }
                      else
                      console.log('Yay! WordPress transient DB has been updated.');
-
+                    */
 
                 }, "json");
 
@@ -295,16 +293,13 @@ jQuery(function ($) {
 
         var usc_clubs_as_json = JSON.parse(options.clubs);
 
-        console.log(usc_clubs_as_json[0]);
+        //console.log(usc_clubs_as_json[0]);
         AjaxUSCClubs.clubs_gotten( usc_clubs_as_json );
-
-        console.log(options.is_cached);
 
         //unlike the jobs plugin, we're updating the cache only if it wasn't cached before.
         //because I don't really expect the list to change ever.
-        //if( ! options.if_cached )
+        if( ! options.if_cached )
             AjaxUSCClubs.ajax_update_wordpress_transient_cache( options );
-
 
     });
 

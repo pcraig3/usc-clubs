@@ -51,6 +51,9 @@ class WP_AJAX {
         return self::$instance;
     }
 
+    /**
+     * @since    2.1.0
+     */
     public function turn_off_object_cache_so_our_bloody_plugin_works() {
 
         global $_wp_using_ext_object_cache;
@@ -61,6 +64,9 @@ class WP_AJAX {
 
     }
 
+    /**
+     * @since    2.1.0
+     */
     public function turn_object_caching_back_on_for_the_next_poor_sod() {
 
         global $_wp_using_ext_object_cache;
@@ -75,7 +81,7 @@ class WP_AJAX {
      * and then returns everything to the javascript function waiting for it.
      *
      * @since    2.0.0
-     */
+     *
     public function get_clubs_ajax() {
 
         $this->make_sure_the_nonce_checks_out( $_POST['attr_id'], $_POST['nonce'] );
@@ -95,7 +101,7 @@ class WP_AJAX {
     /**
      * This method implements our WordPress caching system.  Basically, instead of calling (@see)  all the time,
      *
-     * @since    2.0.0
+     * @since    2.1.0
      *
      */
     public function update_wordpress_clubs_cache() {
@@ -113,20 +119,14 @@ class WP_AJAX {
         $json_decoded_events_array = $json_decoded_events_array['response'];
 
         $expiration = $this->expiration;
-        $expiration = 300;
 
         $this->turn_off_object_cache_so_our_bloody_plugin_works();
 
         $deleted = delete_site_transient( $transient_name );
-        global $_wp_using_ext_object_cache;
 
         //returns true or false
         $result['success'] = set_site_transient( $transient_name, json_encode($json_decoded_events_array), $expiration );
         $result['transient_name'] = $transient_name;
-        $result['expiration'] = $expiration;
-        $result['stupid_test'] = $stupid_test;
-        $result['transient'] = $this->get_clubs($transient_name);
-        $result['object_cache'] = $_wp_using_ext_object_cache;
         $result['deleted'] = $deleted;
 
         $this->turn_object_caching_back_on_for_the_next_poor_sod();
@@ -167,7 +167,7 @@ class WP_AJAX {
 
     /**
      *
-     * @since    2.0.0
+     * @since    2.1.0
      *
      * @param null $json_response
      * @param array $fields_to_keep
@@ -273,6 +273,9 @@ class WP_AJAX {
         return ( is_null($json_response_modified) ) ? $json_response : $json_response_modified;
     }
 
+    /**
+     * @since    2.1.0
+     */
     private function generate_club_url($club, $url_trunk = "clubs/list/", $url_root = '') {
 
         $root_url = ( isset( $root_url ) && ! empty( $root_url ) ) ? esc_url( $root_url )
@@ -294,22 +297,13 @@ class WP_AJAX {
     }
 
     /**
-     * @since    2.0.0
+     * @since    2.1.0
      */
     public function get_clubs( $to_append = '' ) {
 
         $this->turn_off_object_cache_so_our_bloody_plugin_works();
 
-        $transient_name = $this->generate_transient_name( 'usc_clubs_get_clubs' );
-
-        ob_start();
-        var_dump(get_site_transient($to_append));
-        var_dump($transient_name);
-        var_dump($to_append);
-        var_dump($transient_name === $to_append );
-        var_dump(strcmp($transient_name, $to_append));
-        $stupid_test = ob_get_clean();
-
+        $transient_name = $this->generate_transient_name( 'usc_clubs_get_clubs' . $to_append );
         $events_stored_in_cache = $this->if_stored_in_wordpress_transient_cache( $transient_name );
 
         if( false === $events_stored_in_cache ) {
@@ -329,11 +323,74 @@ class WP_AJAX {
         }
 
         $response['transient_name'] = $transient_name;
-        $response['stupid_test'] = $stupid_test;
 
         $this->turn_object_caching_back_on_for_the_next_poor_sod();
 
         return $response;
+    }
+
+    /**
+     * @since    2.1.0
+     */
+    public function get_event_and_prev_next( $desired_club_id ) {
+
+        //function returns the clubs on github as a json array.
+        $clubs_array_response = $this->get_clubs( $desired_club_id );
+        $clubs_array = $clubs_array_response['response'];
+
+        //if you got a cached result, return.
+        if($clubs_array_response['is_cached']) {
+            $clubs_array['is_cached'] = true;
+            return $clubs_array;
+        }
+
+        if( ! is_array( $clubs_array ) ) {
+            return array();
+        }
+
+        $max = intval( count($clubs_array) );
+
+        $current_club = $previous_club = $next_club = null;
+
+        for($i = 0; $i < $max && is_null( $current_club ); $i++) {
+
+            //if it matches
+            if( $desired_club_id === $clubs_array[$i]['organizationId']) {
+
+                if( $i > 0 ) {
+                    $previous_club = $clubs_array[$i - 1];
+                }
+
+                if( $i < ( $max-1 ) ) {
+                    $next_club = $clubs_array[$i + 1];
+                }
+
+                $current_club = $clubs_array[$i];
+            }
+        }
+
+        if( is_null( $current_club ) ) {
+            return array();
+        }
+
+
+        $clubs_found = array(
+            'current_club'  => $current_club,
+            'previous_club' => $previous_club,
+            'next_club'     => $next_club,
+        );
+
+        //if we've gotten here, it means our result hasn't been cached.  so cache it.
+        $this->turn_off_object_cache_so_our_bloody_plugin_works();
+
+        set_site_transient($clubs_array_response['transient_name'], json_encode($clubs_found), 300 );
+
+        $clubs_found['is_cached'] = 'false'; //we're just letting us know that it wasn't cached when we got the data
+
+        $this->turn_object_caching_back_on_for_the_next_poor_sod();
+
+        return $clubs_found;
+
     }
 
     /**
@@ -377,8 +434,6 @@ class WP_AJAX {
 
         //simple
         $api_url = 'http://testwestern.com/github/json.php';
-
-        //wp_die("ack! dead!");
 
         $returned_string = wp_remote_retrieve_body( wp_remote_get( $this->add_http_if_not_exists($api_url)) );
 

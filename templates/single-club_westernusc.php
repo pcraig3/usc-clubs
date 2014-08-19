@@ -27,7 +27,7 @@ get_header();
                         echo esc_html( $current_club['name'] );
                         if( !empty( $current_club['shortName'] ) )
                             echo ' (' . esc_html( $current_club['shortName'] ) . ')';
-                        var_dump($is_cached)?>
+                        ?>
                     </h1>
                 </div>
             </section>
