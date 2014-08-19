@@ -31,7 +31,7 @@ class WP_AJAX {
         add_action("wp_ajax_update_wordpress_clubs_cache", array( $this, "update_wordpress_clubs_cache" ) );
         add_action("wp_ajax_nopriv_update_wordpress_clubs_cache", array( $this, "update_wordpress_clubs_cache") );
 
-        $this->expiration = DAY_IN_SECONDS;
+        $this->expiration = WEEK_IN_SECONDS;
     }
 
     /**
@@ -383,7 +383,7 @@ class WP_AJAX {
         //if we've gotten here, it means our result hasn't been cached.  so cache it.
         $this->turn_off_object_cache_so_our_bloody_plugin_works();
 
-        set_site_transient($clubs_array_response['transient_name'], json_encode($clubs_found), 300 );
+        set_site_transient($clubs_array_response['transient_name'], json_encode($clubs_found), $this->expiration );
 
         $clubs_found['is_cached'] = 'false'; //we're just letting us know that it wasn't cached when we got the data
 
