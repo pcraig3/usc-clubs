@@ -505,20 +505,19 @@ $usc-clubs-salmon--transparent: rgba(255, 90, 90, .8);
     padding-top: 15px;
   }
 
-}
+  .usc_clubs-entry-content {
 
-.usc_clubs-entry-content {
-
-  .usc_clubs__contact .usc_clubs__contact__child {
-    width: 100%;
+    .usc_clubs__contact .usc_clubs__contact__child {
+      width: 100%;
+    }
   }
-}
 
-.button_area_at_the_bottom_of_a_single_usc_club ul li {
+  .button_area_at_the_bottom_of_a_single_usc_club ul li {
 
-  width:    100%;
-  display:  block;
-  padding:  0;
+    width:    100%;
+    display:  block;
+    padding:  0;
+  }
 }
 
 @media screen and (max-width: 750px) {

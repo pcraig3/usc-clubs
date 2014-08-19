@@ -127,7 +127,7 @@ class USC_Clubs {
 
             // CLUB PAGE REQUESTED!
 
-            //tank the main query
+            //tank the main query @TODO: if this isn't the problem, then uncomment it.
             //add_filter('posts_request', array( $this, 'suppress_main_query' ), 10, 2);
 
             //return our template (@TODO: bundle this with the theme, not the plugin)
@@ -146,7 +146,10 @@ class USC_Clubs {
      */
     public function call_template_club_single( $original_template ) {
 
-        $one_club_you_want_two_you_dont = $this->find_a_club_and_its_neighbours( intval( get_query_var( 'usc_clubs' ) ) );
+        //query_var looks like "1717-abolition-project-against-human-trafficking-tapaht"
+        $club_id = intval( array_shift( explode("-", get_query_var( 'usc_clubs' ) ) ) );
+
+        $one_club_you_want_two_you_dont = $this->find_a_club_and_its_neighbours( $club_id );
 
         if ( !empty( $one_club_you_want_two_you_dont ) ) {
 
@@ -172,6 +175,8 @@ class USC_Clubs {
     public function find_a_club_and_its_neighbours( $desired_club_id ) {
 
         //function returns the clubs on github as a json array.
+
+        //$single_clubs_array_response =
 
         $clubs_array_response = $this->wp_ajax->get_clubs();
         $clubs_array = $clubs_array_response['response'];
@@ -298,6 +303,7 @@ class USC_Clubs {
 
             $returned_array['response'],
             $returned_array['is_cached'],
+            $returned_array['transient_name'],
         );
 
         if( is_array( $returned_array ) ) {
@@ -341,9 +347,10 @@ class USC_Clubs {
      *
      * @param $clubs_array      An array of clubs originating from a csv file on github
      * @param $is_cached        Pass this to JS.  If true, trigger an ajax method that updates the cache.
+     * @param $transient_name   Transient name sets the name of the transient if we asynchronously update it.
      * @return string           the names of all of the clubs on github
      */
-    private function clubs_list( $clubs_array, $is_cached ) {
+    private function clubs_list( $clubs_array, $is_cached, $transient_name ) {
 
         wp_enqueue_script( 'tinysort', plugins_url( '/bower_components/tinysort/dist/jquery.tinysort.min.js', __DIR__ ), array( 'jquery' ), self::VERSION );
 
@@ -359,7 +366,7 @@ class USC_Clubs {
             'categories'        => json_encode($this->return_categories_array($clubs_array)),
             'is_cached'         => $is_cached,
             'ajax_url'          => admin_url( 'admin-ajax.php' ),
-            'transient_name'    => '',
+            'transient_name'    => $transient_name,
         ) );
 
         return require_once('views/usc_clubs-list.php');

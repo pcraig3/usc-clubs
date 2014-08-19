@@ -81,19 +81,27 @@ class WP_AJAX {
 
         $this->make_sure_the_nonce_checks_out( $_POST['attr_id'], $_POST['nonce'] );
 
+        ignore_user_abort(true);
+
         $transient_name = ( isset($_POST['transient_name'] ) && !empty($_POST['transient_name']) )
             ? $_POST['transient_name'] : 'usc_clubs_get_clubs';
 
-        $json_decoded_events_array = $this->call_clubs_api();
-        $json_decoded_events_array = $this->filter_js_format_API_response($json_decoded_events_array['items']);
+        $json_decoded_events_array = $this->get_clubs( $transient_name );
+        $stupid_test = $json_decoded_events_array['stupid_test'];
+
+        $json_decoded_events_array = $json_decoded_events_array['response'];
 
         $expiration = $this->expiration;
-        $expiration = 300;
+        $expiration = 30000;
 
-        $deleted = delete_site_transient( $transient_name );
+        $deleted = false; //delete_site_transient( $transient_name );
 
         //returns true or false
         $result['success'] = set_site_transient( $transient_name, json_encode($json_decoded_events_array), $expiration );
+        $result['transient_name'] = $transient_name;
+        $result['expiration'] = $expiration;
+        $result['stupid_test'] = $stupid_test;
+        $result['transient'] = $this->get_clubs($transient_name);
         $result['deleted'] = $deleted;
 
         echo json_encode( $result );
@@ -163,7 +171,7 @@ class WP_AJAX {
         $json_response_modified = null;
         if ( null == ( $json_response ) ) {
 
-            return new WP_Error( 'api_error', __( 'Sorry, but we\'ve got nothing back from the API.  See if paul_craig_16@hotmail.com can do anything about it.', 'usc-clubs' ) );
+            return new \WP_Error( 'api_error', __( 'Sorry, but we\'ve got nothing back from the API.  See if paul_craig_16@hotmail.com can do anything about it.', 'usc-clubs' ) );
 
         } elseif ( ! empty( $fields_to_keep ) ) {
             /** Just so we're all on the same page, here's the full list we can get from a club.
@@ -217,8 +225,7 @@ class WP_AJAX {
                 if('Active' === $club['status'] && "Ratified Clubs" === $club['typeName'] ) {
 
                     $temp_club['id'] = $num + 0; //filter_js needs sequential id numbers
-                    $temp_club['url'] = trailingslashit(get_bloginfo('wpurl'))
-                                . trailingslashit("clubs/list/" . $club['organizationId']);
+                    $temp_club['url'] = $this->generate_club_url( $club );
 
                     foreach( $fields_to_keep as &$field ) {
                         $temp_club[$field] = $club[$field];
@@ -238,26 +245,61 @@ class WP_AJAX {
         return ( is_null($json_response_modified) ) ? $json_response : $json_response_modified;
     }
 
+    private function generate_club_url($club, $url_trunk = "clubs/list/", $url_root = '') {
+
+        $root_url = ( isset( $root_url ) && ! empty( $root_url ) ) ? esc_url( $root_url )
+            : trailingslashit(get_bloginfo('wpurl'));
+
+        $url_leaf = $club['organizationId'];
+
+        //clubs have to have organization IDs for us to make them a URL
+        if(empty($url_leaf))
+            return "#";
+
+        $name_shortName = array( 'name', 'shortName' );
+
+        foreach($name_shortName as $name)
+            $url_leaf .= (  isset( $club[$name] ) && ! empty( $club[$name] ) ) ?  '-' . sanitize_title($club[$name]) : '';
+
+        return $root_url . trailingslashit($url_trunk) . trailingslashit( $url_leaf );
+
+    }
+
     /**
      * @since    2.0.0
      */
-    public function get_clubs() {
+    public function get_clubs( $to_append = '' ) {
 
         $transient_name = $this->generate_transient_name( 'usc_clubs_get_clubs' );
+
+        ob_start();
+        var_dump(get_site_transient($to_append));
+        var_dump($transient_name);
+        var_dump($to_append);
+        var_dump($transient_name === $to_append );
+        var_dump(strcmp($transient_name, $to_append));
+        $stupid_test = ob_get_clean();
 
         $events_stored_in_cache = $this->if_stored_in_wordpress_transient_cache( $transient_name );
 
         if( false === $events_stored_in_cache ) {
+
             $clubs_array = $this->call_clubs_api();
             $clubs_array = $this->filter_js_format_API_response($clubs_array['items']);
 
             $response['response']  = $clubs_array;
             $response['is_cached'] = false;
         } else {
+
+            //wp_die('yes');
+
             //events stored in cache are already formatted
             $response['response'] = $events_stored_in_cache;
             $response['is_cached'] = true;
         }
+
+        $response['transient_name'] = $transient_name;
+        $response['stupid_test'] = $stupid_test;
 
         return $response;
     }
@@ -304,11 +346,13 @@ class WP_AJAX {
         //simple
         $api_url = 'http://testwestern.com/github/json.php';
 
+        //wp_die("ack! dead!");
+
         $returned_string = wp_remote_retrieve_body( wp_remote_get( $this->add_http_if_not_exists($api_url)) );
 
         if( empty( $returned_string ) ) {
 
-            return new WP_Error( 'api_error', __( 'Spot of trouble connecting to the clubs API', 'usc-clubs' ) );
+            return new \WP_Error( 'api_error', __( 'Spot of trouble connecting to the clubs API', 'usc-clubs' ) );
         }
 
         return json_decode( $returned_string, true );

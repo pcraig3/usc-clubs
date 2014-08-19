@@ -26,7 +26,8 @@ get_header();
                     <h1><?php
                         echo esc_html( $current_club['name'] );
                         if( !empty( $current_club['shortName'] ) )
-                            echo ' (' . esc_html( $current_club['shortName'] ) . ')'; ?>
+                            echo ' (' . esc_html( $current_club['shortName'] ) . ')';
+                        var_dump($is_cached)?>
                     </h1>
                 </div>
             </section>
@@ -40,11 +41,12 @@ get_header();
                     <div class="et_pb_text et_pb_bg_layout_light et_pb_text_align_left">
 
                         <div class="breadcrumbs">
-                            <?php if(function_exists('bcn_display'))
+                            <!-- Generating breadcrumbs with a bit of manual effort in the template file.-->
+                            <?php
+                            if(function_exists('bcn_display'))
                             {
                                 bcn_display();
                             }
-
                             //as our page is not a native WordPress one, we're on our own with the breadcrumbs.
                             $manual_breadcrumbs = array(
                                 'a'     => array( 'Clubs', 'Clubs List' ),
@@ -121,6 +123,7 @@ get_header();
 
                                 foreach($social_links as &$social_link) {
                                     if( !empty( $current_club[$social_link]) )
+                                        /* title=" visit us on Facebook! " */
                                         $html_string .= '<a href="' . esc_url( $current_club[$social_link]) . '" target="_blank" class="etmodules ' . $social_link . '"></a>' ;//. date('F j, Y');
                                 }
                                 unset($social_link);

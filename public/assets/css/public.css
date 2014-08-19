@@ -325,15 +325,15 @@
       font-size: 24px; }
 
   .usc_clubs-entry-content .usc_clubs__contact .usc_clubs__contact__child, .page-id-285 .type-usc_clubs .usc_clubs__contact .usc_clubs__contact__child {
-    padding-top: 15px; } }
-.usc_clubs-entry-content .usc_clubs__contact .usc_clubs__contact__child, .page-id-285 .type-usc_clubs .usc_clubs__contact .usc_clubs__contact__child {
-  width: 100%; }
+    padding-top: 15px; }
 
-.button_area_at_the_bottom_of_a_single_usc_club ul li {
-  width: 100%;
-  display: block;
-  padding: 0; }
+  .usc_clubs-entry-content .usc_clubs__contact .usc_clubs__contact__child, .page-id-285 .type-usc_clubs .usc_clubs__contact .usc_clubs__contact__child {
+    width: 100%; }
 
+  .button_area_at_the_bottom_of_a_single_usc_club ul li {
+    width: 100%;
+    display: block;
+    padding: 0; } }
 @media screen and (max-width: 750px) {
   .media .img {
     display: none; }
