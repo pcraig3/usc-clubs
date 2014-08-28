@@ -283,7 +283,7 @@ class USC_Clubs {
      *
      * @param array $clubs_array      an array of clubs originating from a csv file on github
      *
-     * @since    1.1.1
+     * @since    1.1.2
      *
      * @return int              the number of clubs on github
      */
@@ -297,7 +297,7 @@ class USC_Clubs {
      * Reason being is that our Filter JS hides any clubs without categories, so we only need to know the number of
      * clubs that have categories.
      *
-     * @since    1.1.1
+     * @since    1.1.2
      *
      * @param array $clubs_array    an array of clubs
      * @return array                an array of clubs stripped of those without categories

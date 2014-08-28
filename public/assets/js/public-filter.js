@@ -6,19 +6,38 @@ jQuery(function ($) {
 
     var AjaxUSCClubs = {
 
+        $clubs_column:      $('.usc_clubs--count').parents('.et_pb_text'),
+        /* TODO: This is bad practice, adding the class like this. */
+        $widgets_column:    $('.page-id-285 .et_pb_widget_area').addClass('btn-menu'),
+        $filterjs:          $('.filterjs.hidden'),
+
+
+        hide_everything_thats_not_a_horse: function() {
+
+            //find everything and set visibility hidden on them.
+            var $articles = AjaxUSCClubs.$clubs_column.find('article');
+            var $widgets =  AjaxUSCClubs.$widgets_column.find('.et_pb_widget');
+
+            $articles.add($widgets).addClass('invisible');
+
+            //find container
+            var $container_row = $articles.parents('.et_pb_row');
+            $container_row.prepend( AjaxUSCClubs.$filterjs.find('.filterjs__loading').detach() );
+        },
+
         /** Remove the clubs listings created by my clubs list template for the job listings returned by filterJS
          *
          * @since    2.0.0
          */
         remove_wordpress_clubs_for_filterjs_clubs: function() {
 
-            var $clubs_column = $('.usc_clubs--count').parents('.et_pb_text');
-            var $to_detach = $clubs_column.find('.filterjs__list__wrapper');
+            /*var $clubs_column = $('.usc_clubs--count').parents('.et_pb_text');*/
+            var $to_detach = AjaxUSCClubs.$clubs_column.find('.filterjs__list__wrapper');
 
             //http://bugs.jquery.com/ticket/13400
             //old.replaceWith( new ); //can be changed to:
             //old.before( new ).detach();
-            $articles = $clubs_column.find('article');
+            var $articles = AjaxUSCClubs.$clubs_column.find('article');
             $articles.first().before( $to_detach );
             $articles.remove();
         },
@@ -26,22 +45,16 @@ jQuery(function ($) {
         /** Remove the widgets created by Wordpress (if they exist, which they don't)
          *  and sub in the filter checkboxes and searchbar created by filterJS
          *
-         * @since    2.1.1
+         * @since    2.1.2
          */
         remove_wordpress_widgets_for_filterjs_imposter_widgets : function() {
 
-            /* TODO: This is bad practice, adding the class like this. */
-            var $widgets_column = $('.page-id-285 .et_pb_widget_area').addClass('btn-menu');
-            var $filterjs       = $('.filterjs.hidden');
-
-            //old.before( new ).detach();
-
-            $widgets_column.find('.et_pb_widget').each(function( index ) {
+            AjaxUSCClubs.$widgets_column.find('.et_pb_widget').each(function( index ) {
 
                 var found = (  $( this ).find( '[class*=categoryNames]' ).length > 0 );
 
                 if( found )
-                    $( this ).replaceWith( $filterjs.find( '#nav_menu-categoryNames-1000' ) );
+                    $( this ).replaceWith( AjaxUSCClubs.$filterjs.find( '#nav_menu-categoryNames-1000' ) );
 
                 if( !found )
                     $( this ).remove();
@@ -49,20 +62,20 @@ jQuery(function ($) {
             });
 
             //now, put in the search bar.
-            $widgets_column.prepend( $filterjs.find('#nav_menu-search-1000').detach() );
+            AjaxUSCClubs.$widgets_column.prepend( AjaxUSCClubs.$filterjs.find('#nav_menu-search-1000').detach() );
 
             //if there are more asides in the filter column, add them.
-            if( $filterjs.find('aside').length > 0 ) {
+            if( AjaxUSCClubs.$filterjs.find('aside').length > 0 ) {
 
-                $filterjs.find('aside').each(function( index ) {
+                AjaxUSCClubs.$filterjs.find('aside').each(function( index ) {
 
-                    $widgets_column.append( $(this) );
+                    AjaxUSCClubs.$widgets_column.append( $(this) );
 
                 });
             }
 
             //keyup event listener updates 'x clubs' string
-            $widgets_column.find('#search_box').on('keyup', function() {
+            AjaxUSCClubs.$widgets_column.find('#search_box').on('keyup', function() {
 
                 AjaxUSCClubs.typewatch(function () {
                     AjaxUSCClubs.update_visible_clubs();
@@ -70,12 +83,12 @@ jQuery(function ($) {
 
             });
 
-            $widgets_column.before('<h3 id="id1234" class="collapseomatic">Filter Club List</h3>');
-            $widgets_column.prop('id', "target-id1234" ).addClass('collapseomatic_content');
+            AjaxUSCClubs.$widgets_column.before('<h3 id="id1234" class="collapseomatic">Filter Club List</h3>');
+            AjaxUSCClubs.$widgets_column.prop('id', "target-id1234" ).addClass('collapseomatic_content');
 
             $(window).resize(function () {
-                    $collapseomatic_button = $('.collapseomatic');
-                    $collapseomatic_content = $collapseomatic_button.next();
+                    var $collapseomatic_button = $('.collapseomatic');
+                    var $collapseomatic_content = $collapseomatic_button.next();
 
                     if( $(window).width() > 980 && ! $collapseomatic_content.is(':visible') )
                         $collapseomatic_content.show();
@@ -92,7 +105,7 @@ jQuery(function ($) {
             });
 
             //click event listener on normal checkbox items adds/removes the 'clicked' class (for CSS)
-            $widgets_column.find('#categoryNames').delegate('label', 'click', function() {
+            AjaxUSCClubs.$widgets_column.find('#categoryNames').delegate('label', 'click', function() {
 
                 if($( this ).find( 'input:checkbox' ).is( ':checked' ))
                     $( this ).addClass('checked');
@@ -103,7 +116,8 @@ jQuery(function ($) {
             });
 
             AjaxUSCClubs.typewatch(function () {
-                $widgets_column.show();
+                if( $(window).width() > 980 && ! AjaxUSCClubs.$widgets_column.is(':visible') )
+                    AjaxUSCClubs.$widgets_column.show();
             }, 50);
         },
 
@@ -316,6 +330,9 @@ jQuery(function ($) {
             AjaxUSCClubs.ajax_update_wordpress_transient_cache( options );
 
     });
+
+    //hide elements we want gone and put that loading horse in instead
+    //AjaxUSCClubs.hide_everything_thats_not_a_horse();  this method is useless.
 
     //call this right away.  don't wait for $(document).ready
     //this one removes my old clubs and puts in my new clubs.

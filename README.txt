@@ -3,7 +3,7 @@ Contributors: pcraig3
 Tags: clubs list, beta
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,11 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 2.1.1 =
+* Single Club page now has more clear social icons
+* Object cache status saved sooner to forestall any bugs
+* Clubs 'count' shortcode now returns number of clubs with categories assigned
 
 = 2.1.1 =
 * Added JQuery Accordion to Filters on mobile version.
