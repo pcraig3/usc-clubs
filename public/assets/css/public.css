@@ -51,18 +51,12 @@
 
 .usc_clubs-main-content #usc_clubs-post {
   padding-top: 0 !important; }
-.usc_clubs-main-content #content-area {
-  padding: 0; }
-  .usc_clubs-main-content #content-area .et_pb_widget_area {
-    padding-top: 30px; }
 .usc_clubs-main-content .usc_clubs-entry-content p, .usc_clubs-main-content .page-id-285 .type-usc_clubs p, .page-id-285 .usc_clubs-main-content .type-usc_clubs p {
   /* Got both of these from Tyler's style.css */
   font-size: 1.25em;
   line-height: 1.85; }
-.usc_clubs-main-content .news-article-info {
-  margin-bottom: 0px; }
-  .usc_clubs-main-content .news-article-info .post-meta {
-    font-size: 1.05em; }
+.usc_clubs-main-content .news-article-info .post-meta {
+  font-size: 1.05em; }
 .usc_clubs-main-content .usc_clubs__contact__social_media .social_media_links {
   display: inline-block;
   width: 50%;

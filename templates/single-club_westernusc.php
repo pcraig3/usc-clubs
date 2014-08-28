@@ -121,7 +121,7 @@ get_header();
                     </div>
 
                     <div class="usc_clubs-entry-content">
-                        <br>
+
                         <?php
 
                         $html_string = '';
