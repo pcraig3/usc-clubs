@@ -127,7 +127,7 @@ class USC_Clubs {
 
             // CLUB PAGE REQUESTED!
 
-            //tank the main query @TODO: if this isn't the problem, then uncomment it.
+            //tank the main query so that we're not grabbing a bunch of posts unnecessarily
             add_filter('posts_request', array( $this, 'suppress_main_query' ), 10, 2);
 
             //return our template (@TODO: bundle this with the theme, not the plugin)
@@ -289,7 +289,26 @@ class USC_Clubs {
      */
     private function clubs_count( array $clubs_array ) {
 
-        return intval( count( $clubs_array ) );
+        return intval( count( $this->return_categorized_clubs( $clubs_array ) ) );
+    }
+
+    /**
+     * function accepts a clubs array and removes any without a category set
+     * Reason being is that our Filter JS hides any clubs without categories, so we only need to know the number of
+     * clubs that have categories.
+     *
+     * @since    1.1.1
+     *
+     * @param array $clubs_array    an array of clubs
+     * @return array                an array of clubs stripped of those without categories
+     */
+    private function return_categorized_clubs( array $clubs_array ) {
+
+        foreach($clubs_array as $index => $club)
+            if( empty( $club['categories'] ) )
+                unset( $clubs_array[$index] );
+
+        return array_values( $clubs_array );
     }
 
     /**

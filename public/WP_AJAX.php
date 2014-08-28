@@ -32,6 +32,14 @@ class WP_AJAX {
         add_action("wp_ajax_nopriv_update_wordpress_clubs_cache", array( $this, "update_wordpress_clubs_cache") );
 
         $this->expiration = WEEK_IN_SECONDS;
+
+        /*
+         * set an initial value to this variable, in case we call the method to overwrite the global value before we
+         * call the method to store it
+         */
+        global $_wp_using_ext_object_cache;
+
+        $this->wp_using_ext_object_cache_status = $_wp_using_ext_object_cache;
     }
 
     /**
