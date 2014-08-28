@@ -3,7 +3,7 @@ Contributors: pcraig3
 Tags: clubs list, beta
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 2.1.1
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +20,7 @@ This would give you a backend api that anyone could use.
 
 = Why doesn't it work yet? =
 
-Shut up.
+It does!  Ha!
 
 = Does it make any sense to do this? =
 

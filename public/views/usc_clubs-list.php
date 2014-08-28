@@ -42,6 +42,10 @@ ob_start();
             <!--/div-->
         </div>
         <div class="clearfix cf"></div>
+        <?php /* we're putting this in to ensure that the collapseomatic js file is included on the page */
+        /* the collapseomatic rules are set on the filter fields using JS in public-filer.js */
+        /* It's just two lines of JS. */
+        do_shortcode('[expand title="placeholder"][\expand]'); ?>
     </div>
 
 <?php
@@ -94,8 +98,7 @@ for($i = 0; $i < $total; $i++) {
     $total_categories = count( $categories );
 
     for ($j = 0; $j < $total_categories; $j++) {
-        $html_string .=     '<a title="Find more clubs with a focus on ' . esc_attr( $categories[$j]['categoryName'] ) . '!" '
-            . 'href="#">' . esc_html( $categories[$j]['categoryName'] ) . '</a>, ';
+        $html_string .=     '<a>' . esc_html( $categories[$j]['categoryName'] ) . '</a>, ';
     }
 
     $html_string = trim($html_string, ", ");

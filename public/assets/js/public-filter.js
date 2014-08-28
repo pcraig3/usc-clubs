@@ -101,6 +101,10 @@ jQuery(function ($) {
 
                 AjaxUSCClubs.update_visible_clubs();
             });
+
+            AjaxUSCClubs.typewatch(function () {
+                $widgets_column.show();
+            }, 50);
         },
 
         /** Wait a bit after a jquery event to do your action, basically.
@@ -274,8 +278,7 @@ jQuery(function ($) {
             var categories = club.categories;
             var total = categories.length;
             for (var i = 0; i < total; i++) {
-                html_string +=      '<a title="Find more clubs with a focus on ' + categories[i].categoryName + '!" '
-                    + 'href="#">' + categories[i].categoryName + '</a>, ';
+                html_string +=      '<a>' + categories[i].categoryName + '</a>, ';
             }
 
             //cut off the last comma and space

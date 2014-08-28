@@ -319,13 +319,19 @@
 .btn-menu .application_link:before {
   content: "\e02b"; }
 
-@media screen and (max-width: 979px) {
+@media screen and (max-width: 980px) {
   .page-id-285 .collapseomatic {
     display: block;
     padding: 15px;
     color: #666;
     margin-top: 15px;
-    border: 0; }
+    border: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; }
   .page-id-285 .et_pb_widget_area.collapseomatic_excerpt, .page-id-285 .et_pb_widget_area.collapseomatic_content {
     display: none;
     padding: 15px;
@@ -368,7 +374,7 @@
     width: 100%;
     display: block;
     padding: 0; } }
-@media screen and (max-width: 470px) {
+@media screen and (max-width: 480px) {
   .usc_clubs-main-content .news-article-info .post-meta a.etmodules:before {
     padding: 0 35px 0 0;
     font-size: 28px; }
@@ -460,7 +466,7 @@
 
   .flag__body {
     width: 100%; } }
-@media only screen and (max-width: 470px) and (max-width: 480px) {
+@media only screen and (max-width: 480px) and (max-width: 480px) {
   blockquote[id^="clubs"],
   blockquote[id^="events"] {
     margin: 17px 10px; }
