@@ -31,10 +31,7 @@ ob_start();
         <div class="filterjs__list__wrapper">
             <div class="filterjs__loading filterjs__loading--ajax">
                 <img class="filterjs__loading__img" title="go mustangs!"
-                     src="<?php echo plugins_url( 'assets/horse.gif', __DIR__ ); ?>" alt="Loading" height="91" width="160">
-                <p class="filterjs__loading__status">
-                    * Loading *
-                </p>
+                     src="<?php echo plugins_url( '/' . $this->plugin_slug . '/assets/horse.gif') ?>" alt="Loading" height="91" width="160">
             </div>
 
             <!--div class="filterjs__list__crop"-->

@@ -59,57 +59,63 @@
   margin-bottom: 0px; }
   .usc_clubs-main-content .news-article-info .post-meta {
     font-size: 1.05em; }
-    .usc_clubs-main-content .news-article-info .post-meta a:first-of-type {
-      padding-right: 12px;
-      border-right: 1px solid #ccc; }
-    .usc_clubs-main-content .news-article-info .post-meta .etmodules:before {
-      font-family: 'ETmodules';
-      padding: 0 0 0 12px;
-      font-weight: 400;
-      font-size: 15px;
-      /* haha, this is up from 14 */ }
-    .usc_clubs-main-content .news-article-info .post-meta .etmodules:hover:before {
-      color: rgba(255, 90, 90, 0.8); }
-    .usc_clubs-main-content .news-article-info .post-meta .facebookUrl:before {
-      content: "\e0c1";
-      /* social_facebook_square */
-      content: "\e0aa";
-      /* social_facebook_circle */
-      content: "\e093";
-      /* social_facebook */
-      color: #3b5998; }
-    .usc_clubs-main-content .news-article-info .post-meta .twitterUrl:before {
-      content: "\e0ab";
-      /* social_twitter_circle */
-      content: "\e0c2";
-      /* social_twitter_square */
-      content: "\e094";
-      /* social_twitter */
-      color: #55ACEE; }
-    .usc_clubs-main-content .news-article-info .post-meta .flickrFeedUrl:before {
-      content: "\e0d4";
-      /* social_flickr_square */
-      content: "\e0bd";
-      /* social_flickr_circle */
-      content: "\e0a6";
-      /* social_flickr */
-      color: #FF0084; }
-    .usc_clubs-main-content .news-article-info .post-meta .youtubeChannelUrl:before {
-      content: "\e0d1";
-      /* social_youtube_square */
-      content: "\e0ba";
-      /* social_youtube_circle */
-      content: "\e0a3";
-      /* social_youtube */
-      color: #e52d27; }
-    .usc_clubs-main-content .news-article-info .post-meta .googleCalendarUrl:before {
-      content: "\e0c4";
-      /* social_googleplus_square */
-      content: "\e0ad";
-      /* social_googleplus_circle */
-      content: "\e096";
-      /* social_googleplus */
-      color: #dd4b39; }
+.usc_clubs-main-content .usc_clubs__contact__social_media .social_media_links {
+  display: inline-block;
+  width: 50%;
+  text-align: center;
+  color: #555555;
+  padding: 9px;
+  box-sizing: border-box; }
+  .usc_clubs-main-content .usc_clubs__contact__social_media .social_media_links:hover {
+    color: rgba(255, 90, 90, 0.8); }
+  .usc_clubs-main-content .usc_clubs__contact__social_media .social_media_links .label {
+    display: block; }
+.usc_clubs-main-content .usc_clubs__contact__social_media .etmodules:before {
+  font-family: 'ETmodules';
+  font-weight: 400;
+  font-size: 2.8em; }
+.usc_clubs-main-content .usc_clubs__contact__social_media .etmodules:hover:before {
+  color: rgba(255, 90, 90, 0.8); }
+.usc_clubs-main-content .usc_clubs__contact__social_media .facebookUrl:before {
+  content: "\e0c1";
+  /* social_facebook_square */
+  content: "\e0aa";
+  /* social_facebook_circle */
+  content: "\e093";
+  /* social_facebook */
+  color: #3b5998; }
+.usc_clubs-main-content .usc_clubs__contact__social_media .twitterUrl:before {
+  content: "\e0ab";
+  /* social_twitter_circle */
+  content: "\e0c2";
+  /* social_twitter_square */
+  content: "\e094";
+  /* social_twitter */
+  color: #55ACEE; }
+.usc_clubs-main-content .usc_clubs__contact__social_media .flickrFeedUrl:before {
+  content: "\e0d4";
+  /* social_flickr_square */
+  content: "\e0bd";
+  /* social_flickr_circle */
+  content: "\e0a6";
+  /* social_flickr */
+  color: #FF0084; }
+.usc_clubs-main-content .usc_clubs__contact__social_media .youtubeChannelUrl:before {
+  content: "\e0d1";
+  /* social_youtube_square */
+  content: "\e0ba";
+  /* social_youtube_circle */
+  content: "\e0a3";
+  /* social_youtube */
+  color: #e52d27; }
+.usc_clubs-main-content .usc_clubs__contact__social_media .googleCalendarUrl:before {
+  content: "\e0c4";
+  /* social_googleplus_square */
+  content: "\e0ad";
+  /* social_googleplus_circle */
+  content: "\e096";
+  /* social_googleplus */
+  color: #dd4b39; }
 
 .usc_clubs-entry-content, .page-id-285 .type-usc_clubs {
   /* Resetting styles so as to match the USC directory page */ }
@@ -121,7 +127,8 @@
     .usc_clubs-entry-content a:hover, .page-id-285 .type-usc_clubs a:hover {
       color: rgba(255, 90, 90, 0.8); }
   .usc_clubs-entry-content .person-content, .page-id-285 .type-usc_clubs .person-content, .usc_clubs-entry-content .person, .page-id-285 .type-usc_clubs .person {
-    box-sizing: border-box; }
+    box-sizing: border-box;
+    margin-right: 15px; }
     .usc_clubs-entry-content .person-content p, .page-id-285 .type-usc_clubs .person-content p, .usc_clubs-entry-content .person p, .page-id-285 .type-usc_clubs .person p {
       line-height: 1.8;
       padding-bottom: 1em;
@@ -254,59 +261,20 @@
   text-align: right; }
   .button_area_at_the_bottom_of_a_single_usc_club ul li {
     display: inline-block;
-    width: 95%;
+    width: 100%;
     text-align: left;
-    padding: 0 10px;
-    box-sizing: border-box; }
+    padding: 0 15px 0 0px;
+    box-sizing: border-box;
+    margin: 15px 0 0 0 !important; }
     .button_area_at_the_bottom_of_a_single_usc_club ul li a {
       color: #666;
-      position: relative;
-                            /*&.externalWebsite:before {
-
-          content: "\e02b"; /* icon_link_alt *
-        }
-        */ }
+      position: relative; }
       .button_area_at_the_bottom_of_a_single_usc_club ul li a.height_of_person_header {
         padding: 10px 15px; }
       .button_area_at_the_bottom_of_a_single_usc_club ul li a:hover {
         color: rgba(255, 90, 90, 0.8); }
         .button_area_at_the_bottom_of_a_single_usc_club ul li a:hover:before {
           right: 15px; }
-      .button_area_at_the_bottom_of_a_single_usc_club ul li a.facebookUrl:before {
-        content: "\e0c1";
-        /* social_facebook_square */
-        content: "\e0aa";
-        /* social_facebook_circle */
-        content: "\e093";
-        /* social_facebook */ }
-      .button_area_at_the_bottom_of_a_single_usc_club ul li a.twitterUrl:before {
-        content: "\e0ab";
-        /* social_twitter_circle */
-        content: "\e0c2";
-        /* social_twitter_square */
-        content: "\e094";
-        /* social_twitter */ }
-      .button_area_at_the_bottom_of_a_single_usc_club ul li a.flickrFeedUrl:before {
-        content: "\e0d4";
-        /* social_flickr_square */
-        content: "\e0bd";
-        /* social_flickr_circle */
-        content: "\e0a6";
-        /* social_flickr */ }
-      .button_area_at_the_bottom_of_a_single_usc_club ul li a.youtubeChannelUrl:before {
-        content: "\e0d1";
-        /* social_youtube_square */
-        content: "\e0ba";
-        /* social_youtube_circle */
-        content: "\e0a3";
-        /* social_youtube */ }
-      .button_area_at_the_bottom_of_a_single_usc_club ul li a.googleCalendarUrl:before {
-        content: "\e0c4";
-        /* social_googleplus_square */
-        content: "\e0ad";
-        /* social_googleplus_circle */
-        content: "\e096";
-        /* social_googleplus */ }
 
 .btn-menu ul li a {
   position: relative; }
@@ -327,7 +295,7 @@
     margin-top: 15px;
     border: 0;
     -webkit-touch-callout: none;
-    -webkit-user-select: none
+    -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -341,20 +309,11 @@
   .page-id-285 .usc_clubs--count {
     margin-top: 30px; }
 
-  .usc_clubs-main-content .news-article-info .post-meta a:first-of-type {
-    width: 100%;
-    display: block;
-    border-right: none;
-    border-bottom: 1px solid #ccc;
-    padding-right: 0;
-    padding-bottom: 12px; }
-  .usc_clubs-main-content .news-article-info .post-meta a.etmodules {
-    margin-top: 12px;
-    display: inline-block; }
-    .usc_clubs-main-content .news-article-info .post-meta a.etmodules:before {
-      padding: 0px 24px 0px 0px;
-      font-size: 24px; }
+  .usc_clubs-main-content .usc_clubs__contact__social_media .social_media_links {
+    width: 33%; }
 
+  .usc_clubs-entry-content .person-content, .page-id-285 .type-usc_clubs .person-content, .usc_clubs-entry-content .person, .page-id-285 .type-usc_clubs .person {
+    margin-right: 0px; }
   .usc_clubs-entry-content .usc_clubs__contact .usc_clubs__contact__child, .page-id-285 .type-usc_clubs .usc_clubs__contact .usc_clubs__contact__child {
     padding-top: 15px;
     width: 100%; }
@@ -370,113 +329,179 @@
   .usc_clubs-entry-content .usc_clubs__contact .usc_clubs__contact__child, .page-id-285 .type-usc_clubs .usc_clubs__contact .usc_clubs__contact__child {
     width: 100%; }
 
-  .button_area_at_the_bottom_of_a_single_usc_club ul li {
-    width: 100%;
-    display: block;
-    padding: 0; } }
+  .usc_clubs-main-content .usc_clubs__contact__social_media .social_media_links {
+    width: 50%; } }
 @media screen and (max-width: 480px) {
-  .usc_clubs-main-content .news-article-info .post-meta a.etmodules:before {
-    padding: 0 35px 0 0;
-    font-size: 28px; }
-
   .type-usc_clubs .img {
     display: none; }
 
-  /* This applies to the full page clubs pages */
-  article[id^="club-"] img.club-logo {
-    max-width: 170px;
-    max-height: 170px;
-    padding: 5px;
-    border: 1px solid lightgrey; }
-  article[id^="club-"] a[rel="back"]:before {
-    content: "<<<";
-    padding-right: 0.5em; }
-  article[id^="club-"] p.vcard a {
-    padding-right: 10px; }
+  .usc_clubs-main-content .usc_clubs__contact__social_media .social_media_links {
+    padding: 20px; }
+    .usc_clubs-main-content .usc_clubs__contact__social_media .social_media_links .label {
+      display: none; } }
+/* This applies to the full page clubs pages
+article[id^="club-"] {
 
-  /* Applies to the clubs/events lists */
-  /* Attribute selectors explained here: http://css-tricks.com/attribute-selectors/ */
+  img.club-logo {
+
+    max-width:  170px;
+    max-height: 170px;
+    padding:    5px;
+    border:     1px solid lightgrey;
+
+  }
+
+  a[rel="back"]:before {
+
+    content: "<<<";
+    padding-right: 0.5em;
+  }
+
+  p.vcard a {
+
+    padding-right:  10px;
+  }
+}
+
+
+/* Applies to the clubs/events lists *
+/* Attribute selectors explained here: http://css-tricks.com/attribute-selectors/ *
+blockquote[id^="clubs"],
+blockquote[id^="events"] {
+
+  margin: 17px 40px;
+}
+
+/* Source: http://csswizardry.com/2013/05/the-flag-object/ *
+.flag {
+  display: table;
+  width: 100%;
+}
+
+div[class*="__box"] {
+
+  border:         1px solid lightgrey;
+  padding:        4px;
+  position:       relative;
+  border-radius:  2px;
+  margin-bottom:  10px;
+  overflow:       hidden;
+  display:        block;
+
+  &:hover {
+
+    -webkit-box-shadow: 0px 0px 15px -10px grey;
+    box-shadow: 0px 0px 15px -10px grey;
+  }
+
+  img {
+
+    margin:     0;
+    max-height: 80px;
+    max-width:  80px;
+    display:    inline;
+
+  }
+
+  h3.alpha {
+
+    text-align:  left;
+    width:       80%;
+    font-size:   1.6em;
+    display:     inline-block;
+    font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    margin-top: 0;
+  }
+
+  p.lede {
+
+    font-size:   1em;
+    margin: 0;
+    text-align: left;
+    text-transform: lowercase;
+    color: #656565;
+  }
+
+  span[class*="__box__count"] {
+
+    position: absolute;
+    right: -2px;
+    color: #D3D3D3;
+    top: 3px;
+    font-size: 2.8em;
+  }
+
+}
+
+.flag__image,
+.flag__body {
+  display: table-cell;
+  vertical-align: middle;
+
+  .flag--top & {
+    vertical-align: top;
+  }
+
+  .flag--bottom & {
+    vertical-align: bottom;
+  }
+
+}
+
+.flag__image {
+  padding-right: 10px;
+
+  > img {
+    display: block;
+    max-width: none;
+  }
+
+  .flag--rev & {
+    padding-right: 0;
+    padding-left: 10px;
+  }
+
+}
+
+.flag__body {
+  width: 100%;
+}
+
+
+@media only screen and (max-width: 480px) {
+
   blockquote[id^="clubs"],
   blockquote[id^="events"] {
-    margin: 17px 40px; }
 
-  /* Source: http://csswizardry.com/2013/05/the-flag-object/ */
-  .flag {
-    display: table;
-    width: 100%; }
+    margin: 17px 10px;
+  }
 
   div[class*="__box"] {
-    border: 1px solid lightgrey;
-    padding: 4px;
-    position: relative;
-    border-radius: 2px;
-    margin-bottom: 10px;
-    overflow: hidden;
-    display: block; }
-    div[class*="__box"]:hover {
-      -webkit-box-shadow: 0px 0px 15px -10px grey;
-      box-shadow: 0px 0px 15px -10px grey; }
-    div[class*="__box"] img {
-      margin: 0;
-      max-height: 80px;
-      max-width: 80px;
-      display: inline; }
-    div[class*="__box"] h3.alpha {
-      text-align: left;
-      width: 80%;
-      font-size: 1.6em;
-      display: inline-block;
-      font-family: "Adobe Caslon Pro",Palatino,"Times New Roman",serif;
-      font-weight: normal;
-      text-transform: none;
-      letter-spacing: normal;
-      margin-top: 0; }
-    div[class*="__box"] p.lede {
-      font-size: 1em;
-      margin: 0;
-      text-align: left;
-      text-transform: lowercase;
-      color: #656565; }
-    div[class*="__box"] span[class*="__box__count"] {
-      position: absolute;
-      right: -2px;
-      color: #D3D3D3;
-      top: 3px;
-      font-size: 2.8em; }
 
-  .flag__image,
-  .flag__body {
-    display: table-cell;
-    vertical-align: middle; }
-    .flag--top .flag__image, .flag--top
-    .flag__body {
-      vertical-align: top; }
-    .flag--bottom .flag__image, .flag--bottom
-    .flag__body {
-      vertical-align: bottom; }
+    img {
 
-  .flag__image {
-    padding-right: 10px; }
-    .flag__image > img {
-      display: block;
-      max-width: none; }
-    .flag--rev .flag__image {
-      padding-right: 0;
-      padding-left: 10px; }
+      max-height: 70px;
+      max-width:  70px;
+    }
 
-  .flag__body {
-    width: 100%; } }
-@media only screen and (max-width: 480px) and (max-width: 480px) {
-  blockquote[id^="clubs"],
-  blockquote[id^="events"] {
-    margin: 17px 10px; }
+    h3.alpha {
 
-  div[class*="__box"] img {
-    max-height: 70px;
-    max-width: 70px; }
-  div[class*="__box"] h3.alpha {
-    font-size: 1.1em; }
-  div[class*="__box"] p.lede {
-    font-size: 0.8em; }
-  div[class*="__box"] span[class*="__box__count"] {
-    font-size: 2em; } }
+      font-size:   1.1em;
+    }
+
+    p.lede {
+
+      font-size:   0.8em;
+    }
+
+    span[class*="__box__count"] {
+
+      font-size: 2em;
+    }
+  }
+
+}
+*/
