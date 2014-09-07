@@ -22,6 +22,8 @@ class WP_AJAX {
 
     private $wp_using_ext_object_cache_status;
 
+    private $default_transient_name;
+
     private function __construct() {
 
 
@@ -32,6 +34,7 @@ class WP_AJAX {
         add_action("wp_ajax_nopriv_update_wordpress_clubs_cache", array( $this, "update_wordpress_clubs_cache") );
 
         $this->expiration = WEEK_IN_SECONDS;
+        $this->default_transient_name = 'usc_clubs_get_clubs';
 
         /*
          * set an initial value to this variable, in case we call the method to overwrite the global value before we
@@ -100,7 +103,7 @@ class WP_AJAX {
 
 
         //set result/response
-        //$result['if_cached'] = $events_stored_in_cache;
+        //$result['if_cached'] = $clubs_stored_in_cache;
         //$result['success'] = ( false !== $response ) ? true : false;
         echo json_encode($clubs_array);
         die();
@@ -122,7 +125,6 @@ class WP_AJAX {
             ? $_POST['transient_name'] : 'usc_clubs_get_clubs';
 
         $json_decoded_events_array = $this->get_clubs( $transient_name );
-        $stupid_test = $json_decoded_events_array['stupid_test'];
 
         $json_decoded_events_array = $json_decoded_events_array['response'];
 
@@ -309,12 +311,12 @@ class WP_AJAX {
      */
     public function get_clubs( $to_append = '' ) {
 
-        $this->turn_off_object_cache_so_our_bloody_plugin_works();
+        $transient_name = $this->generate_transient_name( '', $to_append );
 
-        $transient_name = $this->generate_transient_name( 'usc_clubs_get_clubs' . $to_append );
-        $events_stored_in_cache = $this->if_stored_in_wordpress_transient_cache( $transient_name );
+        //site caching turned off and on in this method
+        $clubs_stored_in_cache = $this->if_stored_in_wordpress_transient_cache( $transient_name );
 
-        if( false === $events_stored_in_cache ) {
+        if( false === $clubs_stored_in_cache ) {
 
             $clubs_array = $this->call_clubs_api();
             $clubs_array = $this->filter_js_format_API_response($clubs_array['items']);
@@ -326,13 +328,11 @@ class WP_AJAX {
             //wp_die('yes');
 
             //events stored in cache are already formatted
-            $response['response'] = $events_stored_in_cache;
+            $response['response'] = $clubs_stored_in_cache;
             $response['is_cached'] = true;
         }
 
         $response['transient_name'] = $transient_name;
-
-        $this->turn_object_caching_back_on_for_the_next_poor_sod();
 
         return $response;
     }
@@ -408,12 +408,15 @@ class WP_AJAX {
      *
      * @since    2.0.0
      *
-     * @param   $transient_name  return the unmodified string
+     * @param   $transient_name     the first part of the transient. if empty, set to default_tranisent_name
+     * @param   string $to_append   a string to append to the transient
      * @return  string|WP_Error  a shiny new name for our transient
      */
-    public function generate_transient_name( $transient_name ) {
+    public function generate_transient_name( $transient_name, $to_append = '' ) {
 
-        return $transient_name;
+        $transient_name = ( ! empty( $transient_name ) ) ? $transient_name : $this->default_transient_name;
+
+        return $transient_name . $to_append;
     }
 
     /**
@@ -421,12 +424,16 @@ class WP_AJAX {
      *
      * @since    2.0.0
      *
-     * @param $transient_name   looks for a cached object with this name
+     * @param $transient_name   string for a cached object with this name
      * @return bool|mixed       returns 'false' if no object, or a json decoded array if found
      */
     public function if_stored_in_wordpress_transient_cache( $transient_name ) {
 
+        $this->turn_off_object_cache_so_our_bloody_plugin_works();
+
         $clubs_or_false = get_site_transient( $transient_name );
+
+        $this->turn_object_caching_back_on_for_the_next_poor_sod();
 
         return ( false === $clubs_or_false ) ? false : json_decode( $clubs_or_false, true );
     }

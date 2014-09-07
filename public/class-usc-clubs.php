@@ -95,6 +95,193 @@ class USC_Clubs {
         add_shortcode( 'usc_clubs', array( $this, 'usc_clubs_shortcode_function') );
 
         add_action( 'widgets_init', array( $this, 'usc_clubs_register_sidebars' ) );
+
+        //the idea is to intercept the search query and put a club as the first result if we find a club that matches
+        add_action( 'wp', array( $this, 'my_the_post_action') );
+    }
+
+    //@TODO: Move yerass
+    function my_the_post_action() {
+
+        global $wp_query;
+
+        if( $wp_query->is_main_query() && ! $wp_query->is_admin && $wp_query->is_search ) {
+
+            //no transient set means the default transient will be returned
+            $transient_name = $this->wp_ajax->generate_transient_name( '' );
+            $clubs_stored_in_cache = $this->wp_ajax->if_stored_in_wordpress_transient_cache( $transient_name );
+
+            //if there is no transient, return.  Don't want to hold up every search made on our site.
+            if( false === $clubs_stored_in_cache )
+                return;
+
+            //setup club words
+            $common_words_for_clubs = array(
+                'club', 'association', 'society', 'fellowship', 'organization'
+            );
+
+            //print to screen all names of uppercase cahracters
+
+            //remove all clubs words from names array
+
+            //if you get TWO matches or an exact string match //(include the club words)
+            //remove all stopwords.
+
+            //like canfar. hit every word
+            $max = count($clubs_stored_in_cache);
+            $found = -1;
+
+            for($index = 0; $index < $max && $found < 0 ;$index++) {
+
+                if( ! empty($wp_query->query_vars['s'] ) ) {
+
+                    $club = $clubs_stored_in_cache[$index];
+
+                    $search_terms_lowercase_no_punctuation = trim( strtolower( preg_replace('/\p{P}/u', '', $wp_query->query_vars['s']) ) );
+                    $club_name_lowercase_no_punctuation = trim( strtolower( preg_replace('/\p{P}/u', '', $club['name']) ) );
+                    $club_shortName_lowercase_no_punctuation = trim( strtolower( preg_replace('/\p{P}/u', '', $club['shortName']) ) );
+
+                    //exact match name
+                    //echo '<br>Query vars: ' . $search_terms_lowercase_no_punctuation . ' // shortName: ' . $club_name_lowercase_no_punctuation;
+                    $found = ( $found < 0 && $search_terms_lowercase_no_punctuation === $club_name_lowercase_no_punctuation ) ? $index : $found;
+                    //var_dump($found);
+
+                    //exact match short name
+                    //echo '<br>Query vars: ' . $search_terms_lowercase_no_punctuation . ' // shortName: ' . $club_shortName_lowercase_no_punctuation;
+                    $found = ( $found < 0 && $search_terms_lowercase_no_punctuation === $club_shortName_lowercase_no_punctuation ) ? $index : $found;
+
+                    /*
+                    if( $found < 0 ) {
+                        $search_terms = array_unique( array_merge( $wp_query->query_vars['search_terms'], $common_words_for_clubs) );
+
+                        $words_in_name = ( !empty( $club['name'] ) ) ? explode( ' ', $club['name']) : '';
+
+                        $temp = array();
+                        foreach( $words_in_name as $word ) {
+                            //if first letter is not uppercase
+                            if( ctype_upper( substr( $word, 0, 1 ) ) )
+                                //strip punctuation and trim
+                                array_push($temp, trim( preg_replace('/\p{P}/u', '', $word) ) );
+                        }
+
+                        //at this point we have arrays of important words (no more 'and', 'of', etc)
+                        $words_in_name = $temp;
+                    }
+                    */
+                }
+
+                //so, if of the search terms we either match two words or exact match the name or the shortName,
+                //that's what we want.
+
+            }
+
+            if($found > 0) {
+
+                //
+                $found_club = $clubs_stored_in_cache[$found];
+
+                $today = date('Y-m-d H:i:s');
+                $shortName_brackets = ( !empty( $found_club['shortName'] ) ) ? ' (' . $found_club['shortName'] . ')' : '';
+
+                $summary = 'Click to find out more about the ' . $found_club['name'] . '!';
+                if( ! empty( $found_club['summary'] ) )
+                    $summary = wp_strip_all_tags($found_club['summary']);
+
+                else if( ! empty(  $found_club['description'] ) )
+                    $summary = wp_strip_all_tags($found_club['description']);
+
+
+                if( strlen($summary) > 270 )
+                    $summary = substr($summary, 0, 270) . '...';
+
+
+
+
+                $club_post = new stdClass();
+                $club_post->id = $found_club['organizationId']; //lcubs
+                $club_post->post_author = '1'; //sets it as the user id = 1
+                $club_post->post_date = $today; //set it to today's date
+                $club_post->post_date_gmt =  $today;
+                $club_post->post_content = '';
+                $club_post->post_title = $found_club['name'] . $shortName_brackets;
+                $club_post->post_excerpt = $summary;
+                $club_post->post_status = 'publish';
+                $club_post->comment_status = 'closed';
+                $club_post->ping_status = 'closed';
+                $club_post->post_password = '';
+                $club_post->post_name = "website_link";
+                $club_post->to_ping = '';
+                $club_post->pinged = '';
+                $club_post->post_modified = $today;
+                $club_post->post_modified_gmt = $today;
+                $club_post->post_content_filtered = '';
+                $club_post->post_parent = '1'; //I don't know what this means
+                $club_post->guid = "http://westernusc.org/index.php?usc_clubs=" . $found_club['organizationId'];
+                $club_post->menu_order = 0;
+                $club_post->post_type = 'usc_clubs';
+                $club_post->comment_count = '0';
+                $club_post->filter = 'raw';
+
+                //var_dump($club_post);
+
+                $this->register_club_post_type_temporarily('usc_clubs');
+
+
+                //okay, so increase found_posts by one and posts per page by one and just insert our one new post into
+                //into the array of post objects
+                //and put the post as our first post
+                $wp_query->found_posts = $wp_query->found_posts + 1;
+                $wp_query->post_count = $wp_query->post_count + 1;
+
+                array_unshift($wp_query->posts, $club_post);
+                $wp_query->post = $club_post;
+
+                //
+            }
+
+            /*
+            echo '<pre>';
+            var_dump($found);
+            var_dump($wp_query);
+            echo '</pre>';
+            */
+
+        }
+
+    }
+
+    private function register_club_post_type_temporarily( $post_type_name = 'usc_clubs' ) {
+
+        /* register the post type
+           This is ONLY to get the club post_type to show up in the search results */
+        $labels = array(
+            'name'               => 'Clubs',
+            'singular_name'      => 'Club'
+        );
+
+        $args = array(
+            'labels'             => $labels,
+            'public'             => true,
+            'publicly_queryable' => true,
+            'query_var'          => true,
+            'rewrite'            => array( 'slug' => 'clubs/list' ),
+            'has_archive'        => true,
+        );
+
+        register_post_type( $post_type_name, $args );
+
+        add_action( 'wp_footer', function() use ( $post_type_name ) {
+
+                        global $wp_post_types;
+                        if ( isset( $wp_post_types[ $post_type_name ] ) ) {
+                            unset( $wp_post_types[ $post_type_name ] );
+                            return true;
+                        }
+                        return false;
+
+            }, 11
+        );
+
     }
 
     /**
@@ -209,11 +396,11 @@ class USC_Clubs {
      */
     public function usc_clubs_register_sidebars() {
 
-        /* Register the usc jobs archive sidebar. */
+        /* Register the usc clubs single sidebar. */
         register_sidebar(
             array(
                 'id' => 'usc_clubs_single_sidebar',
-                'name' => __( 'USC Club Single Sidebar', 'usc-jobs' ),
+                'name' => __( 'USC Club Single Sidebar', 'usc-clubs' ),
                 'description' => __( 'Widgets meant only for individual USC Club Pages.', 'usc-clubs' ),
                 'before_widget' => '<aside id="%1$s" class="et_pb_widget %2$s">',
                 'after_widget' => '</aside>',
@@ -224,7 +411,7 @@ class USC_Clubs {
     }
 
 
-        /**
+    /**
      * Function meant to target the [usc_clubs] shortcode.  Grabs the attributes in the shortcode to
      * call a function somewhere down there.
      *
