@@ -158,7 +158,7 @@ class USC_Clubs {
                         of clubs if one was detected.  Reason is to return "Persian Club" if user types in "Persian Society."                 */
                         $search_terms = array_map( array( $this, "trim_strip_punctuation_lowercase"), $search_terms);
                         //remove 'western' as this will lead to a lot of bad matches
-                        $search_terms = array_diff($search_terms, array( 'western' ));
+                        $search_terms = array_diff($search_terms, array( 'western', 'uwo' ));
 
 
                         $words_in_club_name = ( !empty( $club['name'] ) ) ? explode( ' ', $club['name']) : '';
