@@ -431,6 +431,7 @@ class WP_AJAX {
 
         $this->turn_off_object_cache_so_our_bloody_plugin_works();
 
+        //set to false to disable caching
         $clubs_or_false = get_site_transient( $transient_name );
 
         $this->turn_object_caching_back_on_for_the_next_poor_sod();
@@ -448,7 +449,7 @@ class WP_AJAX {
     public function call_clubs_api() {
 
         //simple
-        $api_url = 'http://testwestern.com/github/json.php';
+        $api_url = 'http://testwestern.com/api/clubs/json.php';
 
         $returned_string = wp_remote_retrieve_body( wp_remote_get( $this->add_http_if_not_exists($api_url)) );
 
