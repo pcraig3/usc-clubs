@@ -115,21 +115,10 @@ class USC_Clubs {
             if( false === $clubs_stored_in_cache )
                 return;
 
-            //setup club words
-            $common_words_for_clubs = array(
-                'club', 'association', 'society', 'fellowship', 'organization'
-            );
-
-            //print to screen all names of uppercase cahracters
-
-            //remove all clubs words from names array
-
-            //if you get TWO matches or an exact string match //(include the club words)
-            //remove all stopwords.
-
-            //like canfar. hit every word
             $max = count($clubs_stored_in_cache);
             $found = -1;
+
+            $matched_words_array = array();
 
             for($index = 0; $index < $max && $found < 0 ;$index++) {
 
@@ -137,37 +126,58 @@ class USC_Clubs {
 
                     $club = $clubs_stored_in_cache[$index];
 
-                    $search_terms_lowercase_no_punctuation = trim( strtolower( preg_replace('/\p{P}/u', '', $wp_query->query_vars['s']) ) );
-                    $club_name_lowercase_no_punctuation = trim( strtolower( preg_replace('/\p{P}/u', '', $club['name']) ) );
-                    $club_shortName_lowercase_no_punctuation = trim( strtolower( preg_replace('/\p{P}/u', '', $club['shortName']) ) );
+                    $search_terms_sanitized = $this->trim_strip_punctuation_lowercase( $wp_query->query_vars['s'] );
+                    $club_name_sanitized = $this->trim_strip_punctuation_lowercase( $club['name'] );
+                    $club_shortName_sanitized = $this->trim_strip_punctuation_lowercase( $club['shortName'] );
 
                     //exact match name
-                    //echo '<br>Query vars: ' . $search_terms_lowercase_no_punctuation . ' // shortName: ' . $club_name_lowercase_no_punctuation;
-                    $found = ( $found < 0 && $search_terms_lowercase_no_punctuation === $club_name_lowercase_no_punctuation ) ? $index : $found;
-                    //var_dump($found);
+                    $found = ( $found < 0 && $search_terms_sanitized === $club_name_sanitized ) ? $index : $found;
 
                     //exact match short name
-                    //echo '<br>Query vars: ' . $search_terms_lowercase_no_punctuation . ' // shortName: ' . $club_shortName_lowercase_no_punctuation;
-                    $found = ( $found < 0 && $search_terms_lowercase_no_punctuation === $club_shortName_lowercase_no_punctuation ) ? $index : $found;
+                    $found = ( $found < 0 && $search_terms_sanitized === $club_shortName_sanitized ) ? $index : $found;
 
+                    //if no club has been found yet
                     /*
+                     * Logic in here looks for at least two matched words, and also adds in all common words for 'club'
+                     * when at least one is detected.  So if  */
                     if( $found < 0 ) {
-                        $search_terms = array_unique( array_merge( $wp_query->query_vars['search_terms'], $common_words_for_clubs) );
 
-                        $words_in_name = ( !empty( $club['name'] ) ) ? explode( ' ', $club['name']) : '';
+                        //setup club words
+                        $common_words_for_clubs = array(
+                            'club', 'association', 'society', 'fellowship', 'organization'
+                        );
+
+                        $search_terms = $wp_query->query_vars['search_terms'];
+
+                        $words_in_both_arrays = array_intersect( $wp_query->query_vars['search_terms'], $common_words_for_clubs);
+
+                        if( ! empty( $words_in_both_arrays ) )
+                            $search_terms = array_unique( array_merge( $wp_query->query_vars['search_terms'], $common_words_for_clubs) );
+
+                        /*at this point, $search_terms contain either what was searched for OR all of the different names
+                        of clubs if one was detected.  Reason is to return "Persian Club" if user types in "Persian Society."                 */
+                        $search_terms = array_map( array( $this, "trim_strip_punctuation_lowercase"), $search_terms);
+                        //remove 'western' as this will lead to a lot of bad matches
+                        $search_terms = array_diff($search_terms, array( 'western' ));
+
+
+                        $words_in_club_name = ( !empty( $club['name'] ) ) ? explode( ' ', $club['name']) : '';
 
                         $temp = array();
-                        foreach( $words_in_name as $word ) {
+                        foreach( $words_in_club_name as $word ) {
                             //if first letter is not uppercase
                             if( ctype_upper( substr( $word, 0, 1 ) ) )
-                                //strip punctuation and trim
-                                array_push($temp, trim( preg_replace('/\p{P}/u', '', $word) ) );
+                                //strip punctuation, trim
+                                array_push($temp, $word);
                         }
 
                         //at this point we have arrays of important words (no more 'and', 'of', etc)
-                        $words_in_name = $temp;
+                        $words_in_club_name = array_map( array( $this, "trim_strip_punctuation_lowercase"), $temp);
+
+                        array_push($matched_words_array, count( array_intersect( $search_terms, $words_in_club_name) ) );
+
                     }
-                    */
+
                 }
 
                 //so, if of the search terms we either match two words or exact match the name or the shortName,
@@ -175,9 +185,17 @@ class USC_Clubs {
 
             }
 
+            ///if we have a match of at least two, get the first one
+            $max_matched_words = max($matched_words_array);
+
+            if( $max_matched_words > 1 )
+                //get the first array key with the max number of matched words
+                $found = array_shift( array_keys( $matched_words_array, $max_matched_words ) );
+
+
+            //if a club has been found
             if($found > 0) {
 
-                //
                 $found_club = $clubs_stored_in_cache[$found];
 
                 $today = date('Y-m-d H:i:s');
@@ -190,19 +208,17 @@ class USC_Clubs {
                 else if( ! empty(  $found_club['description'] ) )
                     $summary = wp_strip_all_tags($found_club['description']);
 
-
                 if( strlen($summary) > 270 )
                     $summary = substr($summary, 0, 270) . '...';
 
-
-
+                $post_type_name = 'usc_clubs';
 
                 $club_post = new stdClass();
-                $club_post->id = $found_club['organizationId']; //lcubs
+                $club_post->id = $found_club['organizationId']; //clubs
                 $club_post->post_author = '1'; //sets it as the user id = 1
                 $club_post->post_date = $today; //set it to today's date
                 $club_post->post_date_gmt =  $today;
-                $club_post->post_content = '';
+                $club_post->post_content = $summary;
                 $club_post->post_title = $found_club['name'] . $shortName_brackets;
                 $club_post->post_excerpt = $summary;
                 $club_post->post_status = 'publish';
@@ -218,36 +234,41 @@ class USC_Clubs {
                 $club_post->post_parent = '1'; //I don't know what this means
                 $club_post->guid = "http://westernusc.org/index.php?usc_clubs=" . $found_club['organizationId'];
                 $club_post->menu_order = 0;
-                $club_post->post_type = 'usc_clubs';
+                $club_post->post_type = $post_type_name;
                 $club_post->comment_count = '0';
                 $club_post->filter = 'raw';
 
-                //var_dump($club_post);
+                //create a post_type 'usc_clubs' for the meta-data in the search result
+                $this->register_club_post_type_temporarily( $post_type_name );
 
-                $this->register_club_post_type_temporarily('usc_clubs');
+                add_filter( 'post_type_link', function($url, $post) use ( $found_club, $post_type_name ) {
 
+                    if( $post->post_type === $post_type_name ) {
+                        return trailingslashit( get_site_url() )
+                        . trailingslashit( get_post_type_object( $post->post_type )->rewrite['slug'] )
+                        . trailingslashit( $found_club['organizationId'] );
+                    }
 
-                //okay, so increase found_posts by one and posts per page by one and just insert our one new post into
-                //into the array of post objects
-                //and put the post as our first post
+                }, 10, 2  );
+
+                /* Increase found_posts by one and post_count by one and just insert our one new post
+                into the array of post objects and put the found_club as our first post */
                 $wp_query->found_posts = $wp_query->found_posts + 1;
                 $wp_query->post_count = $wp_query->post_count + 1;
 
                 array_unshift($wp_query->posts, $club_post);
                 $wp_query->post = $club_post;
-
-                //
             }
-
-            /*
-            echo '<pre>';
-            var_dump($found);
-            var_dump($wp_query);
-            echo '</pre>';
-            */
-
         }
 
+        //echo'<pre>';
+        //var_dump($wp_query);
+        //echo'</pre>';
+    }
+
+    private function trim_strip_punctuation_lowercase($arr_value) {
+
+        return trim( strtolower( preg_replace('/\p{P}/u', '', $arr_value) ) );
     }
 
     private function register_club_post_type_temporarily( $post_type_name = 'usc_clubs' ) {
@@ -272,12 +293,12 @@ class USC_Clubs {
 
         add_action( 'wp_footer', function() use ( $post_type_name ) {
 
-                        global $wp_post_types;
-                        if ( isset( $wp_post_types[ $post_type_name ] ) ) {
-                            unset( $wp_post_types[ $post_type_name ] );
-                            return true;
-                        }
-                        return false;
+                global $wp_post_types;
+                if ( isset( $wp_post_types[ $post_type_name ] ) ) {
+                    unset( $wp_post_types[ $post_type_name ] );
+                    return true;
+                }
+                return false;
 
             }, 11
         );
