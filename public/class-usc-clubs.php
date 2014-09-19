@@ -97,7 +97,7 @@ class USC_Clubs {
         add_action( 'widgets_init', array( $this, 'usc_clubs_register_sidebars' ) );
 
         //the idea is to intercept the search query and put a club as the first result if we find a club that matches
-        add_action( 'wp', array( $this, 'my_the_post_action') );
+        /*add_action( 'wp', array( $this, 'my_the_post_action') ); */
     }
 
     //@TODO: Move yerass

@@ -234,6 +234,7 @@ $usc-clubs-salmon--transparent: rgba(255, 90, 90, .8);
     &.collapseomatic_content {
 
       margin-left: 0px;
+      margin-top: 0px;
       padding: 0;
       background: none;
       border: none;
@@ -341,6 +342,7 @@ $usc-clubs-salmon--transparent: rgba(255, 90, 90, .8);
       border-bottom:  1px dashed #efefef;
       color:          $usc-clubs-salmon;
       position:       relative;
+      padding-right:  15px;
 
       &:hover {
 

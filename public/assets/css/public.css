@@ -143,6 +143,7 @@
   display: none; }
 .page-id-285 .et_pb_widget_area.collapseomatic_excerpt, .page-id-285 .et_pb_widget_area.collapseomatic_content {
   margin-left: 0px;
+  margin-top: 0px;
   padding: 0;
   background: none;
   border: none; }
@@ -219,8 +220,9 @@
     padding: 10px 0 20px 0;
     border-bottom: 1px dashed #efefef;
     color: #ff5a5a;
-    position: relative; }
-    .page-id-285 .type-usc_clubs h2:hover {
+    position: relative;
+    padding-right: 15px; }
+    .page-id-285 .type-usc_clubs  h2:hover {
       color: rgba(255, 90, 90, 0.8); }
     .page-id-285 .type-usc_clubs h2:before {
       font-family: 'ETmodules';
