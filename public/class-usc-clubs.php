@@ -97,11 +97,36 @@ class USC_Clubs {
         add_action( 'widgets_init', array( $this, 'usc_clubs_register_sidebars' ) );
 
         //the idea is to intercept the search query and put a club as the first result if we find a club that matches
-        /*add_action( 'wp', array( $this, 'my_the_post_action') ); */
+        add_action( 'wp', array( $this, 'usc_clubs_inject_clubs_into_search_results') );
     }
 
-    //@TODO: Move yerass
-    function my_the_post_action() {
+    /**
+     * Seemed simple, but turned into a pretty involved bit of code.  Basically, we've done a pretty
+     * good job of faking the 'usc_clubs' data type in our WordPress install so far (all of the information is stored
+     * offsite and is being beamed in via an API).
+     *
+     * One of our glaring problems was that clubs were not searchable using the main search bar.
+     *
+     * This method runs its own search for clubs names (more below) and, if found, will insert one extra result
+     * in front of all the real search results.  We only want one because this methodology isn't scalable, so our
+     * search algorithm tries to be reasonably sure that we know what people want before disadvantaging all other search
+     * results with our 'fake' result.  It's probably not a huge problem, as most queries that find a club don't return
+     * (m)any other results.
+     *
+     * Search algorithm to find a club:
+     *  -if there is a transient in WordPress with clubs (ie, if someone has loaded the Clubs List page recently)
+     *
+     *      -look for an exact name match (punctuation disregarded): 'acapella project'
+     *      -look for an exact shortname match: 'caisa'
+     *      -look for any two words that match, with all words that mean 'club' included
+     *          so, we can find 'western trivia club' or 'trivia club' or 'trivia society' or 'trivia association'
+     *          basically, we know that they want a club, and we know that 'trivia' is the operative word
+     *
+     *  -NOTE: in the last instance, 'uwo' and 'western' terms are ignored because they're too general
+     *
+     * @since    2.2.0
+     */
+    function usc_clubs_inject_clubs_into_search_results() {
 
         global $wp_query;
 
@@ -120,9 +145,12 @@ class USC_Clubs {
 
             $matched_words_array = array();
 
-            for($index = 0; $index < $max && $found < 0 ;$index++) {
+            //if the search query is not an empty string
+            if( ! empty($wp_query->query_vars['s'] ) ) {
 
-                if( ! empty($wp_query->query_vars['s'] ) ) {
+                //first loop looks for exact matches.
+                //We don't want the less-general loop returning a less-correct result before trying all the names
+                for($index = 0; $index < $max && $found < 0 ;$index++) {
 
                     $club = $clubs_stored_in_cache[$index];
 
@@ -135,63 +163,59 @@ class USC_Clubs {
 
                     //exact match short name
                     $found = ( $found < 0 && $search_terms_sanitized === $club_shortName_sanitized ) ? $index : $found;
-
-                    //if no club has been found yet
-                    /*
-                     * Logic in here looks for at least two matched words, and also adds in all common words for 'club'
-                     * when at least one is detected.  So if  */
-                    if( $found < 0 ) {
-
-                        //setup club words
-                        $common_words_for_clubs = array(
-                            'club', 'association', 'society', 'fellowship', 'organization'
-                        );
-
-                        $search_terms = $wp_query->query_vars['search_terms'];
-
-                        $words_in_both_arrays = array_intersect( $wp_query->query_vars['search_terms'], $common_words_for_clubs);
-
-                        if( ! empty( $words_in_both_arrays ) )
-                            $search_terms = array_unique( array_merge( $wp_query->query_vars['search_terms'], $common_words_for_clubs) );
-
-                        /*at this point, $search_terms contain either what was searched for OR all of the different names
-                        of clubs if one was detected.  Reason is to return "Persian Club" if user types in "Persian Society."                 */
-                        $search_terms = array_map( array( $this, "trim_strip_punctuation_lowercase"), $search_terms);
-                        //remove 'western' as this will lead to a lot of bad matches
-                        $search_terms = array_diff($search_terms, array( 'western', 'uwo' ));
-
-
-                        $words_in_club_name = ( !empty( $club['name'] ) ) ? explode( ' ', $club['name']) : '';
-
-                        $temp = array();
-                        foreach( $words_in_club_name as $word ) {
-                            //if first letter is not uppercase
-                            if( ctype_upper( substr( $word, 0, 1 ) ) )
-                                //strip punctuation, trim
-                                array_push($temp, $word);
-                        }
-
-                        //at this point we have arrays of important words (no more 'and', 'of', etc)
-                        $words_in_club_name = array_map( array( $this, "trim_strip_punctuation_lowercase"), $temp);
-
-                        array_push($matched_words_array, count( array_intersect( $search_terms, $words_in_club_name) ) );
-
-                    }
-
                 }
 
-                //so, if of the search terms we either match two words or exact match the name or the shortName,
-                //that's what we want.
+                /*
+                 * Logic in here looks for at least two matched words, and also adds in all common words for 'club'
+                 * when at least one is detected.  So if no club has been found yet, we try to match two words from the search terms
+                 */
+                for($index = 0; $index < $max && $found < 0 ;$index++) {
+
+                    $club = $clubs_stored_in_cache[$index];
+
+                    //set up club words
+                    $common_words_for_clubs = array(
+                        'club', 'association', 'society', 'fellowship', 'organization'
+                    );
+
+                    $search_terms = $wp_query->query_vars['search_terms'];
+
+                    $words_in_both_arrays = array_intersect( $wp_query->query_vars['search_terms'], $common_words_for_clubs);
+
+                    if( ! empty( $words_in_both_arrays ) )
+                        $search_terms = array_unique( array_merge( $wp_query->query_vars['search_terms'], $common_words_for_clubs) );
+
+                    /*at this point, $search_terms contain either what was searched for OR all of the different names
+                    of clubs if one was detected.  Reason is to return "Persian Club" if user types in "Persian Society."                 */
+                    $search_terms = array_map( array( $this, "trim_strip_punctuation_lowercase"), $search_terms);
+                    //remove 'western' and 'uwo' as this will lead to a lot of bad matches
+                    $search_terms = array_diff( $search_terms, array( 'western', 'uwo' ) );
+                    //$search_terms = array_diff( $search_terms, array( 'western', 'uwo', 'students' ) );
+
+                    $words_in_club_name = ( !empty( $club['name'] ) ) ? explode( ' ', $club['name']) : '';
+
+                    $temp = array();
+                    foreach( $words_in_club_name as $word ) {
+                        //if first letter is not uppercase
+                        if( ctype_upper( substr( $word, 0, 1 ) ) )
+                            //strip punctuation, trim
+                            array_push($temp, $word);
+                    }
+
+                    //at this point we have arrays of important words (no more 'and', 'of', etc)
+                    $words_in_club_name = array_map( array( $this, "trim_strip_punctuation_lowercase"), $temp);
+
+                    array_push($matched_words_array, count( array_intersect( $search_terms, $words_in_club_name) ) );
+                }
 
             }
 
-            ///if we have a match of at least two, get the first one
-            $max_matched_words = max($matched_words_array);
+            $max_matched_words = ( !empty( $matched_words_array ) ) ? max( $matched_words_array ) : 0;
 
+            ///if we have a match of at least two
             if( $max_matched_words > 1 )
                 //get the first array key with the max number of matched words
                 $found = array_shift( array_keys( $matched_words_array, $max_matched_words ) );
-
 
             //if a club has been found
             if($found > 0) {
@@ -260,17 +284,34 @@ class USC_Clubs {
                 $wp_query->post = $club_post;
             }
         }
-
-        //echo'<pre>';
-        //var_dump($wp_query);
-        //echo'</pre>';
     }
 
+    /**
+     * utility function which removes punctuation, trims surrounding whitespace, and lowercases any string parameters
+     *
+     * @since    2.2.0
+     *
+     * @param $arr_value    string a string to sanitize
+     * @return string       string the sanitized string
+     */
     private function trim_strip_punctuation_lowercase($arr_value) {
 
         return trim( strtolower( preg_replace('/\p{P}/u', '', $arr_value) ) );
     }
 
+    /**
+     * Bit of an hacky function.  Basically, in our search results, we will list a club or a job or whatever along with a
+     * link to its archive. Unfortunately, the clubs archive (westernusc.org/clubs/list/) isn't registered in WordPress as
+     * a Post Type archive
+     *
+     * So!  We register the 'usc_clubs' type while search.php (the file that lists search results) is running,
+     * and then de-register it once we reach wp_footer.  This means that our search results include the club archive,
+     * but that clubs are de-registered right afterwards.
+     *
+     * @since    2.2.0
+     *
+     * @param string $post_type_name        the name of the post type to register while search results are being created
+     */
     private function register_club_post_type_temporarily( $post_type_name = 'usc_clubs' ) {
 
         /* register the post type
@@ -338,7 +379,6 @@ class USC_Clubs {
             //tank the main query so that we're not grabbing a bunch of posts unnecessarily
             add_filter('posts_request', array( $this, 'suppress_main_query' ), 10, 2);
 
-            //return our template (@TODO: bundle this with the theme, not the plugin)
             add_filter( 'template_include', array( $this, 'call_template_club_single' ) );
         }
     }
@@ -357,6 +397,7 @@ class USC_Clubs {
         //query_var looks like "1717-abolition-project-against-human-trafficking-tapaht"
         $club_id = intval( array_shift( explode("-", get_query_var( 'usc_clubs' ) ) ) );
 
+        //getting the club we want, as well as the 'next' and 'prev' ones
         $one_club_you_want_two_you_dont = $this->wp_ajax->get_event_and_prev_next( $club_id );
 
         if ( !empty( $one_club_you_want_two_you_dont ) ) {
@@ -364,17 +405,22 @@ class USC_Clubs {
             $current_club = $previous_club = $next_club = null; //these should be set by the array
             extract($one_club_you_want_two_you_dont, EXTR_OVERWRITE);
 
-            //@TODO: H4ck
-            include(locate_template('../../plugins/usc-clubs/templates/single-club_westernusc.php', false));
-            //include(locate_template('single-club.php', false));
-            //H4ck
+            /* THE REASON TO USE INCLUDE IS SO THAT THE TEMPLATE FILES HAVE ACCESS TO OUR WORDPRESS VARIABLES
+                This is why we're doing the extracting in the lines above this one.
+                @see: http://keithdevon.com/passing-variables-to-get_template_part-in-wordpress/
+             */
+            //try to load template from the THEME first.  Note the different filename
+            $club_template_theme = locate_template('single-usc_clubs.php', false);
+            if( !empty ( $club_template_theme ) )
+                include($club_template_theme);
 
-            //return trailingslashit( plugin_dir_path( __DIR__ ) ) . 'templates/single-club.php';
-
-        } else {
-            return $original_template;
+            //load template in PLUGIN after trying the theme.
+            $club_template_plugin = locate_template('../../plugins/usc-clubs/templates/single-usc_clubs_westernusc.php', false);
+            if( !empty ( $club_template_plugin ) )
+                include($club_template_plugin);
         }
-
+        else
+            return $original_template;
     }
 
     /**

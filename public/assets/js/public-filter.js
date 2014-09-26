@@ -142,7 +142,6 @@ jQuery(function ($) {
          * * Hide the loading gif
          * * Check all checkboxes (otherwise results would be hidden)
          * * filterInit builds the page
-         * * change -- not sure what this does.  Maybe nothing.  @TODO: Whoops
          * * Update the 'x clubs'
          *
          * @since    2.0.0
@@ -154,8 +153,6 @@ jQuery(function ($) {
             $('#categoryNames').find('label').addClass('checked').find('input:checkbox').prop('checked', true);
 
             fJS = filterInit( clubs );
-
-            $('#usc_clubs_list').trigger( "change" );
 
             AjaxUSCClubs.update_visible_clubs();
 

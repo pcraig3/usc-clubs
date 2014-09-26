@@ -139,6 +139,9 @@
     float: left;
     width: 50%; }
 
+.page-id-285 .entry {
+  margin-top: 25px;
+  /* For 'No Results Found' text */ }
 .page-id-285 .collapseomatic {
   display: none; }
 .page-id-285 .et_pb_widget_area.collapseomatic_excerpt, .page-id-285 .et_pb_widget_area.collapseomatic_content {
@@ -222,7 +225,7 @@
     color: #ff5a5a;
     position: relative;
     padding-right: 15px; }
-    .page-id-285 .type-usc_clubs  h2:hover {
+    .page-id-285 .type-usc_clubs h2:hover {
       color: rgba(255, 90, 90, 0.8); }
     .page-id-285 .type-usc_clubs h2:before {
       font-family: 'ETmodules';
