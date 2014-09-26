@@ -2,8 +2,8 @@
 Contributors: pcraig3
 Tags: clubs list, beta
 Requires at least: 3.8
-Tested up to: 3.9
-Stable tag: 1.1.2
+Tested up to: 4.0
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,11 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 2.2.0 =
+* Clubs can now be searched for using the main site search bar. (Which was hard and is awesome.)
+* CSS tweaks to single clubs more in line with the rest of the theme
+* Changed the location of the clubs API so that everything locally comes from the same root URL
 
 = 2.1.1 =
 * Single Club page now has more clear social icons
