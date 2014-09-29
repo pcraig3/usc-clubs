@@ -51,9 +51,14 @@ $html_string = ob_get_clean();
 
 $total = intval( count($clubs_array) );
 
+$clubs_string = ( $total === 0 )
+    ? 'No Clubs' :
+    ( $total === 1 )
+        ? '1 Club':
+        $total . ' Clubs';
 ?>
 
-    <h4 class="usc_clubs--count"><span id="counter"><?php echo $total; ?></span> Clubs Found</h4>
+    <h4 class="usc_clubs--count"><span id="counter"><?php echo $clubs_string; ?></span> Found</h4>
 
 <?php
 

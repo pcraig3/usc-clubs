@@ -194,7 +194,11 @@ jQuery(function ($) {
 
             var $clubs_column = $('.usc_clubs--count').parents('.et_pb_text');
 
-            $clubs_column.find('#counter').text( $clubs_column.find('article:visible').length );
+            var num_clubs = $clubs_column.find('article:visible').length;
+
+            num_clubs = ( num_clubs === 0 ) ? 'No Clubs' : ( num_clubs === 1 ) ? '1 Club' : num_clubs + ' Clubs' ;
+
+            $clubs_column.find('#counter').text( num_clubs );
         },
 
         /**
