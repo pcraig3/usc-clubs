@@ -126,7 +126,7 @@ class USC_Clubs {
      *
      *  -NOTE: in the last instance, 'uwo' and 'western' terms are ignored because they're too general
      *
-     * @since    2.2.0
+     * @since    2.2.1
      */
     function usc_clubs_inject_clubs_into_search_results() {
 
@@ -220,7 +220,7 @@ class USC_Clubs {
                 $found = array_shift( array_keys( $matched_words_array, $max_matched_words ) );
 
             //if a club has been found
-            if($found > 0) {
+            if($found >= 0) {
 
                 $found_club = $clubs_stored_in_cache[$found];
 
