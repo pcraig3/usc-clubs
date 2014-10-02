@@ -49,7 +49,7 @@ ob_start();
 
 $html_string = ob_get_clean();
 
-$total = intval( count($clubs_array) );
+$total = USC_Clubs::get_instance()->clubs_count( $clubs_array );
 
 $clubs_string = ( $total === 0 )
     ? 'No Clubs' :
@@ -76,8 +76,15 @@ for($i = 0; $i < $total; $i++) {
             return html_string;
     */
 
+    $categories = $current_club['categories'];
+    $total_categories = count( $categories );
 
-    $html_string .= '<article class="usc_clubs type-usc_clubs et_pb_post media">';
+    $html_string .= '<article class="usc_clubs type-usc_clubs et_pb_post media ';
+
+    if( $total_categories < 1 )
+        $html_string .= 'hidden';
+
+    $html_string .= '">';
 
     if( !empty( $img_url )) {
         $html_string .= '<a href="' . esc_url( $current_club['url'] ) . '" class="img">';

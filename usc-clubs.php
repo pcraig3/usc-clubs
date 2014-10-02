@@ -69,11 +69,9 @@ add_action( 'plugins_loaded', array( 'USC_Clubs', 'get_instance' ) );
  * }
  *
  * The code below is intended to to give the lightest footprint possible.
- *
+ */
 if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 
 	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-usc-clubs-admin.php' );
-	add_action( 'plugins_loaded', array( 'Plugin_Name_Admin', 'get_instance' ) );
-
+	add_action( 'plugins_loaded', array( 'USC_Clubs_Admin', 'get_instance' ) );
 }
- */

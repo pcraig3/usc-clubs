@@ -26,7 +26,6 @@ class WP_AJAX {
 
     private function __construct() {
 
-
         add_action("wp_ajax_get_clubs_ajax", array( $this, "get_clubs_ajax" ) );
         add_action("wp_ajax_nopriv_get_clubs_ajax", array( $this, "get_clubs_ajax") );
 
@@ -63,6 +62,15 @@ class WP_AJAX {
     }
 
     /**
+     * one of two functions created to get around a bug with the APC backend object-caching plugin
+     * Basically, our APC caching backend plugin was setting $_wp_using_ext_object_cache to true, with the
+     * unintended side-effect that any time we saved a transient, it wouldn't persist through the next pageload.
+     *
+     * So this function sets $wp_using_ext_object_cache_status to false so that setting a transient will work
+     *
+     * More detailed discussion here:
+     * @see: https://github.com/michaeluno/admin-page-framework/issues/118
+     *
      * @since    2.1.0
      */
     public function turn_off_object_cache_so_our_bloody_plugin_works() {
@@ -75,7 +83,18 @@ class WP_AJAX {
 
     }
 
+
     /**
+     * one of two functions created to get around a bug with the APC backend object-caching plugin
+     * Basically, our APC caching backend plugin was setting $_wp_using_ext_object_cache to true, with the
+     * unintended side-effect that any time we saved a transient, it wouldn't persist through the next pageload.
+     *
+     * So this function assumes the 'turn_off_object_cache_so_our_bloody_plugin_works' was called first,
+     * sets the $wp_using_ext_object_cache_status back to its original value
+     *
+     * More detailed discussion here:
+     * @see: https://github.com/michaeluno/admin-page-framework/issues/118
+     *
      * @since    2.1.0
      */
     public function turn_object_caching_back_on_for_the_next_poor_sod() {
@@ -85,11 +104,11 @@ class WP_AJAX {
         $_wp_using_ext_object_cache =  $this->wp_using_ext_object_cache_status;
     }
 
-
-
     /**
      * Does (a bit more than) what it says on the box. gets all facebook and db events (and then merges their values)
      * and then returns everything to the javascript function waiting for it.
+     *
+     * @deprecated: we're never calling the clubs using ajax.
      *
      * @since    2.0.0
      *
@@ -110,10 +129,14 @@ class WP_AJAX {
     }
 
     /**
-     * This method implements our WordPress caching system.  Basically, instead of calling (@see)  all the time,
+     * This method implements our WordPress caching system. Basically, instead of calling (@see) call_clubs_api all the time,
+     * we can store its value to the cache (removing the old value first). So that the next time it's called, we might just
+     * get it from the WP_database instead of going all the way to Facebook for the data.
+     *
+     * The assumption here is that we've run (@see) get_clubs first, and then this method will be called next (via AJAX),
+     * and the next time get_clubs is called, it quickly returns the cached value.
      *
      * @since    2.1.0
-     *
      */
     public function update_wordpress_clubs_cache() {
 
@@ -176,14 +199,22 @@ class WP_AJAX {
     }
 
     /**
+     * This function essentially works as a big whitelist, as well as it generates a club's URL.
+     *
+     * It takes the unformatted json_response and, (if it's not empty), filters out all not active clubs
+     * or not ratified clubs.
+     * For each club, it generates a sequential id (starts at 1), as well as a url for them.
+     * Afterwards, it removes all array keys which aren't in the $fields_to_keep array.
+     *
+     * returns the modified response if it's not empty (which it shouldn't be)
      *
      * @since    2.1.0
      *
-     * @param null $json_response
-     * @param array $fields_to_keep
-     * @return array|null
+     * @param array $json_response      unfiltered json response returned from API
+     * @param array $fields_to_keep     array of keys we want to keep for each club
+     * @return array|null               modified array with whitelisted fields, an id num, and a url
      */
-    private function filter_js_format_API_response( $json_response = null,
+    private function filter_js_format_API_response( array $json_response = null,
                                                     array $fields_to_keep = array(
                                                         'organizationId',
                                                         'name',
@@ -284,9 +315,25 @@ class WP_AJAX {
     }
 
     /**
+     * Since we're pretending that the clubs are on our site, they need a url,
+     * but since they're not on our site, they don't have one.  So this function creates
+     * club urls.
+     *
+     * URLs generated are formatted: {club id}-{club name, lowercased, no-punctuation, hyphens}-{club shortname}
+     * This is so that when I type 'caisa' or 'canadian International' into my browser bar, it will be suggested
+     * if I've visited the page before
+     *
+     * ie, "http://westernusc.org/clubs/list/1737-canadian-asian-international-students-association-caisa/"
+     *
      * @since    2.1.0
+     *
+     * @param array $club           an array representing a club returned from westernlink
+     * @param string $url_trunk     the part of the url between the root_url and the beginning of the club link
+     * @param string $root_url      the homepage domain
+     *
+     * @return string               a shiny new url for one of our clubs
      */
-    private function generate_club_url($club, $url_trunk = "clubs/list/", $url_root = '') {
+    private function generate_club_url($club, $url_trunk = "clubs/list/", $root_url = '') {
 
         $root_url = ( isset( $root_url ) && ! empty( $root_url ) ) ? esc_url( $root_url )
             : trailingslashit(get_bloginfo('wpurl'));
@@ -303,11 +350,18 @@ class WP_AJAX {
             $url_leaf .= (  isset( $club[$name] ) && ! empty( $club[$name] ) ) ?  '-' . sanitize_title($club[$name]) : '';
 
         return $root_url . trailingslashit($url_trunk) . trailingslashit( $url_leaf );
-
     }
 
     /**
+     * function which returns clubs from our github API.
+     * Returns the clubs (whether cached or not), formats them, and then delivers them to whomever asked for them.
+     *
      * @since    2.1.0
+     *
+     * @param string $to_append     a string we'd like to append to our transient_name, to be able individuate save
+     *                          different transients under other (predictable) name patterns
+     *
+     * @return array                filtered array of clubs from github, as well as a transient name and other goodies.
      */
     public function get_clubs( $to_append = '' ) {
 
@@ -338,9 +392,18 @@ class WP_AJAX {
     }
 
     /**
+     * Returns one club that we want as well as the next and previous clubs to it in an array.
+     *
+     * Also, save result as a transient so that we can later get the same club more quickly if necessary.
+     *
      * @since    2.1.0
+     *
+     * @param int $desired_club_id  the id of the club we're retrieving
+     *
+     * @return array                an array containing the club we want, and then the one directly preceding and
+     *                          following it (if they both exist)
      */
-    public function get_event_and_prev_next( $desired_club_id ) {
+    public function get_club_along_with_prev_and_next_club( $desired_club_id ) {
 
         //function returns the clubs on github as a json array.
         $clubs_array_response = $this->get_clubs( $desired_club_id );
@@ -381,7 +444,6 @@ class WP_AJAX {
             return array();
         }
 
-
         $clubs_found = array(
             'current_club'  => $current_club,
             'previous_club' => $previous_club,
@@ -398,7 +460,6 @@ class WP_AJAX {
         $this->turn_object_caching_back_on_for_the_next_poor_sod();
 
         return $clubs_found;
-
     }
 
     /**
@@ -460,7 +521,6 @@ class WP_AJAX {
 
         return json_decode( $returned_string, true );
     }
-
 
     /**
      * Simple utility function. Add an "http://" to URLs without it.
@@ -527,5 +587,4 @@ class WP_AJAX {
         call_user_func_array('array_multisort', $args);
         return end($args);
     }
-
 }

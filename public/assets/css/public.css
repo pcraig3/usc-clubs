@@ -118,7 +118,6 @@
 .usc_clubs-entry-content, .page-id-285 .type-usc_clubs {
   /* Resetting styles so as to match the USC directory page */ }
   .usc_clubs-entry-content p, .page-id-285 .type-usc_clubs p {
-    margin-left: 0;
     padding-bottom: .35em; }
   .usc_clubs-entry-content a, .page-id-285 .type-usc_clubs a {
     color: #ff5a5a; }

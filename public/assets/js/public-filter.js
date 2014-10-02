@@ -1,17 +1,36 @@
+/**
+ * public-filter.js contains the AjaxUSCClubs module which defines the HTML structure for a club template
+ * (as a plain string, which isn't really ideal but it's easy) in the club archive, as well as does a whole bunch of other stuff.
+ *
+ * Basically, if you don't have Javascript, you'll get a static club listing, but if you have it (which almost everyone does)
+ * then the original clubs and widgets are stripped from the page and new, better, dynamic ones are implemented.
+ *
+ * There's a bit of a loading delay, but it can't be helped.
+ *
+ * **THIS FILE RELIES VERY HEAVILY ON A TEMPLATE FILE THAT HAS ALL OF THE FILTERJS INITIAL MARKUP**
+ * PLEASE TAKE A LOOK AT /public/views/usc_clubs-list.php TO UNDERSTAND WHERE THE FILTERJS FILTERS AND EVENTS ARE ORIGINALLY
+ * LOCATED
+ */
+
 jQuery(function ($) {
     /* You can safely use $ in this code block to reference jQuery */
 
+    //fJS variable used by filterJS to create the searchable/filterable clubs listing.
     var fJS;
-
 
     var AjaxUSCClubs = {
 
+        //variables we can use within our module so that we're not re-doing jquery selectors every time
         $clubs_column:      $('.usc_clubs--count').parents('.et_pb_text'),
-        /* TODO: This is bad practice, adding the class like this. */
+        /* Note: This is bad practice, adding the class like this, but I don't know a cleaner way */
         $widgets_column:    $('.page-id-285 .et_pb_widget_area').addClass('btn-menu'),
         $filterjs:          $('.filterjs.hidden'),
 
-
+        /* This function was meant to hide everything on the screen if the user has javascript in order to
+         * avoid that really obvious reloading thing that happens on the clubs page (especially on your phone)
+         *
+         * Didn't work at all, because it takes effect way too late.
+         */
         hide_everything_thats_not_a_horse: function() {
 
             //find everything and set visibility hidden on them.
@@ -25,7 +44,9 @@ jQuery(function ($) {
             $container_row.prepend( AjaxUSCClubs.$filterjs.find('.filterjs__loading').detach() );
         },
 
-        /** Remove the clubs listings created by my clubs list template for the job listings returned by filterJS
+        /**
+         * Remove the clubs listings originally on the page before the JS is loaded and replace them instead with the
+         * filterJS events that we can manipulate.
          *
          * @since    2.0.0
          */
@@ -42,8 +63,16 @@ jQuery(function ($) {
             $articles.remove();
         },
 
-        /** Remove the widgets created by Wordpress (if they exist, which they don't)
-         *  and sub in the filter checkboxes and searchbar created by filterJS
+        /** Remove the widgets created by Wordpress and sub in the filter checkboxes and searchbar created by filterJS
+         *  1. Initially looks for widgets similar to the search filters we have so that it changes the order of them
+         *  if they're changed (not too important).
+         *  2. Search bar goes on top.
+         *  3. Add event listener to search bar to update clubs counter slightly after 'keyup' event
+         *  4. Add collapseomatic class to event filter widgets.  Hacky solution for mobile filters.  Works though.
+         *  5. Add window.resize event that makes sure filters are always revealed on a large screen and hidden on a small one.
+         *  6. Sets up event listener for 'All' category checkbox.
+         *  7. Sets up event listener for single category checkboxes.
+         *  8. If window is on a larger screen, show filters (they are hidden by default)
          *
          * @since    2.1.2
          */
@@ -87,11 +116,11 @@ jQuery(function ($) {
             AjaxUSCClubs.$widgets_column.prop('id', "target-id1234" ).addClass('collapseomatic_content');
 
             $(window).resize(function () {
-                    var $collapseomatic_button = $('.collapseomatic');
-                    var $collapseomatic_content = $collapseomatic_button.next();
+                var $collapseomatic_button = $('.collapseomatic');
+                var $collapseomatic_content = $collapseomatic_button.next();
 
-                    if( $(window).width() > 980 && ! $collapseomatic_content.is(':visible') )
-                        $collapseomatic_content.show();
+                if( $(window).width() > 980 && ! $collapseomatic_content.is(':visible') )
+                    $collapseomatic_content.show();
             });
 
             //click event listener on '#all' checkbox turns on and off the entire row.
@@ -139,10 +168,10 @@ jQuery(function ($) {
 
         /**
          * Run through a bunch of setup stuff once the clubs (as a JSON string) has been received from our PHP API call
-         * * Hide the loading gif
-         * * Check all checkboxes (otherwise results would be hidden)
-         * * filterInit builds the page
-         * * Update the 'x clubs'
+         * 1. Hide the loading gif
+         * 2. Check all checkboxes (otherwise results would be hidden)
+         * 3. filterInit builds the page
+         * 4. Update the 'x clubs' counter
          *
          * @since    2.0.0
          */
@@ -188,7 +217,9 @@ jQuery(function ($) {
         /**
          *  Simple.  Find how many clubs are visible and change the number in the 'X Clubs' string.
          *
-         * @since    2.0.0
+         *  Updated to say '1 Club' but '2 Clubs'  *mad applause*
+         *
+         * @since    2.2.1
          */
         update_visible_clubs: function() {
 
@@ -202,7 +233,11 @@ jQuery(function ($) {
         },
 
         /**
+         * Pretty self-explanatory method name, I hope.
+         *
          * @since    2.0.0
+         *
+         * @param categories    array with club categories. go figure.
          */
         create_category_checkbox_filters: function( categories ) {
 
@@ -217,9 +252,15 @@ jQuery(function ($) {
             $('#categoryNames').append(html_string);
 
         },
+
         /**
+         * This method, called after non-cached clubs have been returned, calls a php method which updates the cache.
+         * Basically, clubs saved as WordPress transients are returned more quickly and so we want to cache them.
+         * Not much fancy footwork going on here.  Pretty standard stuff.
          *
          * @since    2.0.0
+         *
+         * @param options   an array of options we need to make the ajax call
          */
         ajax_update_wordpress_transient_cache: function( options ) {
 
@@ -233,29 +274,30 @@ jQuery(function ($) {
                 },
                 function( data ) {
 
-
                     /*
                      if(! data['success']) {
                      console.log('WordPress transient DB has NOT been updated.');
                      }
                      else
                      console.log('Yay! WordPress transient DB has been updated.');
-                    */
+                     */
 
                 }, "json");
-
         }
     };
 
+
     /**
-     * Function sets up all of our filtering.
-     * Works now, but seems a bit brittle.
+     * function pretty much a straightforward copy of the samples given in the filter.js github page
+     * 'view' defines the HTML club list item template, and 'settings' defines the filtering options, which for the
+     * clubs widget includes a search bar and checkboxes representing categories.
      *
-     * @param clubs    a list of clubs. Data is pulled from the WesternLink data saved as a JSON file on github
+     * @see: https://github.com/jiren/filter.js/tree/master
      *
      * @since    2.0.0
      *
-     * @returns {*} A list of searchable clubs in the backend.
+     * @param clubs an array of clubs
+     * @returns {*} a list of clubs
      */
     function filterInit( clubs ) {
 
@@ -282,7 +324,7 @@ jQuery(function ($) {
             }
 
             html_string +=      '<div class="bd">'
-                                    + '<a href="' + club.url + '" title="' + club.name + '"><h2>' + club.name;
+                + '<a href="' + club.url + '" title="' + club.name + '"><h2>' + club.name;
 
             if('' != club.shortName )
                 html_string += ' (' + club.shortName + ')';
@@ -318,6 +360,12 @@ jQuery(function ($) {
         return FilterJS(clubs, "#usc_clubs_list", view, settings);
     }
 
+    /**
+     * WAITS FOR PAGE TO BE MOSTLY LOADED BEFORE FIRING
+     *
+     * Parse the clubs returned from the PHP file as a JSON string, call the method that
+     * updates the page with filterjs clubs, and if the clubs weren't cached then cache them.
+     */
     $(document).ready(function() {
 
         var usc_clubs_as_json = JSON.parse(options.clubs);
@@ -333,7 +381,8 @@ jQuery(function ($) {
     });
 
     //hide elements we want gone and put that loading horse in instead
-    //AjaxUSCClubs.hide_everything_thats_not_a_horse();  this method is useless.
+    //this method turned out useless
+    //AjaxUSCClubs.hide_everything_thats_not_a_horse();
 
     //call this right away.  don't wait for $(document).ready
     //this one removes my old clubs and puts in my new clubs.

@@ -1,6 +1,12 @@
 <?php
 /**
- * USC Clubs
+ * USC Clubs was a technically challenging plugin that nevertheless works pretty good now.
+ * Essentially, it fakes the 'usc_club' data type, providing a fake archive page that's filterable and sortable
+ * as well as a template for single USC Clubs.
+ *
+ * Also includes a hacky search function, which I can't honestly recommend trying in the future.
+ * Basically, if a user searches something that could be a club, a club is inserted as a fake post as the
+ * first result in the list of search results.  Don't judge me.
  *
  * @package   USC_Clubs
  * @author    Paul Craig <pcraig3@uwo.ca>
@@ -9,11 +15,8 @@
  * @copyright 2014 University Students' Council
  */
 
-//http://wordpress.stackexchange.com/questions/97811/how-to-prevent-execution-of-default-query-while-preserving-ability-to-use-wp-qu
-
 /**
- * USC Clubs class. This class should ideally be used to work with the
- * public-facing side of the WordPress site.
+ * USC Clubs class.
  *
  * @package USC_Clubs
  * @author  Paul Craig <pcraig3@uwo.ca>
@@ -82,9 +85,6 @@ class USC_Clubs {
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 
-        /* Define custom functionality.
-         * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
-         */
         //define the rewrite tag and a url pattern that triggers it
         add_action( 'init', array( $this, 'usc_clubs_rewrite_rules' ) );
         //add 'usc_clubs' to our query variables
@@ -92,8 +92,10 @@ class USC_Clubs {
         //check the current request for a usc_clubs value
         add_action( 'template_redirect', array( $this, 'usc_clubs_redirect' ) );
 
+        //add a shortcode to generate a list of clubs
         add_shortcode( 'usc_clubs', array( $this, 'usc_clubs_shortcode_function') );
 
+        //add a sidebar for single clubs
         add_action( 'widgets_init', array( $this, 'usc_clubs_register_sidebars' ) );
 
         //the idea is to intercept the search query and put a club as the first result if we find a club that matches
@@ -347,6 +349,14 @@ class USC_Clubs {
     }
 
     /**
+     * function hijacks the main WordPress Query, forcing it to return nothing.
+     * Normally, this is a really stupid thing to do, but in this case it's justified because we're creating a listing
+     * of results that aren't in the database.
+     * If we didn't use this function, a bunch of useless posts would be retrieved from the database.
+     *
+     * Was helped greatly by an answer on wordpress stackexchange
+     * @see: http://wordpress.stackexchange.com/questions/97811/how-to-prevent-execution-of-default-query-while-preserving-ability-to-use-wp-qu
+     *
      * @since    2.0.0
      */
     public function suppress_main_query( $request, $query ){
@@ -398,7 +408,7 @@ class USC_Clubs {
         $club_id = intval( array_shift( explode("-", get_query_var( 'usc_clubs' ) ) ) );
 
         //getting the club we want, as well as the 'next' and 'prev' ones
-        $one_club_you_want_two_you_dont = $this->wp_ajax->get_event_and_prev_next( $club_id );
+        $one_club_you_want_two_you_dont = $this->wp_ajax->get_club_along_with_prev_and_next_club( $club_id );
 
         if ( !empty( $one_club_you_want_two_you_dont ) ) {
 
@@ -429,7 +439,7 @@ class USC_Clubs {
      * this is the function that registers the name of the variable with WordPress
      *
      * more information here:
-     * http://wordpress.stackexchange.com/questions/71305/when-should-add-rewrite-tag-be-used
+     * @see: http://wordpress.stackexchange.com/questions/71305/when-should-add-rewrite-tag-be-used
      *
      * @since    2.0.0
      */
@@ -518,7 +528,7 @@ class USC_Clubs {
 
             ob_start();
 
-            /* @TODO: Explain yourself. */
+            //calls a function based on the 'get' and 'show' parameters
             echo call_user_func_array( array( $this, $usc_clubs_shortcode_function ), $parameters );
 
             $result = ob_get_clean();
@@ -533,13 +543,13 @@ class USC_Clubs {
     }
 
     /**
-     * Return the number of clubs as an integer
+     * Return the number of clubs *that have categories* as an integer
      *
      * @param array $clubs_array      an array of clubs originating from a csv file on github
      *
      * @since    1.1.2
      *
-     * @return int              the number of clubs on github
+     * @return int              the number of clubs assigned to categories on github
      */
     private function clubs_count( array $clubs_array ) {
 
@@ -570,10 +580,10 @@ class USC_Clubs {
      *
      * @since    2.1.0
      *
-     * @param $clubs_array      An array of clubs originating from a csv file on github
-     * @param $is_cached        Pass this to JS.  If true, trigger an ajax method that updates the cache.
-     * @param $transient_name   Transient name sets the name of the transient if we asynchronously update it.
-     * @return string           the names of all of the clubs on github
+     * @param array $clubs_array        An array of clubs originating from a csv file on github
+     * @param bool $is_cached           Pass this to JS.  If true, trigger an ajax method that updates the cache.
+     * @param string $transient_name   Transient name sets the name of the transient if we asynchronously update it.
+     * @return string                   the names of all of the clubs on github
      */
     private function clubs_list( $clubs_array, $is_cached, $transient_name ) {
 
@@ -598,7 +608,17 @@ class USC_Clubs {
     }
 
     /**
+     * There is no place in the API where we can get all of the categories, so the workaround is just to go through
+     * all of the clubs and find categories they belong to.
+     *
+     * This means that we might miss a category if one exists in WesternLink but has no clubs assigned to it,
+     * but in that case we don't need it as a filter.
+     * So our stopgap solution is fine.
+     *
      * @since   2.0.0
+     *
+     * @param array $clubs_array    the array of clubs from westernlink
+     * @return array                the array of unique categories assigned to the clubs on westernlink
      */
     private function return_categories_array($clubs_array) {
 
@@ -625,7 +645,6 @@ class USC_Clubs {
             );
 
         return $this->wp_ajax->multisort($categories_array, $sort_criteria, true);
-
     }
 
     /**

@@ -45,21 +45,12 @@ class USC_Clubs_Admin {
 	private function __construct() {
 
 		/*
-		 * @TODO :
-		 *
-		 * - Uncomment following lines if the admin class should only be available for super admins
-		 */
-		/* if( ! is_super_admin() ) {
-			return;
-		} */
-
-		/*
 		 * Call $plugin_slug from public plugin class.
 		 */
 		$plugin = USC_Clubs::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
 
-		// Load admin style sheet and JavaScript.
+		/*// Load admin style sheet and JavaScript.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
@@ -82,7 +73,24 @@ class USC_Clubs_Admin {
 		add_filter( '@TODO', array( $this, 'filter_method_name' ) );
 		 */
 
+        $plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->plugin_slug . '.php' );
+        add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_github_api_link' ) );
 	}
+
+    /**
+     * Add the link to the Clubs API update area.  Gonna have to change.
+     *
+     * @since    2.2.1
+     */
+    public function add_github_api_link( $links ) {
+
+        return array_merge(
+            array(
+                'api' => '<a href="http://testwestern.com/api/" target="_blank">Update Clubs API</a>'
+            ),
+            $links
+        );
+    }
 
 	/**
 	 * Return an instance of this class.
