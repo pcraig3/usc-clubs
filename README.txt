@@ -1,20 +1,24 @@
 === USC Clubs ===
 Contributors: pcraig3
 Tags: clubs list, beta
-Requires at least: 3.8
+Requires at least: 3.6
 Tested up to: 4.0
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin beams in some info from GitHub.
+Bespoke USC plugin beams in some JSON Clubs originally from Westernlink; creates archive and single club pages.
 
 == Description ==
 
-This plugin beams in some info from GitHub.
+Bespoke USC plugin beams in some JSON Clubs originally from Westernlink; creates archive and single club pages.
+
+Relies on the existence of the Collapseomatic and the external api with WesternLink stuff.
 
 It's kind of a proof of concept: use wordpress shortcodes to pull in data stored on github.
 This would give you a backend api that anyone could use.
+
+Also hacks the search to push clubs found after obvious club searches into the search results.
 
 == Frequently Asked Questions ==
 
@@ -26,16 +30,13 @@ It does!  Ha!
 
 It took me a long time.  So 'yes.'
 
-
-== Screenshots ==
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
-
 == Changelog ==
+
+= 2.2.1 =
+* Commented like nuts
+* Updated usc_clubs-list view such that without JS events without categories don't show up and count reflects that
+* Added API link on plugins page.
+* Clubs counter is slightly more intelligent.
 
 = 2.2.0 =
 * Clubs can now be searched for using the main site search bar. (Which was hard and is awesome.)
@@ -54,7 +55,7 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 * Another biggish update.  Mostly I forgot to update the version.
 * * Single template basically finished.
 * * Single clubs now called by going to /clubs/clubs-list/{id}
-* * API result fir single clubs cached, not saved asynchronously though.
+* * API result for single clubs cached, not saved asynchronously though.
 * * Added a widget area for single clubs
 * * Updated club Urls so they look better in the browser
 * * OH YEAH AND FIXED THE OBJECT CACHE ISSUE WHICH WAS BREAKING MY PLUGINS

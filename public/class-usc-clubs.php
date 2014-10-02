@@ -12,7 +12,7 @@
  * @author    Paul Craig <pcraig3@uwo.ca>
  * @license   GPL-2.0+
  * @link      http://testwestern.com
- * @copyright 2014 University Students' Council
+ * @copyright 2014 pcraig3
  */
 
 /**
@@ -26,11 +26,11 @@ class USC_Clubs {
     /**
      * Plugin version, used for cache-busting of style and script file references.
      *
-     * @since   2.2.0
+     * @since   2.2.1
      *
      * @var     string
      */
-    const VERSION = '2.2.0';
+    const VERSION = '2.2.1';
 
     /**
      * Unique identifier for your plugin.

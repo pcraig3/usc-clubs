@@ -8,13 +8,13 @@
  * @author    Paul Craig <pcraig3@uwo.ca>
  * @license   GPL-2.0+
  * @link      http://westernusc.org
- * @copyright 2014 University Students' Council
+ * @copyright 2014 pcraig3
  *
  * @wordpress-plugin
  * Plugin Name:       USC Clubs
- * Plugin URI:        http://testwestern.com/clubs-from-github/
- * Description:       Beams in some information from GitHub.  Possibly witchcraft.
- * Version:           2.2.0
+ * Plugin URI:        https://github.com/pcraig3/usc-clubs
+ * Description:       Bespoke USC plugin beams in some JSON Clubs originally from Westernlink; creates archive and single club pages.
+ * Version:           2.2.1
  * Author:            Paul Craig
  * Author URI:        https://profiles.wordpress.org/pcraig3/
  * Text Domain:       usc-clubs
@@ -56,11 +56,6 @@ add_action( 'plugins_loaded', array( 'USC_Clubs', 'get_instance' ) );
  *----------------------------------------------------------------------------*/
 
 /*
- * @TODO:
- *
- * - replace Plugin_Name_Admin with the name of the class defined in
- *   `class-usc-clubs-admin.php`
- *
  * If you want to include Ajax within the dashboard, change the following
  * conditional to:
  *
