@@ -419,15 +419,21 @@ class USC_Clubs {
                 This is why we're doing the extracting in the lines above this one.
                 @see: http://keithdevon.com/passing-variables-to-get_template_part-in-wordpress/
              */
+
             //try to load template from the THEME first.  Note the different filename
             $club_template_theme = locate_template('single-usc_clubs.php', false);
-            if( !empty ( $club_template_theme ) )
-                include($club_template_theme);
+            if( !empty ( $club_template_theme ) ) {
+                include( $club_template_theme );
+                return;
+            }
 
             //load template in PLUGIN after trying the theme.
             $club_template_plugin = locate_template('../../plugins/usc-clubs/templates/single-usc_clubs_westernusc.php', false);
-            if( !empty ( $club_template_plugin ) )
+            if( !empty ( $club_template_plugin ) ) {
                 include($club_template_plugin);
+                return;
+            }
+
         }
         else
             return $original_template;
