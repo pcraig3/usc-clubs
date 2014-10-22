@@ -369,9 +369,7 @@ jQuery(function ($) {
     $(document).ready(function() {
 
         var usc_clubs_as_json = JSON.parse(options.clubs);
-
-        console.log(usc_clubs_as_json);
-
+        
         //console.log(usc_clubs_as_json[0]);
         AjaxUSCClubs.clubs_gotten( usc_clubs_as_json );
 
